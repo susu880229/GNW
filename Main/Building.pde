@@ -3,10 +3,12 @@
 */
 class Building {    
     ArrayList<Person> persons; 
-    int xpos;
-    int ypos; 
-    int buildingWidth;
-    int buildingHeight;
+    ArrayList<Type> blockTypes;
+    float xpos;
+    float ypos; 
+    float buildingWidth;
+    float buildingHeight;
+    int maxTypes;
     
     /**
     * The Building constructor
@@ -15,13 +17,16 @@ class Building {
     * @param w This is the width of the building
     * @param h This is the height of the building
     */
-    Building (int x, int y, int w, int h) {
+    Building (float x, float y, float w, float h) {
       xpos = x;
       ypos = y;
       buildingWidth = w;
       buildingHeight = h;
       
+      maxTypes = 3;
+      
       persons = new ArrayList<Person>();
+      blockTypes = new ArrayList<Type>();
     }
   
    /**
@@ -57,4 +62,11 @@ class Building {
         persons.add(new Person(xpos - i, ypos));
       }
     }  
+    
+    /**
+    * Adds a usage types to this building
+    */
+    void addType(Type type) {
+      blockTypes.add(type);
+    } 
 }

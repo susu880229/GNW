@@ -5,7 +5,7 @@ class Person {
   PVector position;
   PVector velocity;
   float lifespan;
-  int xpos_destination = 350;
+  float xpos_destination = 350;
   
    /**
     * The Person constructor
