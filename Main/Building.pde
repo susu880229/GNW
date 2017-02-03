@@ -4,8 +4,8 @@
 class Building {    
     ArrayList<Person> persons; 
     ArrayList<Type> blockTypes;
-    float xpos;
-    float ypos; 
+    float buildingXPos;
+    float buildingYPos;
     float buildingWidth;
     float buildingHeight;
     int maxTypes;
@@ -18,8 +18,8 @@ class Building {
     * @param h This is the height of the building
     */
     Building (float x, float y, float w, float h) {
-      xpos = x;
-      ypos = y;
+      buildingXPos = x; //<>//
+      buildingYPos = y;
       buildingWidth = w;
       buildingHeight = h;
       
@@ -37,9 +37,7 @@ class Building {
         Person p = persons.get(i);
         p.run();
         if (p.isDead()) {
-          //persons.remove(i);
-          p.position = new PVector (xpos, ypos);
-          p.lifespan = 300;
+          persons.remove(i);
         }
       }
     }
@@ -50,17 +48,14 @@ class Building {
     void render() {
       fill(255);
       rectMode(CENTER);
-      rect(xpos, ypos, buildingWidth, buildingHeight);
+      rect(buildingXPos, buildingYPos, buildingWidth, buildingHeight);
     }
     
     /**
     * Adds a person to this building
     */
-    void addPerson() {
-      for (int i = 0; i <= 50; i = i + 10)
-      {
-        persons.add(new Person(xpos - i, ypos));
-      }
+    void addPerson(PVector destinationPosition) {
+        persons.add(new Person(buildingXPos, buildingYPos, destinationPosition));
     }  
     
     /**
@@ -68,5 +63,14 @@ class Building {
     */
     void addType(Type type) {
       blockTypes.add(type);
+      
+      //TODO: change flow animation based on number of people
+    //  for (int i = 0; i < type.numberOfPeople; i++) {
+      
+      PVector destinationPosition = new PVector (500,500);
+      addPerson(destinationPosition);
+     // }
     } 
+    
+
 }

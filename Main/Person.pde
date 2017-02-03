@@ -2,20 +2,21 @@
 * The Person class represents a person who will be flowing between the buildings 
 */
 class Person {
-  PVector position;
+  PVector sourcePos;
+  PVector destinationPos;
   PVector velocity;
   float lifespan;
-  float xpos_destination = 350;
   
    /**
     * The Person constructor
-    * @param x This is the x-coordinate of the building the person is in
-    * @param y This is the y-coordinate of the building the person is in
+    * @param buildingPosition This is the position of the building the person is in
+    * @param destinationPosition This is the position of the building the person will go to
     */
-    Person(float x, float y) {
-      position = new PVector(x, y);
+    Person(float x, float y, PVector destinationPosition) {
+      sourcePos = new PVector(x, y);
+      destinationPos = destinationPosition;
       velocity = new PVector(1, 0);
-      lifespan = xpos_destination - position.x;
+      lifespan = destinationPos.x - sourcePos.x;
     }
   
    /**
@@ -30,14 +31,14 @@ class Person {
   * Renders a dot to represent the person onto the screen
   */
   void render() {
-    ellipse(position.x, position.y, 8, 8);
+    ellipse(sourcePos.x, sourcePos.y, 8, 8);
   }
   
   /**
   * Updates position of dot
   */
   void update() {
-    position.add(velocity);
+    sourcePos.add(velocity);
     lifespan -= 1;
   }
   
