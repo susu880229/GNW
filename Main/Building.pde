@@ -33,7 +33,7 @@ class Building {
     */
     Building (String id, boolean customizable, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
       persons = new ArrayList<Person>();
-      blockTypes = new ArrayList<Type>(); //<>//
+      blockTypes = new ArrayList<Type>(); //<>// //<>//
       
       buildingId = id;
       maxTypes = 3;
@@ -105,7 +105,7 @@ class Building {
     */
     void addPerson(PVector destinationPosition) {
       //TODO figure out how person will flow between buildings
-      persons.add(new Person(buildingCenter_x, buildingCenter_y, destinationPosition));
+     // persons.add(new Person(buildingCenter_x, buildingCenter_y, destinationPosition));
     }  
     
     /**

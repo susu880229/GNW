@@ -72,7 +72,7 @@ class Person {
    * Recursive path finder helper function
    * If failed to find valid path, null will return
    */
-  ArrayList<Coord> findPathHelper (Node start, Node dest, ArrayList<Node> visited, ArrayList<Coord> path, ArrayList<WorkListEntry> todo) {
+  private ArrayList<Coord> findPathHelper (Node start, Node dest, ArrayList<Node> visited, ArrayList<Coord> path, ArrayList<WorkListEntry> todo) {
     if (start.getId() == dest.getId()) {
       return path;
     } else if (visited.contains(start)) {
@@ -92,7 +92,7 @@ class Person {
     return null;
   }
 
-  ArrayList<Coord> findPathToDoHandler (ArrayList<WorkListEntry> todo, ArrayList<Node> visited, Node dest) {
+  private ArrayList<Coord> findPathToDoHandler (ArrayList<WorkListEntry> todo, ArrayList<Node> visited, Node dest) {
     if (todo.isEmpty()) {
       return null;
     } else {
@@ -103,7 +103,7 @@ class Person {
     }
   }
 
-  ArrayList<Coord> findPathNodeHandler (Node nextNode, ArrayList<Node> visited, ArrayList<Coord> path, ArrayList<WorkListEntry> todo, Node dest) {
+  private ArrayList<Coord> findPathNodeHandler (Node nextNode, ArrayList<Node> visited, ArrayList<Coord> path, ArrayList<WorkListEntry> todo, Node dest) {
     path.add(nextNode.getPos());
     return findPathHelper(nextNode, dest, visited, path, todo) ;
   }
