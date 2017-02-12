@@ -2,9 +2,8 @@
  * Interface for nodes (BuildingNode and RoadNoad)
  */
 interface Node {
-  
   String getId();
-  
+    
   ArrayList<Road> getRoads();
   
   Coord getPos();
@@ -16,18 +15,18 @@ interface Node {
  * The NodeBuilding class represents the connection points between roads and buildings
  */
 class NodeBuilding implements Node {
-  Building building;
+  String id;
   ArrayList<Road> roads;
   Coord buildingPos;    
 
   /*
   * NodeBuilding constructor 
-   * @param building The building object
+   * @param id The building ID
    * @param roads The list of road(s) it is connected to. There should only be 1 road in this list
    * @param buildingPos The coordinates of the "door" to the building. 
    */
-  NodeBuilding (Building building, ArrayList<Road> roads, Coord buildingPos) {
-    this.building = building;
+  NodeBuilding (String id, ArrayList<Road> roads, Coord buildingPos) {
+    this.id = id;
     this.roads = roads;
     this.buildingPos = buildingPos;
   }
@@ -36,7 +35,7 @@ class NodeBuilding implements Node {
   * Returns the id of the associated BuildingID
    */
   String getId() {
-    return building.buildingId;
+    return id;
   }
 
   /*
