@@ -48,7 +48,7 @@ class Building
     buildingName = name;
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
-    
+
     center_x = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 15;
     center_y = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
 
@@ -76,7 +76,6 @@ class Building
       fill(150);
     }
     noStroke();
-    //quad(xpos1, ypos1, xpos2, ypos2, xpos3, ypos3, xpos4, ypos4);
     //draw the polygon 
     beginShape();
     for (int i = 0; i < p.npoints; i++) 

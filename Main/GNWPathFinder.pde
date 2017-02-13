@@ -1,7 +1,7 @@
 class GNWPathFinder 
 {
-  GraphNode[] gNodes, rNodes;
-  GraphEdge[] gEdges, exploredEdges;
+  GraphNode[] gNodes;
+  GraphEdge[] gEdges;
   IGraphSearch pathFinder;
   Graph GNWGraph;
   float nodeSize;
@@ -10,18 +10,42 @@ class GNWPathFinder
   {
     nodeSize = 12.0f;
     GNWGraph = new Graph();
-    GNWMap = new HashMap<String, Building>();
     createGNWGraph();
-    createGNWMap();
   }
 
+  /**
+   * Creates GNWGraph with nodes and edges for path finding
+   */
+  void createGNWGraph() 
+  {
+    makeGraphFromFile(GNWGraph, "data/graph.txt");
+    pathFinder = new GraphSearch_Astar(GNWGraph, new AshCrowFlight(1.0f));
+    gNodes = GNWGraph.getNodeArray();
+    gEdges = GNWGraph.getAllEdgeArray();
+  }
+
+  /**
+   * Finds route
+   * @return GraphNode[] List of nodes to visit to go from startNode to endNode
+   */
+  GraphNode[] findPath(int startNode, int endNode) 
+  {
+    pathFinder.search(startNode, endNode, true);
+    return pathFinder.getRoute();
+  }
+
+/**
+* Draws nodes and edges of graph for debugging help
+*/
   void drawGraph()
   {
     drawNodes();
     drawEdges(gEdges, color(192, 192, 192, 128), 1.0f, true);
- //   drawRoute(rNodes, color(200, 0, 0), 5.0f);
   }
 
+/** 
+* Helper to draw nodes
+*/
   void drawNodes() 
   {
     pushStyle();
@@ -32,7 +56,10 @@ class GNWPathFinder
     }
     popStyle();
   }
-
+  
+/** 
+* Helper to draw edges
+*/
   void drawEdges(GraphEdge[] edges, int lineCol, float sWeight, boolean arrow) {
     if (edges != null) {
       pushStyle();
@@ -49,7 +76,10 @@ class GNWPathFinder
       popStyle();
     }
   }
-
+  
+/** 
+* Helper to draw arrows on edges to indicate which direction it allows
+*/
   void drawArrow(GraphNode fromNode, GraphNode toNode, float nodeRad, float arrowSize) {
     float fx, fy, tx, ty;
     float ax, ay, sx, sy, ex, ey;
@@ -88,8 +118,13 @@ class GNWPathFinder
     endShape();
   }
 
-  void drawRoute(GraphNode[] r, int lineCol, float sWeight) 
+/**
+* THIS FUNCTION IS ONLY TEMP HERE TO ILLUSTRATE ROUTES
+*/
+  void drawRoute(GraphNode[] r) 
   {
+    int lineCol =color(200, 0, 0);
+    float sWeight = 5.0f;
     if (r.length >= 2) {
       pushStyle();
       stroke(lineCol);
@@ -111,25 +146,10 @@ class GNWPathFinder
   }
 
   /**
-   * Creates GNWGraph with nodes and edges for path finding
+   * Creates graph from text file 
+   * @param g Initial graph
+   * @param fname Filenamet
    */
-  void createGNWGraph() 
-  {
-    makeGraphFromFile(GNWGraph, "data/graph.txt");
-    pathFinder = new GraphSearch_Astar(GNWGraph, new AshCrowFlight(1.0f));
-    usePathFinder(pathFinder);
-    gNodes = GNWGraph.getNodeArray();
-    gEdges = GNWGraph.getAllEdgeArray();
-  }
-
-  void usePathFinder(IGraphSearch pf) 
-  {
-    pf.search(0, 1, true);
-    rNodes = pf.getRoute();
-    exploredEdges = pf.getExaminedEdges();
-  }
-
-
   void makeGraphFromFile(Graph g, String fname) 
   {
     String lines[];
@@ -164,6 +184,11 @@ class GNWPathFinder
     } // end while
   }
 
+  /**
+   * Creates a node
+   * @param s a coordinate from the configuration file
+   * @param g the graph to add the node
+   */
   void makeNode(String s, Graph g) 
   {
     int nodeID;
@@ -178,9 +203,9 @@ class GNWPathFinder
   }
 
   /**
-   * Creates an edge(s) between 2 nodes.
-   * @param s a line from the configuration file.
-   * @param g the graph to add the edge.
+   * Creates an edge(s) between 2 nodes
+   * @param s a line from the configuration file
+   * @param g the graph to add the edge
    */
   void makeEdge(String s, Graph g) 
   {

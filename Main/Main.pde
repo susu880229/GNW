@@ -35,8 +35,9 @@ int icon_h = 30;
 void setup()
 {
   size(1400, 700);
-  
+
   icons = new ArrayList<Icon_DragDrop>();
+  GNWMap = new HashMap<String, Building>();
   GNWPathFinder = new GNWPathFinder();
 
   renderInitalBoxes();
@@ -55,9 +56,13 @@ void draw() {
     building.flow_generate();
   }
   drawIcons();
-  
-  //show node and edges for debugging purposes
-  GNWPathFinder.drawGraph();
+  createGNWMap();
+
+  //GraphNode[] path = GNWPathFinder.findPath(0, 28);
+  //GNWPathFinder.drawRoute(path);
+
+  ////show node and edges for debugging purposes
+  //GNWPathFinder.drawGraph();
 }
 
 
