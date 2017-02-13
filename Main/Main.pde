@@ -2,15 +2,8 @@ import pathfinder.*; //<>// //<>//
 import java.util.Map;
 import java.awt.Polygon; 
 
-GraphNode[] gNodes, rNodes;
-GraphEdge[] gEdges, exploredEdges;
-IGraphSearch pathFinder;
-Graph GNWGraph;
-
+GNWPathFinder GNWPathFinder;
 HashMap<String, Building> GNWMap; //String is building id
-ArrayList<Integer> type_1_buildingIds;
-ArrayList<Integer> type_2_buildingIds;
-ArrayList<Integer> type_3_buildingIds;
 
 //define the box parameters
 int rest_x = 100;
@@ -42,17 +35,11 @@ int icon_h = 30;
 void setup()
 {
   size(1400, 700);
-  GNWGraph = new Graph();
-  GNWMap = new HashMap<String, Building>();
-
-  type_1_buildingIds = new ArrayList<Integer>();
-  type_2_buildingIds = new ArrayList<Integer>();
-  type_3_buildingIds = new ArrayList<Integer>();
+  
   icons = new ArrayList<Icon_DragDrop>();
+  GNWPathFinder = new GNWPathFinder();
 
   renderInitalBoxes();
-  createGNWGraph();
-  createGNWMap();
 }
 
 /** 
@@ -68,8 +55,9 @@ void draw() {
     building.flow_generate();
   }
   drawIcons();
-  drawNodes();
-  drawRoute(rNodes, color(200, 0, 0), 5.0f);
+  
+  //show node and edges for debugging purposes
+  GNWPathFinder.drawGraph();
 }
 
 
@@ -79,40 +67,6 @@ void renderInitalBoxes() {
   resi_box = new Icon_Initial(resi_blue, resi_x, resi_y, box_w, box_h, "Residential");
   office_box = new Icon_Initial(office_green, office_x, office_y, box_w, box_h, "Office");
   recre_box = new Icon_Initial(recre_yellow, recre_x, recre_y, box_w, box_h, "Recreation");
-}
-
-void drawNodes() 
-{
-  float nodeSize = 12.0f;
-  pushStyle();
-  noStroke();
-  fill(255, 0, 255, 72);
-  for (GraphNode node : gNodes)
-    ellipse(node.xf(), node.yf(), nodeSize, nodeSize);
-  popStyle();
-}
-
-void drawRoute(GraphNode[] r, int lineCol, float sWeight) 
-{
-  float nodeSize = 12.0f;
-  if (r.length >= 2) {
-    pushStyle();
-    stroke(lineCol);
-    strokeWeight(sWeight);
-    noFill();
-    for (int i = 1; i < r.length; i++)
-      line(r[i-1].xf(), r[i-1].yf(), r[i].xf(), r[i].yf());
-    // Route start node
-    strokeWeight(2.0f);
-    stroke(0, 0, 160);
-    fill(0, 0, 255);
-    ellipse(r[0].xf(), r[0].yf(), nodeSize, nodeSize);
-    // Route end node
-    stroke(160, 0, 0);
-    fill(255, 0, 0);
-    ellipse(r[r.length-1].xf(), r[r.length-1].yf(), nodeSize, nodeSize); 
-    popStyle();
-  }
 }
 
 void drawIcons() 
@@ -278,106 +232,6 @@ void createGNWMap()
   addBuilding("Residential1", false, 21, 170, 350, 615, 350, 615, 550, 170, 550);
   addBuilding("Residential2", false, 22, 615, 350, 1100, 500, 1100, 550, 615, 550);
 }
-
-/**
- * Creates GNWGraph with nodes and edges for path finding
- */
-void createGNWGraph() 
-{
-  makeGraphFromFile(GNWGraph, "data/graph.txt");
-  pathFinder = new GraphSearch_Astar(GNWGraph, new AshCrowFlight(1.0f));
-  usePathFinder(pathFinder);
-  gNodes = GNWGraph.getNodeArray();
-}
-
-void usePathFinder(IGraphSearch pf) 
-{
-  pf.search(0, 1, true);
-  rNodes = pf.getRoute();
-  exploredEdges = pf.getExaminedEdges();
-}
-
-
-void makeGraphFromFile(Graph g, String fname) 
-{
-  String lines[];
-  lines = loadStrings(fname);
-  int mode = 0;
-  int count = 0;
-  while (count < lines.length) {
-    lines[count].trim();
-    if (!lines[count].startsWith("#") && lines[count].length() > 1) {
-      switch(mode) {
-      case 0:
-        if (lines[count].equalsIgnoreCase("<nodes>"))
-          mode = 1;
-        else if (lines[count].equalsIgnoreCase("<edges>"))
-          mode = 2;
-        break;
-      case 1:
-        if (lines[count].equalsIgnoreCase("</nodes>"))
-          mode = 0;
-        else 
-        makeNode(lines[count], g);
-        break;
-      case 2:
-        if (lines[count].equalsIgnoreCase("</edges>"))
-          mode = 0;
-        else
-          makeEdge(lines[count], g);
-        break;
-      } // end switch
-    } // end if
-    count++;
-  } // end while
-}
-
-void makeNode(String s, Graph g) 
-{
-  int nodeID;
-  float x, y = 0;
-  String part[] = split(s, " ");
-  if (part.length >= 3) {
-    nodeID = Integer.parseInt(part[0]);
-    x = Float.parseFloat(part[1]);
-    y = Float.parseFloat(part[2]);
-    g.addNode(new GraphNode(nodeID, x, y));
-  }
-}
-
-/**
- * Creates an edge(s) between 2 nodes.
- * @param s a line from the configuration file.
- * @param g the graph to add the edge.
- */
-void makeEdge(String s, Graph g) 
-{
-  int fromID, toID;
-  float costOut = 0, costBack = 0;
-  String part[] = split(s, " ");
-  if (part.length >= 3) {
-    fromID = Integer.parseInt(part[0]);
-    toID = Integer.parseInt(part[1]);
-    try {
-      costOut = Float.parseFloat(part[2]);
-    }
-    catch(Exception excp) {
-      costOut = -1;
-    }
-    try {
-      costBack = Float.parseFloat(part[3]);
-    }
-    catch(Exception excp) {
-      costBack = -1;
-    }
-    if (costOut >= 0)
-      g.addEdge(fromID, toID, costOut);
-    if (costBack >= 0)
-      g.addEdge(toID, fromID, costBack);
-  }
-}
-
-
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
