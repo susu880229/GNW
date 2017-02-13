@@ -1,104 +1,160 @@
 /** //<>//
- * The Building class represents a physical building 
+ * The Building class represents a physical building
  */
-class Building {    
-  ArrayList<Person> persons; 
-  ArrayList<Type> blockTypes;
-  String buildingId;
-  int maxTypes;
+class Building 
+{    
+  ArrayList<Person> persons;
+  ArrayList<Icon_DragDrop> iconDrags;
+  int xpos1;
+  int ypos1; 
+  int xpos2;
+  int ypos2; 
+  int xpos3;
+  int ypos3; 
+  int xpos4;
+  int ypos4; 
+  int center_x;
+  int center_y;
+  String buildingName;
   boolean isCustomizable;
-  HashMap<String, Coord> buildingCoords;
-  int doorNode;
-  float buildingCenter_x;
-  float buildingCenter_y;
+  int doorNodeId;
+  Polygon p;
 
   /**
    * The Building constructor
-   * @param id This is the id of the building
-   * @param customizable Sets if the building is customizable by user or not
-   * @param buildingCoords Building's coordinates of its 4 corners
-   * @param doorNode The door id to the building. 
+   * @param name This is the id of the building
+   * @param c Sets if the building is customizable by user or not
+   * @param doorNode The door id to the building.
+   * @param x1 This is the x-coordinate of the top-left corner of the building
+   * @param y1 This is the y-coordinate of the top-left corner of the building
+   * @param x2 This is the x-coordinate of the top-right corner of the building
+   * @param y2 This is the y-coordinate of the top-righteft corner of the building
+   * @param x3 This is the x-coordinate of the bottom-right corner of the building
+   * @param y3 This is the y-coordinate of the bottom-right corner of the building
+   * @param x4 This is the x-coordinate of the bottom-left corner of the building
+   * @param y4 This is the y-coordinate of the bottom-left corner of the building
    */
-  Building (String id, boolean customizable, HashMap<String, Coord> buildingCoords, int doorNodeId) {
+  Building (String name, boolean c, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
+  {
+    xpos1 = x1;
+    ypos1 = y1;
+    xpos2 = x2;
+    ypos2 = y2;
+    xpos3 = x3;
+    ypos3 = y3;
+    xpos4 = x4;
+    ypos4 = y4;
+
+    buildingName = name;
+    isCustomizable = c;
+    this.doorNodeId = doorNodeId;
+    
+    center_x = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 15;
+    center_y = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
+
     persons = new ArrayList<Person>();
-    blockTypes = new ArrayList<Type>(); 
-    maxTypes = 3;
-
-    buildingId = id;
-    isCustomizable = customizable;
-    this.buildingCoords = buildingCoords;
-    this.doorNode = doorNodeId;
-
-    buildingCenter_x = ((buildingCoords.get("topLeft").x + buildingCoords.get("topRight").x + buildingCoords.get("bottomRight").x+ buildingCoords.get("bottomLeft").x) /4) - 15;
-    buildingCenter_y = ((buildingCoords.get("topLeft").y + buildingCoords.get("topRight").y + buildingCoords.get("bottomRight").y+ buildingCoords.get("bottomLeft").y) /4) + 5;
+    iconDrags = new ArrayList<Icon_DragDrop>();
   }
 
-  /**
-   * The animation for people to flow out of this building to another building
-   */
-  void run() {
-    for (int i = persons.size()-1; i >= 0; i--) {
-      Person p = persons.get(i);
-      p.run();
-      if (p.isDead()) {
-        persons.remove(i);
+  void createPolygon()
+  {
+    p = new Polygon(); 
+    p.addPoint(xpos1, ypos1);
+    p.addPoint(xpos2, ypos2);
+    p.addPoint(xpos3, ypos3);
+    p.addPoint(xpos4, ypos4);
+  }
+
+  //rendering the block
+  void render() 
+  {
+    if (isCustomizable) 
+    {
+      fill(200);
+    } else 
+    {
+      fill(150);
+    }
+    noStroke();
+    //quad(xpos1, ypos1, xpos2, ypos2, xpos3, ypos3, xpos4, ypos4);
+    //draw the polygon 
+    beginShape();
+    for (int i = 0; i < p.npoints; i++) 
+    {
+      vertex(p.xpoints[i], p.ypoints[i]);
+    }
+    endShape();
+    //render text
+    fill(0);
+    textSize(9);
+    text(buildingName, center_x, center_y);
+  }
+
+  //iterate the iconlist to find the icon class for this building
+  int findIcon_class()
+  {
+    int building_class = -1;
+    for (int i = 0; i < iconDrags.size(); i++)
+    {
+      Icon_DragDrop iconA = iconDrags.get(i);
+      building_class = iconA.Icon_class;
+    }
+    return building_class;
+  }
+
+
+  void addPerson(int target_x, int target_y)
+  {
+    float dis_x = target_x - center_x;
+    float dis_y = target_y - center_y;
+    float a = dis_y / dis_x;
+
+    for (int i = 0; i < 2; i = i + 10)
+    {
+      Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y);
+      persons.add(pA);
+    }
+  }
+
+
+  //flows start from this building 
+  void flow_generate()
+  {
+    int icon_classA;
+    int icon_classB;
+    if (this.iconDrags.size() > 0)
+    {
+      icon_classA = this.findIcon_class();
+      if (icon_classA > 0)
+      {
+        for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
+        {
+          Building building = (Building) GNWMapEntry.getValue();
+          if (building.iconDrags.size() > 0)
+          {
+            icon_classB = building.findIcon_class();
+            if (icon_classA > icon_classB)
+            {
+              addPerson(building.center_x, building.center_y);
+              run();
+            }
+          }
+        }
       }
     }
   }
 
-  /**
-   * Renders a block to represent the building onto the screen
-   */
-  void render() {
-    //draws building/lot
-    if (isCustomizable) {
-      fill(200);
-    } else {
-      fill(150);
+  //run from buildingA to buildingB
+
+  void run()
+  {
+    for (int i = 0; i < persons.size(); i++)
+    {
+      persons.get(i).run();
+      if (persons.get(i).isDead())
+      {
+        persons.remove(i);
+      }
     }
-    noStroke();    
-    quad(buildingCoords.get("topLeft").x, buildingCoords.get("topLeft").y, buildingCoords.get("topRight").x, buildingCoords.get("topRight").y, buildingCoords.get("bottomRight").x, buildingCoords.get("bottomRight").y, buildingCoords.get("bottomLeft").x, buildingCoords.get("bottomLeft").y);
-
-    if (blockTypes.size() > 0) {
-      renderIcons();
-    }
-
-    //draws label
-    fill(0);
-    textSize(9);
-    text(buildingId, buildingCenter_x, buildingCenter_y);
-  }
-
-  /**
-   * Draws usage icons ontop of buildings
-   **/
-  void renderIcons() {
-    for (int i = 0; i < blockTypes.size(); i++) {
-      Type type = blockTypes.get(i); 
-      PImage typeIcon = loadImage(type.imageSource);
-      image(typeIcon, buildingCenter_x, buildingCenter_y);
-    }
-  }
-
-  /**
-   * Adds a person to this building
-   */
-  void addPerson(PVector destinationPosition) {
-    //TODO figure out how person will flow between buildings
-   // persons.add(new Person(buildingCenter_x, buildingCenter_y, destinationPosition));
-  }  
-
-  /**
-   * Adds a usage types to this building
-   */
-  void addType(Type type) {
-    blockTypes.add(type);
-
-    //TODO: change flow animation based on number of people
-    //  for (int i = 0; i < type.numberOfPeople; i++) {
-
-    PVector destinationPosition = new PVector (500, 500);
-    addPerson(destinationPosition);
-    // }
   }
 }

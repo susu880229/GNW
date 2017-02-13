@@ -1,5 +1,6 @@
 import pathfinder.*; //<>// //<>//
 import java.util.Map;
+import java.awt.Polygon; 
 
 GraphNode[] gNodes, rNodes;
 GraphEdge[] gEdges, exploredEdges;
@@ -11,38 +12,77 @@ ArrayList<Integer> type_1_buildingIds;
 ArrayList<Integer> type_2_buildingIds;
 ArrayList<Integer> type_3_buildingIds;
 
-void setup() {
+//define the box parameters
+int rest_x = 100;
+int rest_y = 50;
+int resi_x = 170;
+int resi_y = 50;
+int office_x = 240;
+int office_y = 50;
+int recre_x = 310;
+int recre_y = 50;
+int box_w = 50;
+int box_h = 50;
+color rest_red = color (200, 0, 0);
+color resi_blue = color (0, 0, 200);
+color office_green = color(0, 200, 0);
+color recre_yellow = color(200, 200, 0);
+
+Icon_Initial rest_box;
+Icon_Initial resi_box;
+Icon_Initial office_box;
+Icon_Initial recre_box;
+String choice;
+
+//define icon
+ArrayList<Icon_DragDrop> icons;
+int icon_w = 30;
+int icon_h = 30;
+
+void setup()
+{
   size(1400, 700);
   GNWGraph = new Graph();
   GNWMap = new HashMap<String, Building>();
+
   type_1_buildingIds = new ArrayList<Integer>();
   type_2_buildingIds = new ArrayList<Integer>();
   type_3_buildingIds = new ArrayList<Integer>();
+  icons = new ArrayList<Icon_DragDrop>();
 
+  renderInitalBoxes();
   createGNWGraph();
   createGNWMap();
-  addInitBuildingTypes();
-
-  //TODO: dynamically add types to building (drag and drop type icon into buildings)
 }
 
 /** 
  * Draws all the buildings in GNWMap
  */
 void draw() {
-  background(255);
+  background(0);
+
+  //walk through the GNWmap to render building
   for (Map.Entry GNWMapEntry : GNWMap.entrySet()) {
     Building building = (Building) GNWMapEntry.getValue();
     building.render();
-    building.run();
+    building.flow_generate();
   }
-
+  drawIcons();
   drawNodes();
-
   drawRoute(rNodes, color(200, 0, 0), 5.0f);
 }
 
-void drawNodes() {
+
+void renderInitalBoxes() {
+  //create four boxes objects 
+  rest_box = new Icon_Initial(rest_red, rest_x, rest_y, box_w, box_h, "Restaurant");
+  resi_box = new Icon_Initial(resi_blue, resi_x, resi_y, box_w, box_h, "Residential");
+  office_box = new Icon_Initial(office_green, office_x, office_y, box_w, box_h, "Office");
+  recre_box = new Icon_Initial(recre_yellow, recre_x, recre_y, box_w, box_h, "Recreation");
+}
+
+void drawNodes() 
+{
   float nodeSize = 12.0f;
   pushStyle();
   noStroke();
@@ -52,7 +92,8 @@ void drawNodes() {
   popStyle();
 }
 
-void drawRoute(GraphNode[] r, int lineCol, float sWeight) {
+void drawRoute(GraphNode[] r, int lineCol, float sWeight) 
+{
   float nodeSize = 12.0f;
   if (r.length >= 2) {
     pushStyle();
@@ -74,63 +115,138 @@ void drawRoute(GraphNode[] r, int lineCol, float sWeight) {
   }
 }
 
+void drawIcons() 
+{
+  rectMode(CENTER);
 
-/**
- * Adds type to building and adds building to list of appropriate type of building
- * @param id is the building ID
- * @param type is the type of usage to add to building
- */
-void addType(int id, Type type) {
-  Building building = GNWMap.get(id);
-  building.addType(type);
+  //render boxes
+  rest_box.render();
+  resi_box.render();
+  office_box.render();
+  recre_box.render();
 
-  //Adds building id to appropriate list of building Ids
-  switch(type.id) {
-  case 1:
-    type_1_buildingIds.add(id);
-    break;
-  case 2:
-    type_2_buildingIds.add(id);
-    break;
-  case 3:
-    type_3_buildingIds.add(id);
-    break;
+  //detect the mouse 
+  rest_box.detect();
+  resi_box.detect();
+  office_box.detect();
+  recre_box.detect();
+
+  if (rest_box.mouse_detect)
+  {
+    choice = "restaurant";
+  } else if (resi_box.mouse_detect)
+  {
+    choice = "resident";
+  } else if (recre_box.mouse_detect)
+  {
+    choice = "recreation";
+  } else if (office_box.mouse_detect)
+  {
+    choice = "office";
+  } else 
+  {
+    choice = null;
+  }
+  //System.out.println(choice);
+
+  //render the icon and detect the mouse within the icon
+  if (!icons.isEmpty())
+  {
+    for (int i = 0; i < icons.size(); i++)
+    {
+      icons.get(i).update();
+    }
+  }
+
+  //System.out.println("buildingA:" + buildingA.iconDrags.size() + "," + "buildingB:" + buildingB.iconDrags.size());
+
+  //flow_generate();
+
+  //System.out.println("EmilyCarr" + GNWMap.get("EmilyCarr").iconDrags.size() + "CDM1" + GNWMap.get("CDM1").iconDrags.size());
+  //System.out.println(GNWMap.get("521"));
+}
+
+void mousePressed()
+{
+  //mouse are on the box area to generate icon 
+  if (choice != null)
+  {
+    if (choice == "restaurant")
+    {
+      icon_generate("restaurant.png", rest_x, rest_y + 50, icon_w, icon_h);
+    } else if (choice == "resident")
+    {
+      icon_generate("resident.png", resi_x, resi_y + 50, icon_w, icon_h);
+    } else if (choice == "recreation")
+    {
+      icon_generate("recreation.png", recre_x, recre_y + 50, icon_w, icon_h);
+    } else if (choice == "office")
+    {
+      icon_generate("office.png", office_x, office_y + 50, icon_w, icon_h);
+    }
+  }
+
+  //mouse is outside the box, if it is within icon, lock the icon and get the initial distance between mouse and its position
+  else 
+  {
+    if (!icons.isEmpty())
+    {
+      for (int i = 0; i < icons.size(); i++)
+      {
+        icons.get(i).mousePressed();
+      }
+    }
   }
 }
 
-/**
- * Adds default/existing building usages
- */
-void addInitBuildingTypes() {
-  GNWMap.get("Stn").addType(new Type_3());
+void mouseDragged()
+{
+  //update the icon position based on the mouse
+  if (!icons.isEmpty())
+  {
+    for (int i = 0; i < icons.size(); i++)
+    {
+      icons.get(i).mouseDragged();
+    }
+  }
+}
 
-  GNWMap.get("521").addType(new Type_4());
-  GNWMap.get("515").addType(new Type_4());
+void mouseReleased()
+{
+  //unlock the icon
+  if (!icons.isEmpty())
+  {
+    for (int i = 0; i < icons.size(); i++)
+    {
+      Icon_DragDrop icon = icons.get(i);
+      icon.mouseReleased();
+    }
+  }
+}
 
-  GNWMap.get("EmilyCarr").addType(new Type_1());
+//create icon object 
+void icon_generate(String icon_name, int icon_x, int icon_y, int icon_w, int icon_h )
+{
+  Icon_DragDrop icon = new Icon_DragDrop(icon_name, icon_x, icon_y, icon_w, icon_h);
+  icons.add(icon);
+  icon.load();
+}
 
-  GNWMap.get("CDM1").addType(new Type_1());
-  GNWMap.get("CDM2").addType(new Type_4());
-  GNWMap.get("CDM3").addType(new Type_1());
 
-  GNWMap.get("Lot1").addType(new Type_4());
-  GNWMap.get("Lot2").addType(new Type_4());
-  GNWMap.get("Lot3").addType(new Type_4());
-  GNWMap.get("Lot4").addType(new Type_4());
-  GNWMap.get("Mec").addType(new Type_4());
-
-  GNWMap.get("VCC").addType(new Type_1());
-  GNWMap.get("Lot5").addType(new Type_4());
-
-  GNWMap.get("Lot6").addType(new Type_4());   
-  GNWMap.get("Lot7").addType(new Type_3());
+//add building and name to hash GNWmap
+void addBuilding(String name, Boolean c, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
+{
+  Building newBuilding = new Building(name, c, doorNodeId, x1, y1, x2, y2, x3, y3, x4, y4);
+  newBuilding.createPolygon();
+  GNWMap.put(name, newBuilding);
 }
 
 /** 
  * Creates GNWMap with all the buildings and lots
  * Buildings/lots are added to from left to right and top to bottom
  */
-void createGNWMap() {  
+void createGNWMap() 
+{  
   addBuilding("City", false, 0, 220, 140, 265, 150, 252, 200, 205, 190);
   addBuilding("Park", false, 1, 205, 195, 252, 205, 235, 275, 187, 265);
   addBuilding("Stn", true, 2, 185, 270, 235, 280, 225, 330, 170, 330);
@@ -164,48 +280,26 @@ void createGNWMap() {
 }
 
 /**
- * Helper function to create new building and add the building to GNWMap
- * @param id This is the id of the building
- * @param customizable Sets if the building is customizable by user or not
- * @param doorNode The node id of the door to the building
- * @param x1 This is the x-coordinate of the top-left corner of the building
- * @param y1 This is the y-coordinate of the top-left corner of the building
- * @param x2 This is the x-coordinate of the top-right corner of the building
- * @param y2 This is the y-coordinate of the top-righteft corner of the building
- * @param x3 This is the x-coordinate of the bottom-right corner of the building
- * @param y3 This is the y-coordinate of the bottom-right corner of the building
- * @param x4 This is the x-coordinate of the bottom-left corner of the building
- * @param y4 This is the y-coordinate of the bottom-left corner of the building
- */
-void addBuilding(String id, Boolean customizable, int doorNodeId, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-  HashMap<String, Coord> buildingCoords = new HashMap<String, Coord>();
-  buildingCoords.put("topLeft", new Coord(x1, y1));
-  buildingCoords.put("topRight", new Coord(x2, y2));
-  buildingCoords.put("bottomRight", new Coord(x3, y3));
-  buildingCoords.put("bottomLeft", new Coord(x4, y4));
-
-  Building newBuilding = new Building(id, customizable, buildingCoords, doorNodeId);
-  GNWMap.put(id, newBuilding);
-}
-
-/**
  * Creates GNWGraph with nodes and edges for path finding
  */
-void createGNWGraph() {
-  makeGraphFromFile(GNWGraph, "assets/graph.txt");
+void createGNWGraph() 
+{
+  makeGraphFromFile(GNWGraph, "data/graph.txt");
   pathFinder = new GraphSearch_Astar(GNWGraph, new AshCrowFlight(1.0f));
   usePathFinder(pathFinder);
   gNodes = GNWGraph.getNodeArray();
 }
 
-void usePathFinder(IGraphSearch pf){
+void usePathFinder(IGraphSearch pf) 
+{
   pf.search(0, 1, true);
   rNodes = pf.getRoute();
   exploredEdges = pf.getExaminedEdges();
 }
 
 
-void makeGraphFromFile(Graph g, String fname) {
+void makeGraphFromFile(Graph g, String fname) 
+{
   String lines[];
   lines = loadStrings(fname);
   int mode = 0;
@@ -238,7 +332,8 @@ void makeGraphFromFile(Graph g, String fname) {
   } // end while
 }
 
-void makeNode(String s, Graph g) {
+void makeNode(String s, Graph g) 
+{
   int nodeID;
   float x, y = 0;
   String part[] = split(s, " ");
@@ -255,7 +350,8 @@ void makeNode(String s, Graph g) {
  * @param s a line from the configuration file.
  * @param g the graph to add the edge.
  */
-void makeEdge(String s, Graph g) {
+void makeEdge(String s, Graph g) 
+{
   int fromID, toID;
   float costOut = 0, costBack = 0;
   String part[] = split(s, " ");
@@ -284,8 +380,8 @@ void makeEdge(String s, Graph g) {
 
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
-void mouseClicked() {
-  fill(0);
-  ellipse(mouseX, mouseY, 2, 2);
-  println("x: " + mouseX + "; y: " + mouseY);
-}
+//void mouseClicked() {
+//  fill(0);
+//  ellipse(mouseX, mouseY, 2, 2);
+//  println("x: " + mouseX + "; y: " + mouseY);
+//}
