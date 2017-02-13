@@ -5,16 +5,16 @@ class Building
 {    
     ArrayList<Person> persons;
     ArrayList<Icon_DragDrop> iconDrags;
-    float xpos1;
-    float ypos1; 
-    float xpos2;
-    float ypos2; 
-    float xpos3;
-    float ypos3; 
-    float xpos4;
-    float ypos4; 
-    float center_x;
-    float center_y;
+    int xpos1;
+    int ypos1; 
+    int xpos2;
+    int ypos2; 
+    int xpos3;
+    int ypos3; 
+    int xpos4;
+    int ypos4; 
+    int center_x;
+    int center_y;
     String buildingName;
     boolean isCustomizable;
     Polygon p;
@@ -32,7 +32,7 @@ class Building
 -    * @param x4 This is the x-coordinate of the bottom-left corner of the building
 -    * @param y4 This is the y-coordinate of the bottom-left corner of the building
 -    */
-    Building (String name, boolean c, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) 
+    Building (String name, boolean c, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
     {
       xpos1 = x1;
       ypos1 = y1;
