@@ -29,7 +29,7 @@ class Icon_Initial
     rect(box_x, box_y, box_width, box_height);
     fill(255);
     textSize(9);
-    text(box_type, box_x - 10, box_y);
+    text(box_type, box_x - 20 , box_y);
   }
   
   //draw method
