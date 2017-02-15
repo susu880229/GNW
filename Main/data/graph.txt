@@ -1,0 +1,103 @@
+# graph.txt
+
+# Declare the node positions between tags <nodes></nodes>.
+# 1st = the unique id number for the node it should be >= 0
+#       but the id numbers do not need to start with zero or
+#       be sequential
+# 2nd = the horizontal location of the node
+# 3nd = the vertical location of the node
+#
+# although the locations are expressed as integers in this
+# file they are interpreted as floats.
+#
+
+<nodes>
+#building door nodes
+0 257 180
+1 240 242
+2 225 300
+3 288 206 
+4 271 243
+5 268 285
+6 395 278
+7 327 291
+8 424 293
+9 514 306
+10 572 284
+11 544 318
+12 688 354
+13 789 382 
+14 872 408
+15 950 427
+16 1049 456
+17 1152 478
+18 1159 502
+19 1273 477
+20 1273 499
+21 433 348
+22 832 419
+#road intersection nodes
+23 276 220
+24 251 200 
+25 236 276 
+26 297 284
+27 361 287 
+28 483 283
+29 296 239
+100 1101 486
+101 1215 487
+102 492 339
+103 616 339
+</nodes>
+
+# to do: add rest of the door nodes
+
+# Declare the edges between tags <edges></edges>.
+# 1st = the node id for the 'from' node
+# 2nd = the node id for the 'to' node
+# 3rd = the cost of travelling 'from' >> 'to'
+# 4th = the cost of travelling 'to' >> 'from'
+# If either cost is 0 (zero) then the demo program
+# calculates the Euclidean (shortest) distance between
+# them and uses that as the cost.
+# If either cost is <0.0 then that edge will not be
+# created.
+# The fourth value is optional and if missing then the 
+# edge will not be created (equivalent to -1)
+#
+# although the costs are expressed as integers in this
+# file they are interpreted as floats by the program
+#
+
+<edges>
+25 2 0 0
+25 1 0 0
+25 5 0 0
+24 0 0 0
+24 1 0 0
+24 23 0 0
+23 3 0 0
+23 4 0 0
+23 29 0 0
+29 26 0 0
+26 5 0 0
+26 7 0 0
+26 27 0 0
+27 6 0 0
+27 8 0 0
+27 7 0 0
+27 28 0 0
+100 101 0 0
+100 17 0 0
+100 18 0 0
+101 17 0 0
+101 18 0 0
+101 19 0 0
+101 20 0 0
+17 18 0 0
+19 20 0 0
+28 102 0 0
+102 103 0 0
+103 100 0 0
+</edges>
+

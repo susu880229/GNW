@@ -1,5 +1,9 @@
-import java.util.Map; //<>//
+import pathfinder.*; //<>// //<>//
+import java.util.Map;
 import java.awt.Polygon; 
+
+GNWPathFinder GNWPathFinder;
+HashMap<String, Building> GNWMap; //String is building id
 
 //define the box parameters
 int rest_x = 100;
@@ -22,55 +26,28 @@ Icon_Initial resi_box;
 Icon_Initial office_box;
 Icon_Initial recre_box;
 String choice;
+
 //define icon
 ArrayList<Icon_DragDrop> icons;
 int icon_w = 30;
 int icon_h = 30;
-//define buildings
-/*
-Building buildingA;
- Building buildingB;
- int buildingA_x = 362;
- int buildingA_y = 384;
- int buildingB_x = 662;
- int buildingB_y = 384;
- int building_w = 100;
- int building_h = 100;
- */
-//define the person parameter
-//ArrayList<Person> pAs;
-//ArrayList<Person> pBs;
-//define the map
-HashMap<String, Building> GNWMap; 
 
 void setup()
 {
-  //size(1024, 768);
   size(1400, 700);
   GNWMap = new HashMap<String, Building>();
-  createGNWMap();
-  //buildingA = new Building("buildingA", buildingA_x, buildingA_y, building_w, building_h);
-  //buildingB = new Building("buildingB", buildingB_x, buildingB_y, building_w, building_h);
-  //buildingA.addPerson();
+  icons = new ArrayList<Icon_DragDrop>();
+  GNWPathFinder = new GNWPathFinder();
 
   renderInitalBoxes();
-
-  icons = new ArrayList<Icon_DragDrop>();
+  createGNWMap();
 }
 
-void renderInitalBoxes() {
-
-  //create four boxes objects 
-  rest_box = new Icon_Initial(rest_red, rest_x, rest_y, box_w, box_h, "Restaurant");
-  resi_box = new Icon_Initial(resi_blue, resi_x, resi_y, box_w, box_h, "Residential");
-  office_box = new Icon_Initial(office_green, office_x, office_y, box_w, box_h, "Office");
-  recre_box = new Icon_Initial(recre_yellow, recre_x, recre_y, box_w, box_h, "Recreation");
-}
-
+/** 
+ * Draws all the buildings in GNWMap
+ */
 void draw() {
   background(0);
-  //buildingA.render();
-  //buildingB.render();
 
   //walk through the GNWmap to render building
   for (Map.Entry GNWMapEntry : GNWMap.entrySet()) {
@@ -78,7 +55,26 @@ void draw() {
     building.render();
     building.flow_generate();
   }
+  drawIcons();
 
+  //show node and edges for debugging purposes
+  GNWPathFinder.drawGraph();
+
+  //TODO: use returned path and draw actual animation
+  GraphNode[] path = GNWPathFinder.findPath(0, 28);
+  GNWPathFinder.drawRoute(path);
+}
+
+void renderInitalBoxes() {
+  //create four boxes objects 
+  rest_box = new Icon_Initial(rest_red, rest_x, rest_y, box_w, box_h, "Restaurant");
+  resi_box = new Icon_Initial(resi_blue, resi_x, resi_y, box_w, box_h, "Residential");
+  office_box = new Icon_Initial(office_green, office_x, office_y, box_w, box_h, "Office");
+  recre_box = new Icon_Initial(recre_yellow, recre_x, recre_y, box_w, box_h, "Recreation");
+}
+
+void drawIcons() 
+{
   rectMode(CENTER);
 
   //render boxes
@@ -130,7 +126,6 @@ void draw() {
 
 void mousePressed()
 {
-
   //mouse are on the box area to generate icon 
   if (choice != null)
   {
@@ -176,8 +171,6 @@ void mouseDragged()
 
 void mouseReleased()
 {
-
-
   //unlock the icon
   if (!icons.isEmpty())
   {
@@ -195,52 +188,54 @@ void icon_generate(String icon_name, int icon_x, int icon_y, int icon_w, int ico
   Icon_DragDrop icon = new Icon_DragDrop(icon_name, icon_x, icon_y, icon_w, icon_h);
   icons.add(icon);
   icon.load();
-  //icon.mousePressed();
 }
 
 
 //add building and name to hash GNWmap
-void addBuilding(String name, Boolean c, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
+void addBuilding(String name, Boolean c, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
 {
-  Building newBuilding = new Building(name, c, x1, y1, x2, y2, x3, y3, x4, y4);
+  Building newBuilding = new Building(name, c, doorNodeId, x1, y1, x2, y2, x3, y3, x4, y4);
   newBuilding.createPolygon();
   GNWMap.put(name, newBuilding);
 }
+
+/** 
+ * Creates GNWMap with all the buildings and lots
+ * Buildings/lots are added to from left to right and top to bottom
+ */
 void createGNWMap() 
-{
-  addBuilding("City", false, 220, 140, 265, 150, 252, 200, 205, 190);
-  addBuilding("Park", false, 205, 195, 252, 205, 235, 275, 187, 265);
-  addBuilding("Stn", true, 185, 270, 235, 280, 225, 330, 170, 330);
+{  
+  addBuilding("City", false, 0, 220, 140, 265, 150, 252, 200, 205, 190);
+  addBuilding("Park", false, 1, 205, 195, 252, 205, 235, 275, 187, 265);
+  addBuilding("Stn", true, 2, 185, 270, 235, 280, 225, 330, 170, 330);
 
-  addBuilding("Equinox", false, 264, 175, 328, 190, 323, 215, 258, 200);
-  addBuilding("521", true, 250, 235, 290, 245, 280, 282, 240, 275);
-  addBuilding("515", true, 240, 280, 295, 290, 295, 330, 230, 330);
+  addBuilding("Equinox", false, 3, 264, 175, 328, 190, 323, 215, 258, 200);
+  addBuilding("521", true, 4, 250, 235, 290, 245, 280, 282, 240, 275);  
+  addBuilding("515", true, 5, 240, 280, 295, 290, 295, 330, 230, 330);
 
-  addBuilding("EmilyCarr", false, 305, 230, 475, 230, 475, 280, 305, 280);
-  addBuilding("Plaza", false, 300, 290, 360, 290, 360, 330, 300, 330);
-  addBuilding("PCI", false, 365, 290, 485, 290, 485, 330, 365, 330);
+  addBuilding("EmilyCarr", false, 6, 305, 230, 475, 230, 475, 280, 305, 280); 
+  addBuilding("Plaza", false, 7, 300, 290, 360, 290, 360, 330, 300, 330);
+  addBuilding("PCI", false, 8, 365, 290, 485, 290, 485, 330, 365, 330);
 
-  addBuilding("CDM1", false, 490, 235, 540, 235, 540, 305, 490, 305);
+  addBuilding("CDM1", false, 9, 490, 235, 540, 235, 540, 305, 490, 305);
+  addBuilding("CDM2", true, 10, 545, 235, 605, 258, 605, 285, 545, 285);
+  addBuilding("CDM3", false, 11, 545, 290, 605, 290, 605, 330, 545, 330); 
 
-  addBuilding("CDM2", true, 545, 235, 605, 258, 605, 285, 545, 285);
-  addBuilding("CDM3", false, 545, 290, 605, 290, 605, 330, 545, 330); 
+  addBuilding("Lot1", true, 12, 610, 258, 760, 300, 745, 370, 610, 330); 
+  addBuilding("Lot2", true, 13, 765, 300, 825, 320, 845, 400, 750, 372);
+  addBuilding("Lot3", true, 14, 830, 320, 920, 348, 900, 417, 850, 402);
+  addBuilding("Lot4", true, 15, 925, 348, 1015, 375, 995, 445, 905, 418);
+  addBuilding("Mec", false, 16, 1020, 377, 1100, 400, 1100, 478, 1000, 447);
 
-  addBuilding("Lot1", true, 610, 258, 760, 300, 745, 370, 610, 330);  
-  addBuilding("Lot2", true, 765, 300, 825, 320, 845, 400, 750, 372);
-  addBuilding("Lot3", true, 830, 320, 920, 348, 900, 417, 850, 402);
-  addBuilding("Lot4", true, 925, 348, 1015, 375, 995, 445, 905, 418);
-  addBuilding("Mec", false, 1020, 377, 1100, 400, 1100, 478, 1000, 447);
+  addBuilding("Lot5", true, 17, 1105, 400, 1210, 420, 1210, 480, 1105, 480);
+  addBuilding("VCC", false, 18, 1105, 500, 1210, 500, 1210, 550, 1105, 550);
 
-  addBuilding("Lot5", true, 1105, 400, 1210, 420, 1210, 480, 1105, 480);
-  addBuilding("VCC", false, 1105, 500, 1210, 500, 1210, 550, 1105, 550);
+  addBuilding("Lot6", true, 19, 1220, 500, 1325, 500, 1325, 550, 1220, 550);
+  addBuilding("Lot7", true, 20, 1220, 420, 1325, 450, 1325, 480, 1220, 480);
 
-  addBuilding("Lot6", true, 1220, 500, 1325, 500, 1325, 550, 1220, 550);
-  addBuilding("Lot7", true, 1220, 420, 1325, 450, 1325, 480, 1220, 480);
-
-  addBuilding("Residential1", false, 170, 350, 615, 350, 615, 550, 170, 550);
-  addBuilding("Residential2", false, 615, 350, 1100, 500, 1100, 550, 615, 550);
+  addBuilding("Residential1", false, 21, 170, 350, 615, 350, 615, 550, 170, 550);
+  addBuilding("Residential2", false, 22, 615, 350, 1100, 500, 1100, 550, 615, 550);
 }
-
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
