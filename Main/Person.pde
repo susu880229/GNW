@@ -6,12 +6,12 @@ class Person
   PVector initial_position;
   float speed = 4;
   PVector dest_position;
-  color weight;
+  color density;
   float dis_x;
   float dis_y;
   float angle;
   float lifespan;
-
+  
   /**
    * The Person constructor
    * @param ini_xpos Intial x position of the person
@@ -20,10 +20,11 @@ class Person
    * @param des_ypos Destination y position of the person
    */
 
-  Person(float ini_xpos, float ini_ypos, float des_xpos, float des_ypos) 
+  Person(float ini_xpos, float ini_ypos, float des_xpos, float des_ypos, color c) 
   {
     initial_position = new PVector(ini_xpos, ini_ypos);
     dest_position = new PVector(des_xpos, des_ypos);
+    density = c;
     dis_x = des_xpos - ini_xpos;
     dis_y = des_ypos - ini_ypos;
     angle = (float)Math.atan2( dis_y, dis_x);
@@ -47,8 +48,8 @@ class Person
 
   void render() 
   {
-    fill(0, 0, 200);
-    ellipse(initial_position.x, initial_position.y, 8, 8);
+    fill(density);
+    ellipse(initial_position.x, initial_position.y, 6, 6);
   }
 
 

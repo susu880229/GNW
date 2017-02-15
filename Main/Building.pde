@@ -18,7 +18,7 @@ class Building
     String buildingName;
     boolean isCustomizable;
     Polygon p;
-    
+    Icon_DragDrop icon;
     /**
 -    * The Building constructor
 -    * @param id This is the id of the building
@@ -91,21 +91,32 @@ class Building
     }
 
   //iterate the iconlist to find the icon class for this building
-    int findIcon_class()
+    int building_class()
     {
-      int building_class = -1;
-      for (int i = 0; i < iconDrags.size(); i++)
-      {
-        Icon_DragDrop iconA = iconDrags.get(i);
-        building_class = iconA.Icon_class;
-      }
-      return building_class;
-    
+      
+      get_icon();
+      return icon.class_decide();
+      
     }
     
-    
-    void addPerson(int target_x, int target_y)
+    String Icon_name()
     {
+      
+      get_icon();
+      return icon.icon_name;
+       
+    }
+    
+    void get_icon()
+    {
+      for (int i = 0; i < iconDrags.size(); i++)
+      {
+        icon = iconDrags.get(i);
+      }
+    }
+    
+    void addPerson(int target_x, int target_y, color c)
+    { 
       
       float dis_x = target_x - center_x;
       float dis_y = target_y - center_y;
@@ -114,7 +125,7 @@ class Building
       for(int i = 0; i < 2; i = i + 10)
       {
         
-        Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y);
+        Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y, c);
         persons.add(pA);
         
         //Person p = new Person(xpos, ypos, 
@@ -131,26 +142,46 @@ class Building
     {
       int icon_classA;
       int icon_classB;
+      String icon_nameA;
+      String icon_nameB;
+      color c1 = color(135, 206, 250);
+      
       if(this.iconDrags.size() > 0)
       {
-        icon_classA = this.findIcon_class();
+        icon_classA = this.building_class();
+        icon_nameA = this.Icon_name();
         if(icon_classA > 0)
         {
           for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
           {
             Building building = (Building) GNWMapEntry.getValue();
-            if(building.iconDrags.size() > 0)
+            if(building.iconDrags.size() > 0 && building.buildingName != this.buildingName)
             {
-              icon_classB = building.findIcon_class();
-              if(icon_classA > icon_classB)
+              icon_classB = building.building_class();
+              icon_nameB = building.Icon_name();
+              if(icon_classA > icon_classB && icon_classB > 0)
               {
-                addPerson(building.center_x, building.center_y);
+                c1 = decide_color(icon_nameA, icon_nameB);
+               
+                addPerson(building.center_x, building.center_y, c1);
                 run();
               }
-              
-            
             }
-          
+            //remove the persons when no icon within the building
+            else if(building.iconDrags.size() <= 0)
+            {
+              for(int i = 0; i < persons.size(); i++)
+              {
+                Person p = persons.get(i);
+                if(p.dest_position.x == building.center_x && p.dest_position.y == building.center_y)
+                {
+                  persons.remove(i);
+                  
+                }
+                
+              }
+              
+            }//
           }
         }
       }
@@ -176,7 +207,75 @@ class Building
       
     }
     
-    
+    //decide the path density from icon a to icon b
+    color decide_color(String icon_nameA, String icon_nameB)
+    {
+      //three level of density to show by color
+      color c1 = color(0, 0, 255);
+      color c2 = color(0, 191, 255);
+      //color c3 = color(135, 206, 250);
+      color c3 = color(173, 216, 230);
+      //defaut color is the third level
+      color c = c3;
+      
+      //morning time density rule
+      if(cur_time == "morning")
+      {
+        if(icon_nameA == "resident.png" || icon_nameA == "transit.png")
+        {
+          if(icon_nameB == "restaurant.png")
+          {
+            //the second level density
+            c = c2;
+            
+          }
+          else if(icon_nameB == "office.png" || icon_nameB == "school.png")
+          {
+            //the first level density
+            c = c1;
+          }
+          
+        }
+        else if(icon_nameA == "restaurant.png")
+        {
+          if(icon_nameB == "office.png" || icon_nameB == "school.png")
+          {
+            //the second level density
+            c = c2;
+          }
+          
+        }
+        
+      }
+      //around mid afternoon time density rule
+      else if(cur_time == "mid_afternoon")
+      {
+        if(icon_nameA == "resident.png" || icon_nameA == "transit.png")
+        {
+          if(icon_nameB == "restaurant.png")
+          {
+            //the third level density
+            c = c3;
+            
+          }
+          else if(icon_nameB == "office.png" || icon_nameB == "school.png")
+          {
+            //the third level density
+            c = c3;
+          }
+          else if(icon_nameB == "recreation.png")
+          {
+            //the second level density
+            c = c2;
+          }
+          
+        }
+        
+        
+      }
+      return c;
+      
+    }
     
     
     

@@ -1,5 +1,7 @@
 import java.util.Map; //<>//
 import java.awt.Polygon; 
+//need to download the libraray first to use 
+import controlP5.*;
 
 //define the box parameters
 int rest_x = 100;
@@ -26,22 +28,15 @@ String choice;
 ArrayList<Icon_DragDrop> icons;
 int icon_w = 30;
 int icon_h = 30;
-//define buildings
-/*
-Building buildingA;
- Building buildingB;
- int buildingA_x = 362;
- int buildingA_y = 384;
- int buildingB_x = 662;
- int buildingB_y = 384;
- int building_w = 100;
- int building_h = 100;
- */
-//define the person parameter
-//ArrayList<Person> pAs;
-//ArrayList<Person> pBs;
 //define the map
 HashMap<String, Building> GNWMap; 
+//define the time selection parameter
+String cur_time = "morning";
+//String pre_time = "morning";
+//boolean time_change = false;
+//define the UI for radio button
+ControlP5 cp5;
+RadioButton r1;
 
 void setup()
 {
@@ -49,15 +44,44 @@ void setup()
   size(1400, 700);
   GNWMap = new HashMap<String, Building>();
   createGNWMap();
-  //buildingA = new Building("buildingA", buildingA_x, buildingA_y, building_w, building_h);
-  //buildingB = new Building("buildingB", buildingB_x, buildingB_y, building_w, building_h);
-  //buildingA.addPerson();
-
   renderInitalBoxes();
-
   icons = new ArrayList<Icon_DragDrop>();
+  //create the radio button interface to change the time
+  cp5 = new ControlP5(this);
+  r1 = cp5.addRadioButton("radioButton")
+         .setPosition(400,50)
+         .setSize(40,20)
+         .setColorForeground(color(120))
+         .setColorActive(color(255))
+         .setColorLabel(color(255))
+         .setItemsPerRow(5)
+         .setSpacingColumn(50)
+         .addItem("8AM", 10)
+         .addItem("2PM", 14)
+         ;
 }
 
+//update time 
+void update_time()
+{
+  
+  r1.getValue();
+  if(r1.getValue() == 10)
+  {
+    cur_time = "morning";
+  }
+  else if(r1.getValue() == 14)
+  {
+    cur_time = "mid_afternoon";
+  }
+  else 
+  {
+    cur_time = null;
+  }
+  
+}
+
+//render the icon boxes at the top
 void renderInitalBoxes() {
 
   //create four boxes objects 
@@ -69,14 +93,11 @@ void renderInitalBoxes() {
 
 void draw() {
   background(0);
-  //buildingA.render();
-  //buildingB.render();
 
   //walk through the GNWmap to render building
   for (Map.Entry GNWMapEntry : GNWMap.entrySet()) {
     Building building = (Building) GNWMapEntry.getValue();
     building.render();
-    building.flow_generate();
   }
 
   rectMode(CENTER);
@@ -109,7 +130,7 @@ void draw() {
   {
     choice = null;
   }
-  //System.out.println(choice);
+  
 
   //render the icon and detect the mouse within the icon
   if (!icons.isEmpty())
@@ -119,13 +140,15 @@ void draw() {
       icons.get(i).update();
     }
   }
-
-  //System.out.println("buildingA:" + buildingA.iconDrags.size() + "," + "buildingB:" + buildingB.iconDrags.size());
-
-  //flow_generate();
-
-  //System.out.println("EmilyCarr" + GNWMap.get("EmilyCarr").iconDrags.size() + "CDM1" + GNWMap.get("CDM1").iconDrags.size());
-  //System.out.println(GNWMap.get("521"));
+  update_time();
+  //flow rendering
+  for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
+  {
+    Building building = (Building) GNWMapEntry.getValue();
+    building.flow_generate();
+  }
+  
+  
 }
 
 void mousePressed()
