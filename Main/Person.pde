@@ -33,7 +33,6 @@ class Person
 
   void run() 
   {  
-
     update();
     render();
   }
