@@ -1,4 +1,3 @@
-
 class Icon_Initial
 {
   

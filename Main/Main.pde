@@ -1,6 +1,8 @@
-import pathfinder.*; //<>// //<>//
+import pathfinder.*; //<>//
 import java.util.Map;
 import java.awt.Polygon; 
+//need to download the libraray first to use 
+import controlP5.*;
 
 GNWPathFinder GNWPathFinder;
 HashMap<String, Building> GNWMap; //String is building id
@@ -32,15 +34,57 @@ ArrayList<Icon_DragDrop> icons;
 int icon_w = 30;
 int icon_h = 30;
 
+//define the time selection parameter
+String cur_time = "morning";
+//String pre_time = "morning";
+//boolean time_change = false;
+//define the UI for radio button
+ControlP5 cp5;
+RadioButton r1;
+
+
 void setup()
 {
   size(1400, 700);
   GNWMap = new HashMap<String, Building>();
-  icons = new ArrayList<Icon_DragDrop>();
-  GNWPathFinder = new GNWPathFinder();
-
-  renderInitalBoxes();
   createGNWMap();
+  renderInitalBoxes();
+  GNWPathFinder = new GNWPathFinder();
+  icons = new ArrayList<Icon_DragDrop>();
+  
+  //create the radio button interface to change the time
+  cp5 = new ControlP5(this);
+  r1 = cp5.addRadioButton("radioButton")
+         .setPosition(400,50)
+         .setSize(40,20)
+         .setColorForeground(color(120))
+         .setColorActive(color(255))
+         .setColorLabel(color(255))
+         .setItemsPerRow(5)
+         .setSpacingColumn(50)
+         .addItem("8AM", 10)
+         .addItem("2PM", 14)
+         ;
+}
+
+//update time 
+void update_time()
+{
+  
+  r1.getValue();
+  if(r1.getValue() == 10)
+  {
+    cur_time = "morning";
+  }
+  else if(r1.getValue() == 14)
+  {
+    cur_time = "mid_afternoon";
+  }
+  else 
+  {
+    cur_time = null;
+  }
+  
 }
 
 /** 
@@ -53,7 +97,6 @@ void draw() {
   for (Map.Entry GNWMapEntry : GNWMap.entrySet()) {
     Building building = (Building) GNWMapEntry.getValue();
     building.render();
-    building.flow_generate();
   }
   drawIcons();
 
@@ -105,7 +148,7 @@ void drawIcons()
   {
     choice = null;
   }
-  //System.out.println(choice);
+  
 
   //render the icon and detect the mouse within the icon
   if (!icons.isEmpty())
@@ -115,13 +158,15 @@ void drawIcons()
       icons.get(i).update();
     }
   }
-
-  //System.out.println("buildingA:" + buildingA.iconDrags.size() + "," + "buildingB:" + buildingB.iconDrags.size());
-
-  //flow_generate();
-
-  //System.out.println("EmilyCarr" + GNWMap.get("EmilyCarr").iconDrags.size() + "CDM1" + GNWMap.get("CDM1").iconDrags.size());
-  //System.out.println(GNWMap.get("521"));
+  update_time();
+  //flow rendering
+  for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
+  {
+    Building building = (Building) GNWMapEntry.getValue();
+    building.flow_generate();
+  }
+  
+  
 }
 
 void mousePressed()

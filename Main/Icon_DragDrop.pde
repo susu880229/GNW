@@ -8,10 +8,9 @@ class Icon_DragDrop
   boolean locked = false;
   int difx = 0; 
   int dify = 0; 
-  String img;
+  String icon_name;
   PImage a;
-  int Icon_class;
-  String time = "morning";
+  int Icon_class = -1;
   float flow_percent;
   String building_name = null;
   String building_cur = null;
@@ -20,12 +19,12 @@ class Icon_DragDrop
   //constructor
   Icon_DragDrop(String img_name, int x, int y,int wi, int hi)
   {
-    img = img_name;
+    icon_name = img_name;
     w = wi;
     h = hi;
     bx = x;
     by = y;
-    class_decide();
+    //class_decide();
     
   }
   
@@ -33,7 +32,7 @@ class Icon_DragDrop
   void load()
   {
     //a = loadImage("data/Button.jpg");
-    a = loadImage(img);
+    a = loadImage(icon_name);
     
   }
   
@@ -86,39 +85,43 @@ class Icon_DragDrop
     //System.out.println(building_name);
   }
   
-  void class_decide()
+  int class_decide()
   {
-    if(time == "morning")
+    if(cur_time == "morning")
     {
-      if(img == "restaurant.png")
+      if(icon_name == "restaurant.png")
       {
         Icon_class = 2;
       }
-      else if(img == "resident.png" || img == "transit.png")
+      else if(icon_name == "resident.png" || icon_name == "transit.png")
       {
         Icon_class = 3;
       }
-      else if(img == "office.png" || img == "school.png")
+      else if(icon_name == "office.png" || icon_name == "school.png")
       {
         Icon_class = 1;
       }
-      
+      //creation does not have any flow
+      else if(icon_name == "recreation.png")
+      {
+        Icon_class = -1;
+      }
     }
-    else if(time == "mid_afternoon")
+    else if(cur_time == "mid_afternoon")
     {
-      if(img == "restaurant.png")
+      if(icon_name == "restaurant.png")
       {
       Icon_class = 2;
       }
-      else if(img == "resident.png" || img == "transit.png" )
+      else if(icon_name == "resident.png" || icon_name == "transit.png" )
       {
       Icon_class = 3;
       }
-      else if(img == "office.png" || img == "school.png" )
+      else if(icon_name == "office.png" || icon_name == "school.png" )
       {
       Icon_class = 2;
       }
-      else if(img == "recreation.png")
+      else if(icon_name == "recreation.png")
       {
       //the icon is inactive at this time
       Icon_class = 2;
@@ -127,7 +130,7 @@ class Icon_DragDrop
       
     }
     
-    
+    return Icon_class;
   }
   
   
