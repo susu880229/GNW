@@ -140,7 +140,7 @@ class Icon_DragDrop
     for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
     {
       Building building = (Building) GNWMapEntry.getValue();
-      if(building.p.contains(bx,by))
+      if(building.contains(bx,by))
       {
         building_name = building.buildingName;
         break;
