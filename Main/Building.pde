@@ -18,8 +18,9 @@ class Building
   String buildingName;
   boolean isCustomizable;
   int doorNodeId;
-  Polygon p;
   Icon_DragDrop icon;
+  float node_x;
+  float node_y;
 
   /**
    * The Building constructor
@@ -49,21 +50,12 @@ class Building
     buildingName = name;
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
-    
+
     center_x = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 15;
     center_y = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
 
     persons = new ArrayList<Person>();
     iconDrags = new ArrayList<Icon_DragDrop>();
-  }
-
-  void createPolygon()
-  {
-    p = new Polygon(); 
-    p.addPoint(xpos1, ypos1);
-    p.addPoint(xpos2, ypos2);
-    p.addPoint(xpos3, ypos3);
-    p.addPoint(xpos4, ypos4);
   }
 
   //rendering the block
@@ -77,14 +69,15 @@ class Building
       fill(150);
     }
     noStroke();
-    //quad(xpos1, ypos1, xpos2, ypos2, xpos3, ypos3, xpos4, ypos4);
     //draw the polygon 
+
     beginShape();
-    for (int i = 0; i < p.npoints; i++) 
-    {
-      vertex(p.xpoints[i], p.ypoints[i]);
-    }
-    endShape();
+    vertex(xpos1, ypos1);
+    vertex(xpos2, ypos2);
+    vertex(xpos3, ypos3);
+    vertex(xpos4, ypos4);
+    endShape(CLOSE);
+
     //render text
     fill(0);
     textSize(9);
@@ -101,7 +94,6 @@ class Building
 
   String Icon_name()
   {
-
     get_icon();
     return icon.icon_name;
   }
@@ -114,24 +106,25 @@ class Building
     }
   }
 
-  void addPerson(int target_x, int target_y, color c)
+  void addPerson(int dest_doorNodeId, color c)
   { 
-
+    /*
     float dis_x = target_x - center_x;
     float dis_y = target_y - center_y;
     float a = dis_y / dis_x;
 
     for (int i = 0; i < 2; i = i + 10)
     {
-
       Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y, c);
       persons.add(pA);
-
-      //Person p = new Person(xpos, ypos,
     }
-
-    //Person pA = new Person(center_x, center_y, target_x, target_y);
-    //persons.add(pA);
+    */
+    Person pA = new Person(this.doorNodeId, dest_doorNodeId, c);
+    persons.add(pA);
+    
+   
+    
+    
   }
 
 
@@ -161,7 +154,7 @@ class Building
             {
               c1 = decide_color(icon_nameA, icon_nameB);
 
-              addPerson(building.center_x, building.center_y, c1);
+              addPerson(building.doorNodeId, c1);
               run();
             }
           }
@@ -171,7 +164,7 @@ class Building
             for (int i = 0; i < persons.size(); i++)
             {
               Person p = persons.get(i);
-              if (p.dest_position.x == building.center_x && p.dest_position.y == building.center_y)
+              if (p.dest_nodeID == building.doorNodeId)
               {
                 persons.remove(i);
               }
@@ -190,7 +183,7 @@ class Building
     for (int i = 0; i < persons.size(); i++)
     {
       persons.get(i).run();
-      if (persons.get(i).isDead())
+      if (persons.get(i).isDead)
       {
         persons.remove(i);
       }
@@ -253,4 +246,21 @@ class Building
     }
     return c;
   }
+
+  boolean contains(int x, int y) {
+    PVector[] verts = { new PVector(xpos1, ypos1), new PVector(xpos2, ypos2), new PVector(xpos3, ypos3), new PVector(xpos4, ypos4) }; 
+    PVector pos = new PVector(x, y);
+    int i, j;
+    boolean c=false;
+    int sides = verts.length;
+    for (i=0, j=sides-1; i<sides; j=i++) {
+      if (( ((verts[i].y <= pos.y) && (pos.y < verts[j].y)) || ((verts[j].y <= pos.y) && (pos.y < verts[i].y))) &&
+        (pos.x < (verts[j].x - verts[i].x) * (pos.y - verts[i].y) / (verts[j].y - verts[i].y) + verts[i].x)) {
+        c = !c;
+      }
+    }
+    return c;
+  }
+  
+  
 }

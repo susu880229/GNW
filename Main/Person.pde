@@ -1,71 +1,114 @@
 /**
  * The Person class represents a person who will be flowing between the buildings
  */
+
 class Person 
 {
-  PVector initial_position;
-  float speed = 4;
-  PVector dest_position;
+  
+  int initial_nodeID;
+  int dest_nodeID;
   color density;
+  int current_index = -1;
+  int final_index = -1;
+  float speed = 4;
+  PVector initial_position;
+  PVector next_position;
+  ArrayList<GraphNode> nodes;
   float dis_x;
   float dis_y;
   float angle;
   float lifespan;
+  boolean isDead = false;
+ 
   
   /**
    * The Person constructor
-   * @param ini_xpos Intial x position of the person
-   * @param ini_ypos Initial y position of the person
-   * @param des_xpos Destination x position of the person
-   * @param des_ypos Destination y position of the person
+   * @param initial_id Intial doorID of the person
+   * @param dest_id destination doorID of the person
+   * @param c the density of person from intial to dest
    */
 
-  Person(float ini_xpos, float ini_ypos, float des_xpos, float des_ypos, color c) 
+  Person(int initial_id, int dest_id, color c) 
   {
-    initial_position = new PVector(ini_xpos, ini_ypos);
-    dest_position = new PVector(des_xpos, des_ypos);
+    
+    initial_nodeID = initial_id;
+    dest_nodeID = dest_id;
     density = c;
-    dis_x = des_xpos - ini_xpos;
-    dis_y = des_ypos - ini_ypos;
-    angle = (float)Math.atan2( dis_y, dis_x);
-    lifespan = abs(dist(initial_position.x, initial_position.y, dest_position.x, dest_position.y)) / speed;
+    initial_position = new PVector();
+    next_position = new PVector();
+    nodes = new ArrayList<GraphNode>();
+    nodes = GNWPathFinder.findPath(initial_nodeID , dest_nodeID);
+    //if the path is found, get the initial and next 
+    if(nodes.size() > 0)
+    {
+      current_index = 0;
+      final_index = nodes.size() - 1;
+      update_position();
+    }
+    
   }
-
+  
   void run() 
   {  
+    
     update();
     render();
+    
   }
 
   void update() 
   {
-    //move from left to right
-    initial_position.x += speed * Math.cos( angle );
-    initial_position.y += speed * Math.sin( angle );
-    lifespan -= 1;
+    if(nodes.size() > 0)
+    {
+      
+      if(lifespan > 0 && !isDead)
+      {
+        
+        initial_position.x += speed * Math.cos( angle );
+        initial_position.y += speed * Math.sin( angle );
+        lifespan -= 1;
+       
+      }
+      //finish one path, continue to another path (not yet arrive the destination)
+      else if(lifespan <= 0)
+      {
+        if(current_index < final_index - 1)
+        {
+          current_index ++;
+          update_position();
+        }
+        else
+        {
+          isDead = true;
+          //run = false;
+        }
+        
+      }
+      
+    }
+    
   }
-
+  //update from, to, angle... every time finish one part of path.
+  void update_position()
+  {
+    initial_position.x = nodes.get(current_index).xf();
+    initial_position.y = nodes.get(current_index).yf();
+    next_position.x = nodes.get(current_index + 1).xf(); 
+    next_position.y = nodes.get(current_index + 1).yf(); 
+    dis_x = next_position.x - initial_position.x;
+    dis_y = next_position.y - initial_position.y;
+    angle = (float)Math.atan2( dis_y, dis_x);
+    lifespan = abs(dist(initial_position.x, initial_position.y, next_position.x, next_position.y)) / speed;
+    
+  }
   void render() 
   {
     fill(density);
     ellipse(initial_position.x, initial_position.y, 6, 6);
+    
   }
 
 
-
-  //decide weight by color
-  void decide_color()
-  {
-  }
-
-  boolean isDead() 
-  {
-    if (lifespan < 0.0) 
-    {
-      return true;
-    } else 
-    {
-      return false;
-    }
-  }
+ 
+  
 }

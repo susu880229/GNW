@@ -1,7 +1,5 @@
-import pathfinder.*; //<>//
+import pathfinder.*;
 import java.util.Map;
-import java.awt.Polygon; 
-//need to download the libraray first to use 
 import controlP5.*;
 
 GNWPathFinder GNWPathFinder;
@@ -45,7 +43,8 @@ RadioButton r1;
 
 void setup()
 {
-  size(1400, 700);
+  //fullScreen();
+  size(1400, 768);
   GNWMap = new HashMap<String, Building>();
   createGNWMap();
   renderInitalBoxes();
@@ -101,11 +100,11 @@ void draw() {
   drawIcons();
 
   //show node and edges for debugging purposes
-  GNWPathFinder.drawGraph();
+  //GNWPathFinder.drawGraph();
 
   //TODO: use returned path and draw actual animation
-  GraphNode[] path = GNWPathFinder.findPath(0, 28);
-  GNWPathFinder.drawRoute(path);
+  //ArrayList<GraphNode> path = GNWPathFinder.findPath(0, 2);
+  //GNWPathFinder.drawRoute(path);
 }
 
 void renderInitalBoxes() {
@@ -160,10 +159,13 @@ void drawIcons()
   }
   update_time();
   //flow rendering
+  
+  
   for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
   {
     Building building = (Building) GNWMapEntry.getValue();
     building.flow_generate();
+    
   }
   
   
@@ -240,7 +242,6 @@ void icon_generate(String icon_name, int icon_x, int icon_y, int icon_w, int ico
 void addBuilding(String name, Boolean c, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
 {
   Building newBuilding = new Building(name, c, doorNodeId, x1, y1, x2, y2, x3, y3, x4, y4);
-  newBuilding.createPolygon();
   GNWMap.put(name, newBuilding);
 }
 
@@ -250,17 +251,17 @@ void addBuilding(String name, Boolean c, int doorNodeId, int x1, int y1, int x2,
  */
 void createGNWMap() 
 {  
-  addBuilding("City", false, 0, 220, 140, 265, 150, 252, 200, 205, 190);
+  addBuilding("City", true, 0, 220, 140, 265, 150, 252, 200, 205, 190);
   addBuilding("Park", false, 1, 205, 195, 252, 205, 235, 275, 187, 265);
   addBuilding("Stn", true, 2, 185, 270, 235, 280, 225, 330, 170, 330);
 
-  addBuilding("Equinox", false, 3, 264, 175, 328, 190, 323, 215, 258, 200);
+  addBuilding("Equinox", true, 3, 264, 175, 328, 190, 323, 215, 258, 200);
   addBuilding("521", true, 4, 250, 235, 290, 245, 280, 282, 240, 275);  
   addBuilding("515", true, 5, 240, 280, 295, 290, 295, 330, 230, 330);
 
   addBuilding("EmilyCarr", false, 6, 305, 230, 475, 230, 475, 280, 305, 280); 
   addBuilding("Plaza", false, 7, 300, 290, 360, 290, 360, 330, 300, 330);
-  addBuilding("PCI", false, 8, 365, 290, 485, 290, 485, 330, 365, 330);
+  addBuilding("PCI", true, 8, 365, 290, 485, 290, 485, 330, 365, 330);
 
   addBuilding("CDM1", false, 9, 490, 235, 540, 235, 540, 305, 490, 305);
   addBuilding("CDM2", true, 10, 545, 235, 605, 258, 605, 285, 545, 285);
@@ -273,13 +274,7 @@ void createGNWMap()
   addBuilding("Mec", false, 16, 1020, 377, 1100, 400, 1100, 478, 1000, 447);
 
   addBuilding("Lot5", true, 17, 1105, 400, 1210, 420, 1210, 480, 1105, 480);
-  addBuilding("VCC", false, 18, 1105, 500, 1210, 500, 1210, 550, 1105, 550);
-
-  addBuilding("Lot6", true, 19, 1220, 500, 1325, 500, 1325, 550, 1220, 550);
-  addBuilding("Lot7", true, 20, 1220, 420, 1325, 450, 1325, 480, 1220, 480);
-
-  addBuilding("Residential1", false, 21, 170, 350, 615, 350, 615, 550, 170, 550);
-  addBuilding("Residential2", false, 22, 615, 350, 1100, 500, 1100, 550, 615, 550);
+  addBuilding("Lot7", true, 19, 1220, 420, 1325, 450, 1325, 480, 1220, 480);
 }
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
