@@ -1,9 +1,12 @@
-import pathfinder.*;
+import pathfinder.*; //<>//
 import java.util.Map;
 import controlP5.*;
 
 GNWPathFinder GNWPathFinder;
 HashMap<String, Building> GNWMap; //String is building id
+
+PImage mapImage;
+int x;
 
 //define the box parameters
 int rest_x = 100;
@@ -43,69 +46,70 @@ RadioButton r1;
 
 void setup()
 {
-  //fullScreen();
-  size(1400, 768);
+  fullScreen();
+  mapImage = loadImage("map.png");
+
   GNWMap = new HashMap<String, Building>();
   createGNWMap();
   renderInitalBoxes();
   GNWPathFinder = new GNWPathFinder();
   icons = new ArrayList<Icon_DragDrop>();
-  
+
   //create the radio button interface to change the time
   cp5 = new ControlP5(this);
   r1 = cp5.addRadioButton("radioButton")
-         .setPosition(400,50)
-         .setSize(40,20)
-         .setColorForeground(color(120))
-         .setColorActive(color(255))
-         .setColorLabel(color(255))
-         .setItemsPerRow(5)
-         .setSpacingColumn(50)
-         .addItem("8AM", 10)
-         .addItem("2PM", 14)
-         ;
-}
-
-//update time 
-void update_time()
-{
-  
-  r1.getValue();
-  if(r1.getValue() == 10)
-  {
-    cur_time = "morning";
-  }
-  else if(r1.getValue() == 14)
-  {
-    cur_time = "mid_afternoon";
-  }
-  else 
-  {
-    cur_time = null;
-  }
-  
+    .setPosition(400, 50)
+    .setSize(40, 20)
+    .setColorForeground(color(120))
+    .setColorActive(color(0))
+    .setColorLabel(color(0))
+    .setItemsPerRow(5)
+    .setSpacingColumn(50)
+    .addItem("8AM", 10)
+    .addItem("2PM", 14)
+    ;
 }
 
 /** 
  * Draws all the buildings in GNWMap
  */
 void draw() {
-  background(0);
+  background(255);
+
+  drawIcons();
+
+  translate(x, 0);
 
   //walk through the GNWmap to render building
   for (Map.Entry GNWMapEntry : GNWMap.entrySet()) {
     Building building = (Building) GNWMapEntry.getValue();
     building.render();
   }
-  drawIcons();
+
+  image(mapImage, 0, 0);
 
   //show node and edges for debugging purposes
-  //GNWPathFinder.drawGraph();
-
-  //TODO: use returned path and draw actual animation
-  //ArrayList<GraphNode> path = GNWPathFinder.findPath(0, 2);
-  //GNWPathFinder.drawRoute(path);
+  GNWPathFinder.drawGraph();
+  //GNWPathFinder.drawRoute(GNWPathFinder.findPath(10, 60));;
 }
+
+//update time 
+void update_time()
+{
+
+  r1.getValue();
+  if (r1.getValue() == 10)
+  {
+    cur_time = "morning";
+  } else if (r1.getValue() == 14)
+  {
+    cur_time = "mid_afternoon";
+  } else 
+  {
+    cur_time = null;
+  }
+}
+
 
 void renderInitalBoxes() {
   //create four boxes objects 
@@ -147,7 +151,7 @@ void drawIcons()
   {
     choice = null;
   }
-  
+
 
   //render the icon and detect the mouse within the icon
   if (!icons.isEmpty())
@@ -159,16 +163,13 @@ void drawIcons()
   }
   update_time();
   //flow rendering
-  
-  
+
+
   for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
   {
     Building building = (Building) GNWMapEntry.getValue();
     building.flow_generate();
-    
   }
-  
-  
 }
 
 void mousePressed()
@@ -206,6 +207,10 @@ void mousePressed()
 
 void mouseDragged()
 {
+  // TODO: differentiate icon drag and map drag
+  x = x - (pmouseX - mouseX);
+  x = constrain(x, width-mapImage.width, 0);
+
   //update the icon position based on the mouse
   if (!icons.isEmpty())
   {
@@ -213,6 +218,7 @@ void mouseDragged()
     {
       icons.get(i).mouseDragged();
     }
+  } else {
   }
 }
 
@@ -251,35 +257,35 @@ void addBuilding(String name, Boolean c, int doorNodeId, int x1, int y1, int x2,
  */
 void createGNWMap() 
 {  
-  addBuilding("City", true, 0, 220, 140, 265, 150, 252, 200, 205, 190);
-  addBuilding("Park", false, 1, 205, 195, 252, 205, 235, 275, 187, 265);
-  addBuilding("Stn", true, 2, 185, 270, 235, 280, 225, 330, 170, 330);
+  addBuilding("Lot5", true, 0, 272, 147, 354, 153, 347, 247, 268, 248);
+  addBuilding("Park", false, 1, 267, 302, 350, 298, 341, 464, 271, 465);
+  addBuilding("Lot7", true, 2, 265, 519, 342, 520, 360, 620, 276, 641);
 
-  addBuilding("Equinox", true, 3, 264, 175, 328, 190, 323, 215, 258, 200);
-  addBuilding("521", true, 4, 250, 235, 290, 245, 280, 282, 240, 275);  
-  addBuilding("515", true, 5, 240, 280, 295, 290, 295, 330, 230, 330);
+  addBuilding("Lot4", true, 3, 394, 159, 586, 162, 584, 212, 400, 213);
+  addBuilding("521", true, 4, 379, 364, 476, 367, 473, 463, 382, 466);  
+  addBuilding("515", true, 5, 376, 533, 489, 522, 513, 580, 382, 603);
 
-  addBuilding("EmilyCarr", false, 6, 305, 230, 475, 230, 475, 280, 305, 280); 
-  addBuilding("Plaza", false, 7, 300, 290, 360, 290, 360, 330, 300, 330);
-  addBuilding("PCI", true, 8, 365, 290, 485, 290, 485, 330, 365, 330);
+  addBuilding("EmilyCarr", false, 6, 535, 352, 924, 255, 951, 344, 565, 443); 
+  addBuilding("Plaza", false, 7, 531, 517, 643, 491, 658, 546, 551, 573);
+  addBuilding("569", false, 8, 678, 485, 1075, 386, 1091, 434, 700, 539);
 
-  addBuilding("CDM1", false, 9, 490, 235, 540, 235, 540, 305, 490, 305);
-  addBuilding("CDM2", true, 10, 545, 235, 605, 258, 605, 285, 545, 285);
-  addBuilding("CDM3", false, 11, 545, 290, 605, 290, 605, 330, 545, 330); 
+  addBuilding("CDM1", false, 9, 1115, 177, 1235, 146, 1283, 336, 1167, 371);
+  addBuilding("1933", true, 10, 1273, 147, 1406, 136, 1428, 225, 1297, 258);
+  addBuilding("CDM2", false, 11, 1304, 312, 1444, 284, 1463, 352, 1314, 366); 
 
-  addBuilding("Lot1", true, 12, 610, 258, 760, 300, 745, 370, 610, 330); 
-  addBuilding("Lot2", true, 13, 765, 300, 825, 320, 845, 400, 750, 372);
-  addBuilding("Lot3", true, 14, 830, 320, 920, 348, 900, 417, 850, 402);
-  addBuilding("Lot4", true, 15, 925, 348, 1015, 375, 995, 445, 905, 418);
-  addBuilding("Mec", false, 16, 1020, 377, 1100, 400, 1100, 478, 1000, 447);
+  addBuilding("701", true, 12, 1541, 210, 2000, 210, 2023, 357, 1575, 355); 
+  addBuilding("1980", true, 13, 2117, 155, 2275, 150, 2412, 380, 2161, 368);
+  addBuilding("887", true, 14, 2438, 157, 2655, 178, 2656, 381, 2578, 385);
+  addBuilding("901", true, 15, 2701, 184, 2937, 210, 2924, 395, 2704, 386);
+  addBuilding("Mec", false, 16, 2983, 217, 3163, 225, 3211, 404, 2977, 401);
 
-  addBuilding("Lot5", true, 17, 1105, 400, 1210, 420, 1210, 480, 1105, 480);
-  addBuilding("Lot7", true, 19, 1220, 420, 1325, 450, 1325, 480, 1220, 480);
+  addBuilding("Shaw", true, 17, 3299, 225, 3595, 224, 3623, 326, 3346, 398);
+  addBuilding("NaturesPath", true, 18, 3729, 218, 4022, 200, 4033, 237, 3754, 300);
 }
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
-//void mouseClicked() {
-//  fill(0);
-//  ellipse(mouseX, mouseY, 2, 2);
-//  println("x: " + mouseX + "; y: " + mouseY);
-//}
+void mouseClicked() {
+  fill(0);
+  ellipse(mouseX, mouseY, 2, 2);
+  println("x: " + mouseX + "; y: " + mouseY);
+}

@@ -1,4 +1,4 @@
-/**  //<>//
+/**  //<>// //<>//
  * The Building class represents a physical building
  */
 class Building 
@@ -169,13 +169,11 @@ class Building
                 persons.remove(i);
               }
             }
-          }//
+          }
         }
       }
     }
   }
-
-  //run from buildingA to buildingB
 
   void run()
   {
