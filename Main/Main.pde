@@ -1,4 +1,4 @@
-import pathfinder.*; //<>// //<>//
+import pathfinder.*; //<>//
 import java.util.Map;
 import controlP5.*;
 
@@ -59,14 +59,14 @@ void setup()
   resi_box = new Icon_Initial(resi_blue, resi_x, resi_y, box_w, box_h, "Residential");
   office_box = new Icon_Initial(office_green, office_x, office_y, box_w, box_h, "Office");
   recre_box = new Icon_Initial(recre_yellow, recre_x, recre_y, box_w, box_h, "Recreation");
-  
+
   //create the radio button interface to change the time
   cp5 = new ControlP5(this);
   r1 = cp5.addRadioButton("radioButton")
     .setPosition(400, 50)
     .setSize(40, 20)
     .setColorForeground(color(120))
-    .setColorActive(color(0))
+    .setColorActive(color(200))
     .setColorLabel(color(0))
     .setItemsPerRow(5)
     .setSpacingColumn(50)
@@ -81,8 +81,8 @@ void setup()
 void draw() {
   background(255);
   renderInitalBoxes();
-  
-  
+
+
   translate(x, 0);
 
   //walk through the GNWmap to render building
@@ -91,14 +91,10 @@ void draw() {
     building.render();
   }
 
-
   image(mapImage, 0, 0);
-  
-  
   //show node and edges for debugging purposes
-  GNWPathFinder.drawGraph();
-  //GNWPathFinder.drawRoute(GNWPathFinder.findPath(10, 60));
-  
+  //GNWPathFinder.drawGraph();
+
   drawIcons();
 }
 
@@ -121,7 +117,7 @@ void update_time()
 
 
 void renderInitalBoxes() {
-   //render boxes
+  //render boxes
   rest_box.render();
   resi_box.render();
   office_box.render();
@@ -209,18 +205,23 @@ void mousePressed()
 
 void mouseDragged()
 {
-  // TODO: differentiate icon drag and map drag
-  x = x - (pmouseX - mouseX);
-  x = constrain(x, width-mapImage.width, 0);
+  boolean mouseOnIcon = false;
 
   //update the icon position based on the mouse
   if (!icons.isEmpty())
   {
     for (int i = 0; i < icons.size(); i++)
     {
-      icons.get(i).mouseDragged();
+      if (icons.get(i).isMouseOnIcon()) {
+        icons.get(i).mouseDragged();
+        mouseOnIcon = true;
+      }
     }
-  } else {
+  }
+
+  if (!mouseOnIcon) {
+    x = x - (pmouseX - mouseX);
+    x = constrain(x, width-mapImage.width, 0);
   }
 }
 

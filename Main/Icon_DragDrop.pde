@@ -28,10 +28,9 @@ class Icon_DragDrop
     
   }
   
-  //load he image to drop at the beginning
+  //load the image to drop at the beginning
   void load()
   {
-    //a = loadImage("data/Button.jpg");
     a = loadImage(icon_name);
     
   }
@@ -39,8 +38,7 @@ class Icon_DragDrop
   //the image is controlled by the bx, by parameters
   void update()
   {
-    
-    if (mouseX > bx - w/2 && mouseX < bx + w/2 && mouseY > by - h/2 && mouseY < by + h/2) 
+    if (isMouseOnIcon()) 
     {
       hover = true;  
     } 
@@ -50,6 +48,15 @@ class Icon_DragDrop
     }
     image(a, bx, by, w, h);
   }
+  
+  boolean isMouseOnIcon()
+  {
+    boolean checkX = mouseX > bx - w && mouseX < bx + w;
+    boolean checkY =  mouseY > by - h && mouseY < by + h;
+    
+    return checkX && checkY;
+  }
+  
   void mousePressed() 
   {
     if(hover) 
