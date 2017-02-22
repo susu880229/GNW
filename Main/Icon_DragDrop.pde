@@ -48,7 +48,6 @@ class Icon_DragDrop
     {
       hover = false;
     }
-    imageMode(CENTER);
     image(a, bx, by, w, h);
   }
   void mousePressed() 

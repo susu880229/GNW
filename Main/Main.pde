@@ -46,8 +46,7 @@ RadioButton r1;
 
 void setup()
 {
-  //fullScreen();
-  size(1400, 700);
+  fullScreen();
   mapImage = loadImage("map.png");
 
   GNWMap = new HashMap<String, Building>();
@@ -94,11 +93,13 @@ void draw() {
 
 
   image(mapImage, 0, 0);
-  drawIcons();
+  
   
   //show node and edges for debugging purposes
   GNWPathFinder.drawGraph();
-  //GNWPathFinder.drawRoute(GNWPathFinder.findPath(10, 60));;
+  //GNWPathFinder.drawRoute(GNWPathFinder.findPath(10, 60));
+  
+  drawIcons();
 }
 
 //update time 
