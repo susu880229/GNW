@@ -16,7 +16,7 @@ class GNWMap
   void render()
   {
     image(mapImage, 0, 0);
-    
+
     //walk through the GNWmap to render building
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
@@ -24,17 +24,17 @@ class GNWMap
     }
   }
 
-//TODO fix bug regarding horizontal scroll. Can't find building properly. 
   void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
     Building building = findBuilding();
     building.addBuildingUse(selectedBuildingUse);
   }
 
+  //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
   Building findBuilding() throws Exception {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();
-      if (building.contains(mouseX, mouseY))
+      if (building.contains(mouseX - shiftX, mouseY))
       {
         return building;
       }

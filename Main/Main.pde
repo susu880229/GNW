@@ -1,4 +1,4 @@
-import pathfinder.*; //<>// //<>//
+import pathfinder.*; //<>//
 import controlP5.*;
 
 GNWPathFinder GNWPathFinder;
@@ -7,11 +7,8 @@ GNWInterface GNWInterface;
 
 ArrayList<BuildingUse> buildingUses;
 
-int x;
-int y;
-
-
-
+int shiftX;
+int shiftY;
 
 //define the time selection parameter
 String cur_time = "morning";
@@ -26,8 +23,8 @@ void setup()
   //fullScreen();
   size(2134, 1601);
 
-  x = 0;
-  y = 0;
+  shiftX = 0;
+  shiftY = 0;
 
   GNWMap = new GNWMap();
   GNWInterface = new GNWInterface();
@@ -59,7 +56,7 @@ void draw() {
   background(255);
 
   pushMatrix();
-  translate(x, y);
+  translate(shiftX, shiftY);
   GNWMap.render();
   GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   popMatrix();
@@ -70,7 +67,6 @@ void draw() {
 //update time 
 void update_time()
 {
-
   r1.getValue();
   if (r1.getValue() == 10)
   {
@@ -120,8 +116,8 @@ void mouseDragged()
   if (GNWInterface.selectedBUIcon != null) {
     GNWInterface.update();
   } else {
-    x = x - (pmouseX - mouseX);
-    x = constrain(x, width-GNWMap.mapImage.width, 0);
+    shiftX = shiftX - (pmouseX - mouseX);
+    shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
   }
 } 
 

@@ -23,8 +23,8 @@ class BuildingUseIcon
   {
     this.buildingUse = buildingUse;
     icon_name = buildingUse.imgSrc;
-    w = 50;
-    h = 50;
+    w = 60;
+    h = 60;
     bx = x;
     by = y;
     //class_decide();

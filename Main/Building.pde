@@ -231,7 +231,7 @@ class Building
     return c;
   }
 
-  boolean contains(int x, int y) {
+  boolean contains(int x, int y) {    
     PVector[] verts = { new PVector(xpos1, ypos1), new PVector(xpos2, ypos2), new PVector(xpos3, ypos3), new PVector(xpos4, ypos4) }; 
     PVector pos = new PVector(x, y);
     int i, j;
