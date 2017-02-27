@@ -4,7 +4,7 @@
 class Building 
 {    
   ArrayList<Person> persons;
-  ArrayList<Icon_DragDrop> iconDrags;
+  ArrayList<BuildingUse> buildingUses;
   int xpos1;
   int ypos1; 
   int xpos2;
@@ -18,9 +18,12 @@ class Building
   String buildingName;
   boolean isCustomizable;
   int doorNodeId;
-  Icon_DragDrop icon;
   float node_x;
   float node_y;
+  
+  //TODO currently limit 1 for each building; should allow up to 3 for some
+  //TODO implement delete to allow user to replace building use
+  int maxBuildingUses = 1;
 
   /**
    * The Building constructor
@@ -55,54 +58,41 @@ class Building
     center_y = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
 
     persons = new ArrayList<Person>();
-    iconDrags = new ArrayList<Icon_DragDrop>();
+    buildingUses = new ArrayList<BuildingUse>();
   }
 
   //rendering the block
   void render() 
   {
-    if (isCustomizable) 
-    {
-      fill(200);
-    } else 
-    {
-      fill(150);
-    }
-    noStroke();
-    //draw the polygon 
+    drawPolygon();
 
+
+//TODO: currently only shows one dot. so using center is fine. but if more than 1 in the future, then will need to implement logic for it. 
+    if (!buildingUses.isEmpty())
+    {
+      for (int i = 0; i < buildingUses.size(); i++) {
+        color c = buildingUses.get(i).colorId;
+        fill(c);
+        ellipse(center_x, center_y, 20, 20);
+      }
+    }
+  }
+
+  void drawPolygon() 
+  {
+    noFill();
+    noStroke();
     beginShape();
     vertex(xpos1, ypos1);
     vertex(xpos2, ypos2);
     vertex(xpos3, ypos3);
     vertex(xpos4, ypos4);
     endShape(CLOSE);
-
-    //render text
-    fill(0);
-    textSize(9);
-    text(buildingName, center_x, center_y);
   }
 
-  //iterate the iconlist to find the icon class for this building
-  int building_class()
-  {
-
-    get_icon();
-    return icon.class_decide();
-  }
-
-  String Icon_name()
-  {
-    get_icon();
-    return icon.icon_name;
-  }
-
-  void get_icon()
-  {
-    for (int i = 0; i < iconDrags.size(); i++)
-    {
-      icon = iconDrags.get(i);
+  void addBuildingUse(BuildingUse buildingUse) {
+    if(buildingUses.size() < maxBuildingUses) {
+    buildingUses.add(buildingUse);
     }
   }
 
@@ -110,21 +100,17 @@ class Building
   { 
     /*
     float dis_x = target_x - center_x;
-    float dis_y = target_y - center_y;
-    float a = dis_y / dis_x;
-
-    for (int i = 0; i < 2; i = i + 10)
-    {
-      Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y, c);
-      persons.add(pA);
-    }
-    */
+     float dis_y = target_y - center_y;
+     float a = dis_y / dis_x;
+     
+     for (int i = 0; i < 2; i = i + 10)
+     {
+     Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y, c);
+     persons.add(pA);
+     }
+     */
     Person pA = new Person(this.doorNodeId, dest_doorNodeId, c);
     persons.add(pA);
-    
-   
-    
-    
   }
 
 
@@ -136,46 +122,44 @@ class Building
     String icon_nameA;
     String icon_nameB;
     color c1 = color(135, 206, 250);
-
+    /*
     if (this.iconDrags.size() > 0)
-    {
-      icon_classA = this.building_class();
-      icon_nameA = this.Icon_name();
-      if (icon_classA > 0)
-      {
-        for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
-        {
-          Building building = (Building) GNWMapEntry.getValue();
-          if (building.iconDrags.size() > 0 && building.buildingName != this.buildingName)
-          {
-            icon_classB = building.building_class();
-            icon_nameB = building.Icon_name();
-            if (icon_classA > icon_classB && icon_classB > 0)
-            {
-              c1 = decide_color(icon_nameA, icon_nameB);
-
-              addPerson(building.doorNodeId, c1);
-              run();
-            }
-          }
-          //remove the persons when no icon within the building
-          else if (building.iconDrags.size() <= 0)
-          {
-            for (int i = 0; i < persons.size(); i++)
-            {
-              Person p = persons.get(i);
-              if (p.dest_nodeID == building.doorNodeId)
-              {
-                persons.remove(i);
-              }
-            }
-          }//
-        }
-      }
-    }
+     {
+     icon_classA = this.building_class();
+     icon_nameA = this.Icon_name();
+     if (icon_classA > 0)
+     {
+     for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
+     {
+     Building building = (Building) GNWMapEntry.getValue();
+     if (building.iconDrags.size() > 0 && building.buildingName != this.buildingName)
+     {
+     icon_classB = building.building_class();
+     icon_nameB = building.Icon_name();
+     if (icon_classA > icon_classB && icon_classB > 0)
+     {
+     c1 = decide_color(icon_nameA, icon_nameB);
+     
+     addPerson(building.doorNodeId, c1);
+     run();
+     }
+     }
+     //remove the persons when no icon within the building
+     else if (building.iconDrags.size() <= 0)
+     {
+     for (int i = 0; i < persons.size(); i++)
+     {
+     Person p = persons.get(i);
+     if (p.dest_nodeID == building.doorNodeId)
+     {
+     persons.remove(i);
+     }
+     }
+     }
+     
+     }
+     }*/
   }
-
-  //run from buildingA to buildingB
 
   void run()
   {
@@ -247,7 +231,7 @@ class Building
     return c;
   }
 
-  boolean contains(int x, int y) {
+  boolean contains(int x, int y) {    
     PVector[] verts = { new PVector(xpos1, ypos1), new PVector(xpos2, ypos2), new PVector(xpos3, ypos3), new PVector(xpos4, ypos4) }; 
     PVector pos = new PVector(x, y);
     int i, j;
@@ -261,6 +245,4 @@ class Building
     }
     return c;
   }
-  
-  
 }
