@@ -19,7 +19,6 @@ class BuildingUseBox
     box_height = 290;
   }
 
-
   //draw method
   void render()
   {
