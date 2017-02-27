@@ -21,15 +21,13 @@ RadioButton r1;
 void setup()
 {
   //fullScreen();
-  size(2134, 1601);
 
+  size(2134, 1601);
   shiftX = 0;
   shiftY = 0;
-
   GNWMap = new GNWMap();
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder();
-
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
 
@@ -37,13 +35,13 @@ void setup()
   //create the radio button interface to change the time
   cp5 = new ControlP5(this);
   r1 = cp5.addRadioButton("radioButton")
-    .setPosition(400, 50)
-    .setSize(40, 20)
+    .setPosition(100, 900)
+    .setSize(100, 50)
     .setColorForeground(color(120))
     .setColorActive(color(200))
     .setColorLabel(color(0))
     .setItemsPerRow(5)
-    .setSpacingColumn(50)
+    .setSpacingColumn(70)
     .addItem("8AM", 10)
     .addItem("2PM", 14)
     ;
@@ -53,14 +51,20 @@ void setup()
  * 
  */
 void draw() {
-  background(255);
 
+  background(255);
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
   GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
+  update_time();
+  for (Map.Entry GNWMapEntry : GNWMap.buildings.entrySet()) 
+  {
+    Building building = (Building) GNWMapEntry.getValue();
+    building.flow_generate();
+  }
   popMatrix();
-
+  //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
 }
 
@@ -81,22 +85,12 @@ void update_time()
 }
 
 
-
-
 //void drawIcons() 
 //{
-//  //render the icon and detect the mouse within the icon
-//  if (!icons.isEmpty())
-//  {
-//    for (int i = 0; i < icons.size(); i++)
-//    {
-//      icons.get(i).update();
-//    }
-//  }
+//  
 //  update_time();
+
 //  //flow rendering
-
-
 //  for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
 //  {
 //    Building building = (Building) GNWMapEntry.getValue();
@@ -109,10 +103,13 @@ void mousePressed()
   if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
   }
+
 }
+
 
 void mouseDragged()
 {
+  //differiate between icon move and map move
   if (GNWInterface.selectedBUIcon != null) {
     GNWInterface.update();
   } else {
@@ -120,6 +117,7 @@ void mouseDragged()
     shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
   }
 } 
+
 
 void mouseReleased()
 {
@@ -131,7 +129,7 @@ void mouseReleased()
       GNWInterface.clearSelected();
     }
   }
-
+  //remove the icon after release the mouse
   GNWInterface.clearSelected();
 }
 

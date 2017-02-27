@@ -122,43 +122,42 @@ class Building
     String icon_nameA;
     String icon_nameB;
     color c1 = color(135, 206, 250);
-    /*
-    if (this.iconDrags.size() > 0)
-     {
+    
+    if (this.buildingUses.size() > 0)
+    {
      icon_classA = this.building_class();
      icon_nameA = this.Icon_name();
      if (icon_classA > 0)
      {
-     for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
-     {
-     Building building = (Building) GNWMapEntry.getValue();
-     if (building.iconDrags.size() > 0 && building.buildingName != this.buildingName)
-     {
-     icon_classB = building.building_class();
-     icon_nameB = building.Icon_name();
-     if (icon_classA > icon_classB && icon_classB > 0)
-     {
-     c1 = decide_color(icon_nameA, icon_nameB);
-     
-     addPerson(building.doorNodeId, c1);
-     run();
-     }
-     }
+       for (Map.Entry GNWMapEntry : GNWMap.buildings.entrySet()) 
+       {
+         Building building = (Building) GNWMapEntry.getValue();
+         if (building.buildingUses.size() > 0 && building.buildingName != this.buildingName)
+         {
+           icon_classB = building.building_class();
+           icon_nameB = building.Icon_name();
+           if (icon_classA > icon_classB && icon_classB > 0)
+           {
+             c1 = decide_color(icon_nameA, icon_nameB);
+             addPerson(building.doorNodeId, c1);
+             run();
+           }
+         }
      //remove the persons when no icon within the building
-     else if (building.iconDrags.size() <= 0)
-     {
-     for (int i = 0; i < persons.size(); i++)
-     {
-     Person p = persons.get(i);
-     if (p.dest_nodeID == building.doorNodeId)
-     {
-     persons.remove(i);
+         else if (building.buildingUses.size() <= 0)
+         {
+           for (int i = 0; i < persons.size(); i++)
+           {
+             Person p = persons.get(i);
+             if (p.dest_nodeID == building.doorNodeId)
+             {
+               persons.remove(i);
+             }
+           }
+         }
+       }
      }
-     }
-     }
-     
-     }
-     }*/
+    }
   }
 
   void run()
@@ -173,7 +172,29 @@ class Building
       }
     }
   }
-
+  
+  int building_class()
+  {
+    int building_class = -1;
+    for(BuildingUse use : buildingUses)
+    {
+      building_class = use.class_decide();
+      break;
+    }
+    return building_class;
+   }
+   
+   String Icon_name()
+   {
+     String icon_name = null;
+     for(BuildingUse use : buildingUses)
+     {
+        icon_name = use.imgSrc;
+        break;
+     }
+     return icon_name;
+     
+    }
   //decide the path density from icon a to icon b
   color decide_color(String icon_nameA, String icon_nameB)
   {
