@@ -14,7 +14,7 @@ class BuildingUseBox
     this.buildingUse = buildingUse;
     box_x = x;
     box_y = y;
-    
+
     box_width = 380;
     box_height = 290;
   }
@@ -31,7 +31,7 @@ class BuildingUseBox
   {
     boolean checkX = mouseX > box_x && mouseX < box_x + box_width;
     boolean checkY = mouseY > box_y && mouseY < box_y + box_height;
-    
+
     return checkX && checkY;
   }
 }
