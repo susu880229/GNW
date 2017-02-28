@@ -25,7 +25,6 @@ class GNWInterface //<>//
     for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse buildingUse = buildingUses.get(i);
       BuildingUseBox buildingUseBox = new BuildingUseBox(buildingUse, xBuildingBox, yBuildingBox);
-      //buildingUseBox.render();
       buildingUseBoxes.add(buildingUseBox);
 
       xBuildingBox += space;
@@ -42,8 +41,6 @@ class GNWInterface //<>//
     }
     
     if (selectedBUIcon != null) {
-      
-        //selectedBUIcon.update();
         selectedBUIcon.render();
     }
   }
@@ -56,7 +53,6 @@ class GNWInterface //<>//
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
 
       if (buildingUseBox.detect()) {
-        //BuildingUseIcon icon = new BuildingUseIcon(buildingUseBox.buildingUse, mouseX, mouseY);
         selectedBUIcon = new BuildingUseIcon(buildingUseBox.buildingUse, mouseX, mouseY);
         break;
       }

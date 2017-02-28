@@ -13,17 +13,15 @@ class Building
   int ypos3; 
   int xpos4;
   int ypos4; 
-  int center_x;
-  int center_y;
   String buildingName;
   boolean isCustomizable;
   int doorNodeId;
   float node_x;
   float node_y;
-  
-  //TODO currently limit 1 for each building; should allow up to 3 for some
+
+  //TODO this should be customizable depending on building; will implement in future
   //TODO implement delete to allow user to replace building use
-  int maxBuildingUses = 1;
+  int maxBuildingUses = 3;
 
   /**
    * The Building constructor
@@ -54,9 +52,6 @@ class Building
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
 
-    center_x = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 15;
-    center_y = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
-
     persons = new ArrayList<Person>();
     buildingUses = new ArrayList<BuildingUse>();
   }
@@ -65,17 +60,7 @@ class Building
   void render() 
   {
     drawPolygon();
-
-
-//TODO: currently only shows one dot. so using center is fine. but if more than 1 in the future, then will need to implement logic for it. 
-    if (!buildingUses.isEmpty())
-    {
-      for (int i = 0; i < buildingUses.size(); i++) {
-        color c = buildingUses.get(i).colorId;
-        fill(c);
-        ellipse(center_x, center_y, 20, 20);
-      }
-    }
+    drawBuildingUses();
   }
 
   void drawPolygon() 
@@ -90,74 +75,82 @@ class Building
     endShape(CLOSE);
   }
 
+  void drawBuildingUses() 
+  {
+    if (!buildingUses.isEmpty())
+    {
+      for (int i = 0; i < buildingUses.size(); i++) {
+        BuildingUse bUse = buildingUses.get(i);
+        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 30 + (i*20);
+        int dotY = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
+        
+        color c = bUse.colorId;
+        fill(c);
+        ellipse(dotX , dotY, 20, 20);
+      }
+    }
+  }
+
+  void generateFlow()
+  {
+    if (!buildingUses.isEmpty())
+    {
+      for (int i = 0; i < buildingUses.size(); i++) {
+        BuildingUse bUse = buildingUses.get(i);
+        color flowColor = decide_color(bUse.name, bUse.matchBUse);
+        ArrayList<Building> destBuildings = findBuildingDoorNodes(bUse.matchBUse);    
+
+        if (destBuildings != null && !destBuildings.isEmpty()) {
+          for (int j = 0; j < destBuildings.size(); j ++) {
+            int destDoorNodeId = destBuildings.get(j).doorNodeId;
+            addPerson(destDoorNodeId, flowColor);
+            run();
+          }
+        }
+      }
+    }
+  }
+
+  //TODO currently returns the first doornode of the first building in category; should should return all?
+  ArrayList<Building> findBuildingDoorNodes(String buildingName)
+  {
+    if (buildingName == "Restaurant" && !restaurantBuildings.isEmpty()) {
+      return restaurantBuildings;
+    } else if (buildingName == "Office" && officeBuildings.size() > 0) {
+      return officeBuildings;
+    } else if (buildingName == "Recreation" && recBuildings.size() > 0) {
+      return recBuildings;
+    } else if (buildingName =="Resident" && residentBuildings.size() > 0) {
+      return residentBuildings;
+    } else if (buildingName =="Retail" && retailBuildings.size() > 0) {
+      return retailBuildings;
+    } else {
+      return null;
+    }
+  }
+
   void addBuildingUse(BuildingUse buildingUse) {
-    if(buildingUses.size() < maxBuildingUses) {
-    buildingUses.add(buildingUse);
+    if (buildingUses.size() < maxBuildingUses) {
+      buildingUses.add(buildingUse);
+
+      if (buildingUse.name == "Restaurant") {
+        restaurantBuildings.add(this);
+      } else if (buildingUse.name == "Office") {
+        officeBuildings.add(this);
+      } else if (buildingUse.name == "Recreation") {
+        recBuildings.add(this);
+      } else if (buildingUse.name =="Resident") {
+        residentBuildings.add(this);
+      } else if (buildingUse.name =="Retail") {
+        retailBuildings.add(this);
+      }
     }
   }
 
   void addPerson(int dest_doorNodeId, color c)
-  { 
-    /*
-    float dis_x = target_x - center_x;
-     float dis_y = target_y - center_y;
-     float a = dis_y / dis_x;
-     
-     for (int i = 0; i < 2; i = i + 10)
-     {
-     Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y, c);
-     persons.add(pA);
-     }
-     */
+  {     
     Person pA = new Person(this.doorNodeId, dest_doorNodeId, c);
     persons.add(pA);
-  }
-
-
-  //flows start from this building 
-  void flow_generate()
-  {
-    int icon_classA;
-    int icon_classB;
-    String icon_nameA;
-    String icon_nameB;
-    color c1 = color(135, 206, 250);
-    
-    if (this.buildingUses.size() > 0)
-    {
-     icon_classA = this.building_class();
-     icon_nameA = this.Icon_name();
-     if (icon_classA > 0)
-     {
-       for (Map.Entry GNWMapEntry : GNWMap.buildings.entrySet()) 
-       {
-         Building building = (Building) GNWMapEntry.getValue();
-         if (building.buildingUses.size() > 0 && building.buildingName != this.buildingName)
-         {
-           icon_classB = building.building_class();
-           icon_nameB = building.Icon_name();
-           if (icon_classA > icon_classB && icon_classB > 0)
-           {
-             c1 = decide_color(icon_nameA, icon_nameB);
-             addPerson(building.doorNodeId, c1);
-             run();
-           }
-         }
-     //remove the persons when no icon within the building
-         else if (building.buildingUses.size() <= 0)
-         {
-           for (int i = 0; i < persons.size(); i++)
-           {
-             Person p = persons.get(i);
-             if (p.dest_nodeID == building.doorNodeId)
-             {
-               persons.remove(i);
-             }
-           }
-         }
-       }
-     }
-    }
   }
 
   void run()
@@ -172,36 +165,13 @@ class Building
       }
     }
   }
-  
-  int building_class()
-  {
-    int building_class = -1;
-    for(BuildingUse use : buildingUses)
-    {
-      building_class = use.class_decide();
-      break;
-    }
-    return building_class;
-   }
-   
-   String Icon_name()
-   {
-     String icon_name = null;
-     for(BuildingUse use : buildingUses)
-     {
-        icon_name = use.imgSrc;
-        break;
-     }
-     return icon_name;
-     
-    }
+
   //decide the path density from icon a to icon b
   color decide_color(String icon_nameA, String icon_nameB)
   {
     //three level of density to show by color
     color c1 = color(0, 0, 255);
     color c2 = color(0, 191, 255);
-    //color c3 = color(135, 206, 250);
     color c3 = color(173, 216, 230);
     //defaut color is the third level
     color c = c3;

@@ -7,6 +7,12 @@ GNWInterface GNWInterface;
 
 ArrayList<BuildingUse> buildingUses;
 
+ArrayList<Building> restaurantBuildings;
+ArrayList<Building> officeBuildings;
+ArrayList<Building> recBuildings;
+ArrayList<Building> residentBuildings;
+ArrayList<Building> retailBuildings;
+
 int shiftX;
 int shiftY;
 
@@ -31,6 +37,11 @@ void setup()
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
 
+  restaurantBuildings = new ArrayList<Building>();
+  officeBuildings = new ArrayList<Building>();
+  recBuildings = new ArrayList<Building>();
+  residentBuildings = new ArrayList<Building>();
+  retailBuildings = new ArrayList<Building>();
 
   //create the radio button interface to change the time
   cp5 = new ControlP5(this);
@@ -51,19 +62,16 @@ void setup()
  * 
  */
 void draw() {
-
   background(255);
+
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
   GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
-  for (Map.Entry GNWMapEntry : GNWMap.buildings.entrySet()) 
-  {
-    Building building = (Building) GNWMapEntry.getValue();
-    building.flow_generate();
-  }
+  GNWMap.drawFlow();
   popMatrix();
+
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
 }
@@ -84,28 +92,12 @@ void update_time()
   }
 }
 
-
-//void drawIcons() 
-//{
-//  
-//  update_time();
-
-//  //flow rendering
-//  for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
-//  {
-//    Building building = (Building) GNWMapEntry.getValue();
-//    building.flow_generate();
-//  }
-//}
-
 void mousePressed()
 {
   if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
   }
-
 }
-
 
 void mouseDragged()
 {
@@ -117,7 +109,6 @@ void mouseDragged()
     shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
   }
 } 
-
 
 void mouseReleased()
 {
@@ -144,11 +135,11 @@ boolean isOnMap()
 
 void setBuildingUses()
 {
-  buildingUses.add(new BuildingUse("Restaurant", "restaurant.png", color (200, 0, 0)));
-  buildingUses.add(new BuildingUse("Office", "office.png", color (0, 0, 200)));
-  buildingUses.add(new BuildingUse("Recreation", "recreation.png", color(0, 200, 0)));
-  buildingUses.add(new BuildingUse("Resident", "resident.png", color (200, 200, 0)));
-  buildingUses.add(new BuildingUse("Retail", "restaurant.png", color(200, 0, 200)));
+  buildingUses.add(new BuildingUse("Restaurant", "restaurant.png", color (200, 0, 0), "Office"));
+  buildingUses.add(new BuildingUse("Office", "office.png", color (0, 0, 200), "Restaurant"));
+  buildingUses.add(new BuildingUse("Recreation", "recreation.png", color(0, 200, 0), "Office"));
+  buildingUses.add(new BuildingUse("Resident", "resident.png", color (200, 200, 0), "Restaurant"));
+  buildingUses.add(new BuildingUse("Retail", "restaurant.png", color(200, 0, 200), "Restaurant"));
 
   GNWInterface.createBuildingUseBoxes();
 }

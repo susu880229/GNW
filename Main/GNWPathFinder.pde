@@ -1,8 +1,6 @@
 class GNWPathFinder 
 {
-  //GraphNode[] gNodes;
   ArrayList<GraphNode> gNodes;
-  //GraphEdge[] gEdges;
   ArrayList<GraphEdge> gEdges;
   IGraphSearch pathFinder;
   Graph GNWGraph;
