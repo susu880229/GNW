@@ -23,12 +23,14 @@ String cur_time = "morning";
 ControlP5 cp5;
 RadioButton r1;
 
+//use 0.45 for laptops
+float scaleFactor = 0.45;
 
 void setup()
 {
-  //fullScreen();
+  fullScreen();
 
-  size(2134, 1601);
+  //size(2134, 1601);
   shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
@@ -65,6 +67,9 @@ void draw() {
   background(255);
 
   pushMatrix();
+  scale(scaleFactor);
+
+  pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
   GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
@@ -74,6 +79,7 @@ void draw() {
 
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
+  popMatrix();
 }
 
 //update time 
@@ -94,6 +100,9 @@ void update_time()
 
 void mousePressed()
 {
+  mouseX = int(mouseX / scaleFactor);
+  mouseY = int(mouseY / scaleFactor);
+
   if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
   }
@@ -103,15 +112,19 @@ void mouseDragged()
 {
   //differiate between icon move and map move
   if (GNWInterface.selectedBUIcon != null) {
+    pmouseX = int(pmouseX / scaleFactor);
+    mouseX = int(mouseX / scaleFactor);
+    mouseY = int(mouseY / scaleFactor);
+
     GNWInterface.update();
-  } else {
+  } else if (isOnMap()) {
     shiftX = shiftX - (pmouseX - mouseX);
     shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
   }
 } 
 
 void mouseReleased()
-{
+{ 
   if (GNWInterface.selectedBUIcon != null && isOnMap()) {
     try {
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
@@ -147,7 +160,8 @@ void setBuildingUses()
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
-//  fill(0);
-//  ellipse(mouseX, mouseY, 2, 2);
-//  println("x: " + mouseX + "; y: " + mouseY);
+//  mouseX = int(mouseX / scaleFactor);
+//  mouseY = int(mouseY / scaleFactor);
+
+//  println("After - x: " + mouseX + "; y: " + mouseY);
 //}

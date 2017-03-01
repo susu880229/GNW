@@ -1,4 +1,4 @@
-class GNWInterface //<>//
+class GNWInterface //<>// //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
@@ -6,7 +6,7 @@ class GNWInterface //<>//
   int xBuildingBox;
 
   BuildingUseIcon selectedBUIcon;
-  
+
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
@@ -39,7 +39,7 @@ class GNWInterface //<>//
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
       buildingUseBox.render();
     }
-    
+
     if (selectedBUIcon != null) {
         selectedBUIcon.render();
     }
@@ -48,7 +48,7 @@ class GNWInterface //<>//
   void selectBuildingUse()
   {
     selectedBUIcon = null;
-    
+
     for (int i = 0; i < buildingUseBoxes.size(); i++) {
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
 
@@ -58,14 +58,14 @@ class GNWInterface //<>//
       }
     }
   }
-  
+
   void update() 
   {
-     if (selectedBUIcon != null) {
-        selectedBUIcon.mouseDragged();
-     }
+    if (selectedBUIcon != null) {
+      selectedBUIcon.mouseDragged();
+    }
   }
-  
+
   void clearSelected ()
   {
     selectedBUIcon = null;
