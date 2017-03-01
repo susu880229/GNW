@@ -15,7 +15,7 @@ class BuildingUseBox
     box_x = x;
     box_y = y;
 
-    box_width = 380;
+    box_width = 385;
     box_height = 290;
   }
 

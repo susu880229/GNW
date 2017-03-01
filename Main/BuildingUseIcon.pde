@@ -22,8 +22,8 @@ class BuildingUseIcon
   {
     this.buildingUse = buildingUse;
     icon_name = buildingUse.imgSrc;
-    w = 60;
-    h = 60;
+    w = 100;
+    h = 100;
     bx = x;
     by = y;
     a = loadImage(icon_name);
