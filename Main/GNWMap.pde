@@ -16,7 +16,7 @@ class GNWMap
   void render()
   {
     image(mapImage, 0, 0);
-
+    
     //walk through the GNWmap to render building
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
@@ -24,9 +24,21 @@ class GNWMap
     }
   }
 
+  void drawFlow() {
+    for (Map.Entry buildingEntry : buildings.entrySet()) {
+      Building building = (Building) buildingEntry.getValue();
+      building.generateFlow();
+    }
+  }
+
   void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
-    Building building = findBuilding();
-    building.addBuildingUse(selectedBuildingUse);
+    try {
+      Building building = findBuilding();
+      building.addBuildingUse(selectedBuildingUse);
+    } 
+    catch (Exception e) {
+      //if no building found, don't do anything
+    }
   }
 
   //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
