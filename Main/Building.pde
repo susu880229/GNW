@@ -3,8 +3,7 @@
  */
 class Building 
 {    
-  ArrayList<Person> persons;
-  ArrayList<Icon_DragDrop> iconDrags;
+  ArrayList<BuildingUse> buildingUses;
   int xpos1;
   int ypos1; 
   int xpos2;
@@ -13,14 +12,15 @@ class Building
   int ypos3; 
   int xpos4;
   int ypos4; 
-  int center_x;
-  int center_y;
   String buildingName;
   boolean isCustomizable;
   int doorNodeId;
-  Icon_DragDrop icon;
   float node_x;
   float node_y;
+
+  //TODO this should be customizable depending on building; will implement in future
+  //TODO implement delete to allow user to replace building use
+  int maxBuildingUses = 3;
 
   /**
    * The Building constructor
@@ -51,155 +51,112 @@ class Building
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
 
-    center_x = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 15;
-    center_y = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
-
-    persons = new ArrayList<Person>();
-    iconDrags = new ArrayList<Icon_DragDrop>();
+    buildingUses = new ArrayList<BuildingUse>();
   }
 
   //rendering the block
   void render() 
   {
-    if (isCustomizable) 
-    {
-      fill(200);
-    } else 
-    {
-      fill(150);
-    }
-    noStroke();
-    //draw the polygon 
+    drawPolygon();
+    drawBuildingUses();
+  }
 
+  void drawPolygon() 
+  {
+    noFill();
+    noStroke();
     beginShape();
     vertex(xpos1, ypos1);
     vertex(xpos2, ypos2);
     vertex(xpos3, ypos3);
     vertex(xpos4, ypos4);
     endShape(CLOSE);
-
-    //render text
-    fill(0);
-    textSize(9);
-    text(buildingName, center_x, center_y);
   }
 
-  //iterate the iconlist to find the icon class for this building
-  int building_class()
+  void drawBuildingUses() 
   {
-
-    get_icon();
-    return icon.class_decide();
-  }
-
-  String Icon_name()
-  {
-    get_icon();
-    return icon.icon_name;
-  }
-
-  void get_icon()
-  {
-    for (int i = 0; i < iconDrags.size(); i++)
+    if (!buildingUses.isEmpty())
     {
-      icon = iconDrags.get(i);
-    }
-  }
-
-  void addPerson(int dest_doorNodeId, color c)
-  { 
-    /*
-    float dis_x = target_x - center_x;
-    float dis_y = target_y - center_y;
-    float a = dis_y / dis_x;
-
-    for (int i = 0; i < 2; i = i + 10)
-    {
-      Person pA = new Person(center_x - i, center_y + a * i, target_x, target_y, c);
-      persons.add(pA);
-    }
-    */
-    Person pA = new Person(this.doorNodeId, dest_doorNodeId, c);
-    persons.add(pA);
-    
-   
-    
-    
-  }
-
-
-  //flows start from this building 
-  void flow_generate()
-  {
-    int icon_classA;
-    int icon_classB;
-    String icon_nameA;
-    String icon_nameB;
-    color c1 = color(135, 206, 250);
-
-    if (this.iconDrags.size() > 0)
-    {
-      icon_classA = this.building_class();
-      icon_nameA = this.Icon_name();
-      if (icon_classA > 0)
-      {
-        for (Map.Entry GNWMapEntry : GNWMap.entrySet()) 
-        {
-          Building building = (Building) GNWMapEntry.getValue();
-          if (building.iconDrags.size() > 0 && building.buildingName != this.buildingName)
-          {
-            icon_classB = building.building_class();
-            icon_nameB = building.Icon_name();
-            if (icon_classA > icon_classB && icon_classB > 0)
-            {
-              c1 = decide_color(icon_nameA, icon_nameB);
-
-              addPerson(building.doorNodeId, c1);
-              run();
-            }
-          }
-          //remove the persons when no icon within the building
-          else if (building.iconDrags.size() <= 0)
-          {
-            for (int i = 0; i < persons.size(); i++)
-            {
-              Person p = persons.get(i);
-              if (p.dest_nodeID == building.doorNodeId)
-              {
-                persons.remove(i);
-              }
-            }
-          }//
-        }
+      for (int i = 0; i < buildingUses.size(); i++) {
+        BuildingUse bUse = buildingUses.get(i);
+        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 30 + (i*20);
+        int dotY = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
+        
+        color c = bUse.colorId;
+        fill(c);
+        ellipse(dotX , dotY, 20, 20);
       }
     }
   }
-
-  //run from buildingA to buildingB
-
-  void run()
+  
+  ArrayList<Path> buildPaths(ArrayList<Path> paths)
   {
-
-    for (int i = 0; i < persons.size(); i++)
+    
+    if (!buildingUses.isEmpty())
     {
-      persons.get(i).run();
-      if (persons.get(i).isDead)
-      {
-        persons.remove(i);
+      for (int i = 0; i < buildingUses.size(); i++) {
+        BuildingUse bUse = buildingUses.get(i);
+        float density = decide_density(bUse.name, bUse.matchBUse);
+        ArrayList<Building> destBuildings = findBuildingDoorNodes(bUse.matchBUse);    
+
+        if (destBuildings != null && !destBuildings.isEmpty()) {
+          for (int j = 0; j < destBuildings.size(); j ++) {
+            int destDoorNodeId = destBuildings.get(j).doorNodeId;
+            FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
+            paths = fA.buildPathDensities(density, paths);
+
+          }
+        }
+      }
+    }
+    return paths;
+  }
+
+  //TODO currently returns the first doornode of the first building in category; should should return all?
+  ArrayList<Building> findBuildingDoorNodes(String buildingName)
+  {
+    if (buildingName == "Restaurant" && !restaurantBuildings.isEmpty()) {
+      return restaurantBuildings;
+    } else if (buildingName == "Office" && officeBuildings.size() > 0) {
+      return officeBuildings;
+    } else if (buildingName == "Recreation" && recBuildings.size() > 0) {
+      return recBuildings;
+    } else if (buildingName =="Resident" && residentBuildings.size() > 0) {
+      return residentBuildings;
+    } else if (buildingName =="Retail" && retailBuildings.size() > 0) {
+      return retailBuildings;
+    } else {
+      return null;
+    }
+  }
+
+  void addBuildingUse(BuildingUse buildingUse) {
+    if (buildingUses.size() < maxBuildingUses) {
+      buildingUses.add(buildingUse);
+
+      if (buildingUse.name == "Restaurant") {
+        restaurantBuildings.add(this);
+      } else if (buildingUse.name == "Office") {
+        officeBuildings.add(this);
+      } else if (buildingUse.name == "Recreation") {
+        recBuildings.add(this);
+      } else if (buildingUse.name =="Resident") {
+        residentBuildings.add(this);
+      } else if (buildingUse.name =="Retail") {
+        retailBuildings.add(this);
       }
     }
   }
 
   //decide the path density from icon a to icon b
-  color decide_color(String icon_nameA, String icon_nameB)
+  float decide_density(String icon_nameA, String icon_nameB)
   {
-    //three level of density to show by color
-    color c1 = color(0, 0, 255);
-    color c2 = color(0, 191, 255);
-    //color c3 = color(135, 206, 250);
-    color c3 = color(173, 216, 230);
+    //three levels of density per unit length
+    float d1 = 0.08;
+    float d2 = 0.03;
+    float d3 = 0.01;
     //defaut color is the third level
-    color c = c3;
+    float d = d3;
 
     //morning time density rule
     if (cur_time == "morning")
@@ -209,18 +166,18 @@ class Building
         if (icon_nameB == "restaurant.png")
         {
           //the second level density
-          c = c2;
+          d = d2;
         } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
         {
           //the first level density
-          c = c1;
+          d = d1;
         }
       } else if (icon_nameA == "restaurant.png")
       {
         if (icon_nameB == "office.png" || icon_nameB == "school.png")
         {
           //the second level density
-          c = c2;
+          d = d2;
         }
       }
     }
@@ -232,22 +189,22 @@ class Building
         if (icon_nameB == "restaurant.png")
         {
           //the third level density
-          c = c3;
+          d = d3;
         } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
         {
           //the third level density
-          c = c3;
+          d = d3;
         } else if (icon_nameB == "recreation.png")
         {
           //the second level density
-          c = c2;
+          d = d2;
         }
       }
     }
-    return c;
+    return d;
   }
 
-  boolean contains(int x, int y) {
+  boolean contains(int x, int y) {    
     PVector[] verts = { new PVector(xpos1, ypos1), new PVector(xpos2, ypos2), new PVector(xpos3, ypos3), new PVector(xpos4, ypos4) }; 
     PVector pos = new PVector(x, y);
     int i, j;
@@ -261,6 +218,4 @@ class Building
     }
     return c;
   }
-  
-  
 }
