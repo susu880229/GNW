@@ -6,21 +6,22 @@ class GNWInterface //<>// //<>//
   int xBuildingBox;
 
   BuildingUseIcon selectedBUIcon;
-  
+
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
+    interfaceImage.resize(2148, 1536);
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
 
     selectedBUIcon = null;
 
-    yBuildingBox = 991;
+    yBuildingBox = 950;
     xBuildingBox = 42;
   }
 
   void createBuildingUseBoxes() 
   {
-    int space = 418;
+    int space = 420;
 
     for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse buildingUse = buildingUses.get(i);
@@ -33,22 +34,22 @@ class GNWInterface //<>// //<>//
 
   void render() 
   {
-    image(interfaceImage, 0, 0);
-
     for (int i = 0; i < buildingUseBoxes.size(); i++) {
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
       buildingUseBox.render();
     }
-    
+
+    image(interfaceImage, 0, 0);
+
     if (selectedBUIcon != null) {
-        selectedBUIcon.render();
+      selectedBUIcon.render();
     }
   }
 
   void selectBuildingUse()
   {
     selectedBUIcon = null;
-    
+
     for (int i = 0; i < buildingUseBoxes.size(); i++) {
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
 
@@ -58,14 +59,14 @@ class GNWInterface //<>// //<>//
       }
     }
   }
-  
+
   void update() 
   {
-     if (selectedBUIcon != null) {
-        selectedBUIcon.mouseDragged();
-     }
+    if (selectedBUIcon != null) {
+      selectedBUIcon.mouseDragged();
+    }
   }
-  
+
   void clearSelected ()
   {
     selectedBUIcon = null;

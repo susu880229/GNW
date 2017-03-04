@@ -1,4 +1,4 @@
-/**  //<>//
+/**   //<>//
  * The Building class represents a physical building
  */
 class Building 
@@ -76,22 +76,20 @@ class Building
   void drawBuildingUses() 
   {
     if (!buildingUses.isEmpty())
-    {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
-        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 30 + (i*20);
+        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 50 + (i*60);
         int dotY = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
-        
+
         color c = bUse.colorId;
         fill(c);
-        ellipse(dotX , dotY, 20, 20);
+        ellipse(dotX, dotY, 60, 60);
       }
-    }
   }
-  
+
   ArrayList<Path> buildPaths(ArrayList<Path> paths)
   {
-    
+
     if (!buildingUses.isEmpty())
     {
       for (int i = 0; i < buildingUses.size(); i++) {
@@ -104,7 +102,6 @@ class Building
             int destDoorNodeId = destBuildings.get(j).doorNodeId;
             FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
             paths = fA.buildPathDensities(density, paths);
-
           }
         }
       }
@@ -112,18 +109,19 @@ class Building
     return paths;
   }
 
+
   //TODO currently returns the first doornode of the first building in category; should should return all?
-  ArrayList<Building> findBuildingDoorNodes(String buildingName)
+  ArrayList<Building> findBuildingDoorNodes(String bUName)
   {
-    if (buildingName == "Restaurant" && !restaurantBuildings.isEmpty()) {
-      return restaurantBuildings;
-    } else if (buildingName == "Office" && officeBuildings.size() > 0) {
-      return officeBuildings;
-    } else if (buildingName == "Recreation" && recBuildings.size() > 0) {
-      return recBuildings;
-    } else if (buildingName =="Resident" && residentBuildings.size() > 0) {
-      return residentBuildings;
-    } else if (buildingName =="Retail" && retailBuildings.size() > 0) {
+    if (bUName == "artCulture" && !artCultureBuildings.isEmpty()) {
+      return artCultureBuildings;
+    } else if (bUName == "lightIndustrial" && lightIndustrialBuildings.size() > 0) {
+      return lightIndustrialBuildings;
+    } else if (bUName == "offices" && officesBuildings.size() > 0) {
+      return officesBuildings;
+    } else if (bUName =="retail" && residentalBuildings.size() > 0) {
+      return residentalBuildings;
+    } else if (bUName =="residential" && retailBuildings.size() > 0) {
       return retailBuildings;
     } else {
       return null;
@@ -134,15 +132,15 @@ class Building
     if (buildingUses.size() < maxBuildingUses) {
       buildingUses.add(buildingUse);
 
-      if (buildingUse.name == "Restaurant") {
-        restaurantBuildings.add(this);
-      } else if (buildingUse.name == "Office") {
-        officeBuildings.add(this);
-      } else if (buildingUse.name == "Recreation") {
-        recBuildings.add(this);
-      } else if (buildingUse.name =="Resident") {
-        residentBuildings.add(this);
-      } else if (buildingUse.name =="Retail") {
+      if (buildingUse.name == "artCulture") {
+        artCultureBuildings.add(this);
+      } else if (buildingUse.name == "lightIndustrial") {
+        lightIndustrialBuildings.add(this);
+      } else if (buildingUse.name == "offices") {
+        officesBuildings.add(this);
+      } else if (buildingUse.name =="retail") {
+        residentalBuildings.add(this);
+      } else if (buildingUse.name =="residential") {
         retailBuildings.add(this);
       }
     }
@@ -155,6 +153,7 @@ class Building
     float d1 = 0.08;
     float d2 = 0.03;
     float d3 = 0.01;
+
     //defaut color is the third level
     float d = d3;
 
