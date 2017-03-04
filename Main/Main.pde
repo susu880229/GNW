@@ -29,9 +29,8 @@ float scaleFactor = .5;
 
 void setup()
 {
-  fullScreen();
-
- // size(2134, 1601);
+  //fullScreen();
+  size(2134, 1601);
   shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
@@ -73,7 +72,7 @@ void draw() {
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
-  GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
+  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
   GNWMap.drawFlow();
   popMatrix();
@@ -120,7 +119,7 @@ void mouseDragged()
     GNWInterface.update();
   } else if (isOnMap()) {
     shiftX = shiftX - (pmouseX - mouseX);
-   // shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
+    //shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
   }
 } 
 
@@ -149,7 +148,7 @@ boolean isOnMap()
 
 void setBuildingUses()
 {
-    buildingUses.add(new BuildingUse("retail", "retail.png", #EA6C90, "offices"));
+  buildingUses.add(new BuildingUse("retail", "retail.png", #EA6C90, "offices"));
   buildingUses.add(new BuildingUse("artCulture", "artCulture.png", #AA96CC, "offices"));
   buildingUses.add(new BuildingUse("lightIndustrial", "lightIndustrial.png", #8ACE8A, "retail"));
   buildingUses.add(new BuildingUse("offices", "offices.png", #66D9E2, "retail"));
@@ -160,9 +159,9 @@ void setBuildingUses()
 
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
-void mouseClicked() {
-  mouseX = int(mouseX / scaleFactor);
-  mouseY = int(mouseY / scaleFactor);
+//void mouseClicked() {
+//mouseX = int(mouseX / scaleFactor);
+//mouseY = int(mouseY / scaleFactor);
 
-  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
-}
+//println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
+//}

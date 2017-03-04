@@ -16,7 +16,7 @@ class GNWMap
   void render()
   {
     image(mapImage, 0, 0);
-  
+
     //walk through the GNWmap to render building
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
@@ -62,30 +62,30 @@ class GNWMap
    */
   void createGNWMap() 
   {  
-    addBuilding("Lot5", true, 64, 272, 147, 354, 153, 347, 247, 268, 248);
-    addBuilding("Park", false, 5, 267, 302, 350, 298, 341, 464, 271, 465);
-    addBuilding("Lot7", true, 7, 265, 519, 342, 520, 360, 620, 276, 641);
+    addBuilding("Lot5", true, 64, 285, 155, 390, 164, 387, 300, 277, 305);
+    addBuilding("Park", false, 5, 274, 333, 383, 330, 376, 525, 279, 520);
+    addBuilding("Lot7", true, 7, 272, 571, 379, 580, 392, 698, 280, 720);
 
-    addBuilding("Lot4", true, 17, 394, 159, 586, 162, 584, 212, 400, 213);
-    addBuilding("521", true, 14, 379, 364, 476, 367, 473, 463, 382, 466);  
-    addBuilding("515", true, 12, 376, 533, 489, 522, 513, 580, 382, 603);
+    addBuilding("Lot4", true, 17, 417, 167, 645, 175, 648, 260, 417, 260);
+    addBuilding("521", true, 14, 401, 390, 524, 398, 521, 532, 402, 532);
+    addBuilding("515", true, 12, 401, 579, 543, 571, 564, 660, 410, 695);
 
-    addBuilding("EmilyCarr", false, 28, 535, 352, 924, 255, 951, 344, 565, 443); 
-    addBuilding("Plaza", false, 22, 531, 517, 643, 491, 658, 546, 551, 573);
-    addBuilding("569", false, 26, 678, 485, 1075, 386, 1091, 434, 700, 539);
+    addBuilding("EmilyCarr", false, 28, 570, 378, 1128, 251, 1155, 378, 604, 507);
+    addBuilding("Plaza", false, 22, 568, 567, 702, 538, 721, 616, 593, 650);
+    addBuilding("569", false, 26, 728, 528, 1182, 420, 1201, 500, 750, 612);
 
-    addBuilding("CDM1", false, 34, 1115, 177, 1235, 146, 1283, 336, 1167, 371);
-    addBuilding("1933", true, 38, 1273, 147, 1406, 136, 1428, 225, 1297, 258);
-    addBuilding("CDM2", false, 41, 1304, 312, 1444, 284, 1463, 352, 1314, 366); 
+    addBuilding("CDM1", false, 34, 1207, 188, 1353, 156, 1400, 394, 1260, 425);
+    addBuilding("1933", true, 38, 1376, 152, 1539, 153, 1566, 283, 1408, 309);
+    addBuilding("CDM2", false, 41, 1415, 344, 1577, 313, 1600, 411, 1425, 422);
 
-    addBuilding("701", true, 44, 1541, 210, 2000, 210, 2023, 357, 1575, 355); 
-    addBuilding("1980", true, 46, 2117, 155, 2275, 150, 2412, 380, 2161, 368);
-    addBuilding("887", true, 48, 2438, 157, 2655, 178, 2656, 381, 2578, 385);
-    addBuilding("901", true, 50, 2701, 184, 2937, 210, 2924, 395, 2704, 386);
-    addBuilding("Mec", false, 52, 2983, 217, 3163, 225, 3211, 404, 2977, 401);
+    addBuilding("701", true, 44, 1662, 217, 2185, 224, 2221, 418, 1690, 401);
+    addBuilding("1980", true, 46, 2296, 166, 2528, 164, 2699, 432, 2353, 424);
+    addBuilding("887", true, 48, 2578, 173, 2904, 198, 2899, 448, 2765, 444);
+    addBuilding("901", true, 50, 2932, 203, 3211, 231, 3197, 459, 2923, 444);
+    addBuilding("Mec", false, 52, 3241, 240, 3460, 248, 3518, 473, 3221, 457);
 
-    addBuilding("Shaw", true, 55, 3299, 225, 3595, 224, 3623, 326, 3346, 398);
-    addBuilding("NaturesPath", true, 59, 3729, 218, 4022, 200, 4033, 237, 3754, 300);
+    addBuilding("Shaw", true, 55, 3569, 251, 3935, 247, 3965, 385, 3627, 457);
+    addBuilding("NaturesPath", true, 59, 4043, 241, 4392, 214, 4407, 284, 4081, 354);
   }
 
   /**
