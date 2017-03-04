@@ -7,10 +7,10 @@ GNWInterface GNWInterface;
 
 ArrayList<BuildingUse> buildingUses;
 
-ArrayList<Building> restaurantBuildings;
-ArrayList<Building> officeBuildings;
-ArrayList<Building> recBuildings;
-ArrayList<Building> residentBuildings;
+ArrayList<Building> artCultureBuildings;
+ArrayList<Building> lightIndustrialBuildings;
+ArrayList<Building> officesBuildings;
+ArrayList<Building> residentalBuildings;
 ArrayList<Building> retailBuildings;
 
 int shiftX;
@@ -23,14 +23,14 @@ String cur_time = "morning";
 ControlP5 cp5;
 RadioButton r1;
 
-//use 0.45 for laptops
-float scaleFactor = 0.45;
+//use 0.50 for laptops; 1 for tablet
+float scaleFactor = .5;
+//float scaleFactor = 1;
 
 void setup()
 {
-  fullScreen();
-
-  //size(2134, 1601);
+  //fullScreen();
+  size(2134, 1601);
   shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
@@ -39,17 +39,17 @@ void setup()
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
 
-  restaurantBuildings = new ArrayList<Building>();
-  officeBuildings = new ArrayList<Building>();
-  recBuildings = new ArrayList<Building>();
-  residentBuildings = new ArrayList<Building>();
+  artCultureBuildings = new ArrayList<Building>();
+  lightIndustrialBuildings = new ArrayList<Building>();
+  officesBuildings = new ArrayList<Building>();
+  residentalBuildings = new ArrayList<Building>();
   retailBuildings = new ArrayList<Building>();
 
   //create the radio button interface to change the time
   cp5 = new ControlP5(this);
   r1 = cp5.addRadioButton("radioButton")
-    .setPosition(100, 900)
-    .setSize(100, 50)
+    .setPosition(100 * scaleFactor, 1300 * scaleFactor)
+    .setSize(int(scaleFactor* 100), int(scaleFactor * 50))
     .setColorForeground(color(120))
     .setColorActive(color(200))
     .setColorLabel(color(0))
@@ -72,7 +72,7 @@ void draw() {
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
-  GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
+  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
   GNWMap.drawFlow();
   popMatrix();
@@ -119,7 +119,7 @@ void mouseDragged()
     GNWInterface.update();
   } else if (isOnMap()) {
     shiftX = shiftX - (pmouseX - mouseX);
-    shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
+    //shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
   }
 } 
 
@@ -148,11 +148,11 @@ boolean isOnMap()
 
 void setBuildingUses()
 {
-  buildingUses.add(new BuildingUse("Restaurant", "restaurant.png", color (200, 0, 0), "Office"));
-  buildingUses.add(new BuildingUse("Office", "office.png", color (0, 0, 200), "Restaurant"));
-  buildingUses.add(new BuildingUse("Recreation", "recreation.png", color(0, 200, 0), "Office"));
-  buildingUses.add(new BuildingUse("Resident", "resident.png", color (200, 200, 0), "Restaurant"));
-  buildingUses.add(new BuildingUse("Retail", "restaurant.png", color(200, 0, 200), "Restaurant"));
+  buildingUses.add(new BuildingUse("retail", "retail.png", #EA6C90, "offices"));
+  buildingUses.add(new BuildingUse("artCulture", "artCulture.png", #AA96CC, "offices"));
+  buildingUses.add(new BuildingUse("lightIndustrial", "lightIndustrial.png", #8ACE8A, "retail"));
+  buildingUses.add(new BuildingUse("offices", "offices.png", #66D9E2, "retail"));
+  buildingUses.add(new BuildingUse("residential", "residential.png", #F9D463, "artCulture"));
 
   GNWInterface.createBuildingUseBoxes();
 }
@@ -160,8 +160,8 @@ void setBuildingUses()
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
-//  mouseX = int(mouseX / scaleFactor);
-//  mouseY = int(mouseY / scaleFactor);
+//mouseX = int(mouseX / scaleFactor);
+//mouseY = int(mouseY / scaleFactor);
 
-//  println("After - x: " + mouseX + "; y: " + mouseY);
+//println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
 //}
