@@ -89,13 +89,12 @@ class Building
 
   ArrayList<Path> buildPaths(ArrayList<Path> paths)
   {
-
     if (!buildingUses.isEmpty())
     {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
         float density = decide_density(bUse.name, bUse.matchBUse);
-        ArrayList<Building> destBuildings = findBuildingDoorNodes(bUse.matchBUse);    
+        ArrayList<Building> destBuildings = findBuildingList(bUse.matchBUse);    
 
         if (destBuildings != null && !destBuildings.isEmpty()) {
           for (int j = 0; j < destBuildings.size(); j ++) {
@@ -109,9 +108,11 @@ class Building
     return paths;
   }
 
-
-  //TODO currently returns the first doornode of the first building in category; should should return all?
-  ArrayList<Building> findBuildingDoorNodes(String bUName)
+  /**
+   * Returns list of buildings with the same building use name
+   * @param buName is the name of building use
+   */
+  ArrayList<Building> findBuildingList(String bUName)
   {
     if (bUName == "artCulture" && !artCultureBuildings.isEmpty()) {
       return artCultureBuildings;
@@ -128,6 +129,10 @@ class Building
     }
   }
 
+  /**
+   * Adds building use to the building
+   * @param buildingUse is the building use object to be added
+   */
   void addBuildingUse(BuildingUse buildingUse) {
     if (buildingUses.size() < maxBuildingUses) {
       buildingUses.add(buildingUse);
@@ -146,34 +151,34 @@ class Building
     }
   }
 
-  //decide the path density from icon a to icon b
-  float decide_density(String icon_nameA, String icon_nameB)
+  //decide the path density from building use src to building use dest
+  float decide_density(String bUNameSrc, String bUNameDest)
   {
     //three levels of density per unit length
     float d1 = 0.08;
     float d2 = 0.03;
     float d3 = 0.01;
 
-    //defaut color is the third level
+    //defaut density is the third level
     float d = d3;
 
     //morning time density rule
     if (cur_time == "morning")
     {
-      if (icon_nameA == "resident.png" || icon_nameA == "transit.png")
+      if (bUNameSrc == "residential" || bUNameSrc == "transit")
       {
-        if (icon_nameB == "restaurant.png")
+        if (bUNameDest == "retail")
         {
           //the second level density
           d = d2;
-        } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
+        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
         {
           //the first level density
           d = d1;
         }
-      } else if (icon_nameA == "restaurant.png")
+      } else if (bUNameSrc == "retail")
       {
-        if (icon_nameB == "office.png" || icon_nameB == "school.png")
+        if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
         {
           //the second level density
           d = d2;
@@ -183,17 +188,17 @@ class Building
     //around mid afternoon time density rule
     else if (cur_time == "mid_afternoon")
     {
-      if (icon_nameA == "resident.png" || icon_nameA == "transit.png")
+      if (bUNameSrc == "resident" || bUNameSrc == "transit")
       {
-        if (icon_nameB == "restaurant.png")
+        if (bUNameDest == "retail")
         {
           //the third level density
           d = d3;
-        } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
+        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
         {
           //the third level density
           d = d3;
-        } else if (icon_nameB == "recreation.png")
+        } else if (bUNameDest == "artCulture")
         {
           //the second level density
           d = d2;

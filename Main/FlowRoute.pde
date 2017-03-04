@@ -25,13 +25,13 @@ class FlowRoute
     nodes = new ArrayList<GraphNode>();
     nodes = GNWPathFinder.findPath(initial_nodeID, dest_nodeID);
   }
-  
+
   /*
   *  From the route found between two buildings, update the Arraylist path. 
-  *  If the route passes through paths that have an existing flow, 
-  *  add the densities together. Else, add the new path into the Arraylist path.
-  */
-  
+   *  If the route passes through paths that have an existing flow, 
+   *  add the densities together. Else, add the new path into the Arraylist path.
+   */
+
   ArrayList<Path> buildPathDensities(float d, ArrayList<Path> flowPaths)
   {
     for (int i = 0; i < nodes.size() - 1; i++)
@@ -41,29 +41,28 @@ class FlowRoute
       float nodeEndX = nodes.get(i+1).xf();
       float nodeEndY = nodes.get(i+1).yf();
       boolean doesPathExist = false;
-      
-      Path curPath = new Path(new PVector(nodeStartX,nodeStartY), new PVector(nodeEndX, nodeEndY), d);
+
+      Path curPath = new Path(new PVector(nodeStartX, nodeStartY), new PVector(nodeEndX, nodeEndY), d);
       curPath.density = curPath.calcFinalDensity();
-  
+
       for (int j = 0; j < flowPaths.size(); j++) 
       {
         Path examPath = flowPaths.get(j);
         if (nodeStartX == examPath.pathStartPoint.x && nodeStartY == examPath.pathStartPoint.y &&
-            nodeEndX == examPath.pathEndPoint.x && nodeEndY == examPath.pathEndPoint.y)
+          nodeEndX == examPath.pathEndPoint.x && nodeEndY == examPath.pathEndPoint.y)
         {
-            doesPathExist = true;  
-            flowPaths.get(j).density += curPath.density;
-            break;
+          doesPathExist = true;  
+          flowPaths.get(j).density += curPath.density;
+          break;
         }
       }
-      
+
       if (!doesPathExist)
       {
-            flowPaths.add(curPath);
+        flowPaths.add(curPath);
       }
     }
-    
+
     return flowPaths;
   }
 }
- 

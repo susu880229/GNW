@@ -74,7 +74,7 @@ void draw() {
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
-  GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
+  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
 
 
