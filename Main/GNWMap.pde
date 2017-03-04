@@ -15,7 +15,7 @@ class GNWMap
 
   void render()
   {
-    image(mapImage, 0, -10);
+    image(mapImage, 0, 0);
   
     //walk through the GNWmap to render building
     for (Map.Entry buildingEntry : buildings.entrySet()) {

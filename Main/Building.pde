@@ -65,8 +65,8 @@ class Building
 
   void drawPolygon() 
   {
-    fill(0);
-    //noFill();
+    //fill(0);
+    noFill();
     noStroke();
     beginShape();
     vertex(xpos1, ypos1);
@@ -82,7 +82,7 @@ class Building
     {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
-        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 30 + (i*20);
+        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 50 + (i*60);
         int dotY = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
 
         color c = bUse.colorId;
