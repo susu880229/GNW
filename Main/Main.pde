@@ -31,8 +31,8 @@ float scaleFactor = .5;
 
 void setup()
 {
-  //fullScreen();
-  size(2134, 1601);
+  fullScreen();
+  //size(2134, 1601);
   shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
@@ -119,13 +119,17 @@ void update_time()
   prevTime = curTimeVal;
 }
 
-void mousePressed()
-{
-
+void scaleMouse() {
+  pmouseX = int(pmouseX / scaleFactor);
+  pmouseY = int(pmouseY / scaleFactor);
   mouseX = int(mouseX / scaleFactor);
   mouseY = int(mouseY / scaleFactor);
+}
 
-  if (!isOnMap()) {
+void mousePressed()
+{
+  if (isOnInterface()) {
+    scaleMouse();
     GNWInterface.selectBuildingUse();
   }
 }
@@ -134,10 +138,7 @@ void mouseDragged()
 {
   //differiate between icon move and map move
   if (GNWInterface.selectedBUIcon != null) {
-    pmouseX = int(pmouseX / scaleFactor);
-    mouseX = int(mouseX / scaleFactor);
-    mouseY = int(mouseY / scaleFactor);
-
+    scaleMouse();
     GNWInterface.update();
   } else if (isOnMap()) {
     shiftX = shiftX - (pmouseX - mouseX);
@@ -161,11 +162,20 @@ void mouseReleased()
 
 /**
  * Checks if mouse position is on map
- * TODO: update to actual pixel. Currently assuming first half of app is map
  */
 boolean isOnMap()
 {
-  return mouseY< height/2;
+  int midY = int(913 * scaleFactor );
+  return mouseY* scaleFactor < midY;
+}
+
+/**
+ * Checks if mouse position is on map
+ */
+boolean isOnInterface()
+{
+  int midY = int(913 * scaleFactor );
+  return mouseY > midY;
 }
 
 void setBuildingUses()
@@ -182,8 +192,6 @@ void setBuildingUses()
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
-//mouseX = int(mouseX / scaleFactor);
-//mouseY = int(mouseY / scaleFactor);
-
-//println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
+//  scaleMouse();
+//  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
 //}

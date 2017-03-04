@@ -1,4 +1,4 @@
-/**   //<>//
+/**   //<>// //<>//
  * The Building class represents a physical building
  */
 class Building 
