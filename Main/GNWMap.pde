@@ -28,6 +28,19 @@ class GNWMap
     }
   }
 
+  void selectBuilding()
+  {
+    for (int i = 0; i < buildings.size(); i++ ) 
+    {
+      Building building = buildings.get(i);
+
+      if(building!=null && building.contains(mouseX, mouseY)) {
+        println(building.buildingName);
+        break;
+      }
+    }
+  }
+
   void flowInit()
   {
     flowPaths = new ArrayList<Path>();
@@ -53,7 +66,7 @@ class GNWMap
   void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
     try {
       Building building = findBuilding();
-      
+
       if (building.isCustomizable) {
         building.addBuildingUse(selectedBuildingUse);
         isBuildingUseAdded = true;

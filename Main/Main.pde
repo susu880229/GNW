@@ -119,6 +119,9 @@ void update_time()
   prevTime = curTimeVal;
 }
 
+/**
+ * Calculates mouse value if it was on original size sketch (i.e. if scaleFactor = 1)
+ */
 void scaleMouse() {
   pmouseX = int(pmouseX / scaleFactor);
   pmouseY = int(pmouseY / scaleFactor);
@@ -126,26 +129,43 @@ void scaleMouse() {
   mouseY = int(mouseY / scaleFactor);
 }
 
+/**
+ * Note: Checks raw values - so need to scale mouse values back to real size before checking
+ **/
 void mousePressed()
 {
-  if (isOnInterface()) {
-    scaleMouse();
+  scaleMouse();
+  if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
+  } else if (isOnMap()) {
+    GNWMap.selectBuilding();
   }
 }
 
+/**
+ * Handles how to interpret different mouse drags
+ * First case: moving building use icon - it updates raw interface values, so need to scaleMouse() first
+ * Second case: moving map - scaled map is being updated, so don't need to scaleMouse(); however, isOnMap() checks raw y values, so still need to revert mouseY
+ **/
 void mouseDragged()
 {
-  //differiate between icon move and map move
   if (GNWInterface.selectedBUIcon != null) {
     scaleMouse();
     GNWInterface.update();
-  } else if (isOnMap()) {
-    shiftX = shiftX - (pmouseX - mouseX);
-    shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
+  } else {
+    mouseY = int(mouseY / scaleFactor);
+    if (isOnMap()) {
+      shiftX = shiftX - (pmouseX - mouseX);
+      shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
+    }
   }
 } 
 
+/**
+ * Handles what happens when user releases icon; 
+ * If dropped onto a building, the building use gets added to building; otherwise nothing else happens
+ * Icon is always removed from sketch in both cases
+ */
 void mouseReleased()
 { 
   if (GNWInterface.selectedBUIcon != null && isOnMap()) {
@@ -156,26 +176,16 @@ void mouseReleased()
       GNWInterface.clearSelected();
     }
   }
-  //remove the icon after release the mouse
   GNWInterface.clearSelected();
 }
 
 /**
- * Checks if mouse position is on map
+ * Checks if mouse position is on map; this checks raw coordinates (i.e. when scaleFactor is 1)
  */
 boolean isOnMap()
 {
-  int midY = int(913 * scaleFactor );
-  return mouseY* scaleFactor < midY;
-}
-
-/**
- * Checks if mouse position is on map
- */
-boolean isOnInterface()
-{
-  int midY = int(913 * scaleFactor );
-  return mouseY > midY;
+  int midY = 913;
+  return mouseY < midY;
 }
 
 void setBuildingUses()
