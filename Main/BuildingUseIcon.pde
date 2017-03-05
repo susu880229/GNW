@@ -21,12 +21,11 @@ class BuildingUseIcon
   BuildingUseIcon(BuildingUse buildingUse, int x, int y)
   {
     this.buildingUse = buildingUse;
-    icon_name = buildingUse.imgSrc;
     w = 100;
     h = 100;
     bx = x;
     by = y;
-    a = loadImage(icon_name);
+    a = buildingUse.img;
   }
 
 

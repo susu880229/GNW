@@ -30,14 +30,9 @@ class GNWMap
 
   void selectBuilding()
   {
-    for (int i = 0; i < buildings.size(); i++ ) 
-    {
-      Building building = buildings.get(i);
-
-      if(building!=null && building.contains(mouseX, mouseY)) {
-        println(building.buildingName);
-        break;
-      }
+    for (Map.Entry buildingEntry : buildings.entrySet()) {
+      Building building = (Building) buildingEntry.getValue();
+      building.showTooltip = building.contains(mouseX, mouseY);
     }
   }
 
@@ -77,12 +72,11 @@ class GNWMap
     }
   }
 
-  //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
   Building findBuilding() throws Exception {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();
-      if (building.contains(mouseX - shiftX, mouseY))
+      if (building.contains(mouseX, mouseY))
       {
         return building;
       }

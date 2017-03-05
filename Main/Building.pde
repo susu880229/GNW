@@ -18,6 +18,9 @@ class Building
   float node_x;
   float node_y;
 
+  PImage tooltipImage;
+  boolean showTooltip;
+
   //TODO this should be customizable depending on building; will implement in future
   //TODO implement delete to allow user to replace building use
   int maxBuildingUses = 3;
@@ -52,6 +55,7 @@ class Building
     this.doorNodeId = doorNodeId;
 
     buildingUses = new ArrayList<BuildingUse>();
+    tooltipImage = loadImage("tooltip.png");
   }
 
   //rendering the block
@@ -59,6 +63,9 @@ class Building
   {
     drawPolygon();
     drawBuildingUses();
+    if (showTooltip) {
+      drawTooltip();
+    }
   }
 
   void drawPolygon() 
@@ -85,6 +92,25 @@ class Building
         fill(c);
         ellipse(dotX, dotY, 60, 60);
       }
+  }
+
+  void drawTooltip()
+  {
+    float tooltipX = xpos2;
+    float tooltipY = ypos2 - 30;
+    image(tooltipImage, tooltipX, tooltipY);
+    
+    if (buildingUses.isEmpty()) {
+      return;
+    } else {
+      for (int i = 0; i < buildingUses.size(); i++) {
+        BuildingUse bUse = buildingUses.get(i);
+        float space = (i == 0) ? 55 : 55 + i * (45 + bUse.img.width);
+        float bUX = tooltipX + space;
+        float bUY = tooltipY + 30;
+        image(bUse.img, bUX, bUY);
+      }
+    }
   }
 
   ArrayList<Path> buildPaths(ArrayList<Path> paths)

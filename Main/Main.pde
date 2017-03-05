@@ -130,14 +130,17 @@ void scaleMouse() {
 }
 
 /**
- * Note: Checks raw values - so need to scale mouse values back to real size before checking
+ * Handles how to interpret mouse presses; both cases below checks raw values, so need to scale mouse values back to real size before checking
+ * First case: select building use if mouse pressed onto interface
+ * Second case: Handle any horizontal scroll and select building if mouse pressed onto map 
  **/
 void mousePressed()
 {
   scaleMouse();
   if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
-  } else if (isOnMap()) {
+  } else {
+    mouseX = mouseX - shiftX;
     GNWMap.selectBuilding();
   }
 }
@@ -145,7 +148,7 @@ void mousePressed()
 /**
  * Handles how to interpret different mouse drags
  * First case: moving building use icon - it updates raw interface values, so need to scaleMouse() first
- * Second case: moving map - scaled map is being updated, so don't need to scaleMouse(); however, isOnMap() checks raw y values, so still need to revert mouseY
+ * Second case: moving map - scaled map is being updated, so don't need to scaleMouse(); however, isOnMap() checks raw y values, so need to revert mouseY
  **/
 void mouseDragged()
 {
@@ -163,13 +166,14 @@ void mouseDragged()
 
 /**
  * Handles what happens when user releases icon; 
- * If dropped onto a building, the building use gets added to building; otherwise nothing else happens
- * Icon is always removed from sketch in both cases
+ * If dropped onto a building, handle any horizontal stroll and add building use to building
+ * Icon is always removed from sketch wherever icon is released
  */
 void mouseReleased()
 { 
   if (GNWInterface.selectedBUIcon != null && isOnMap()) {
     try {
+      mouseX = mouseX - shiftX;
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
     } 
     catch(Exception e) {
