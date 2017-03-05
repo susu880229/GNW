@@ -28,11 +28,17 @@ class GNWMap
     }
   }
 
+  /**
+  * Reset all building showTooltip field depending on last mouse click by user;
+  * TODO check with team about how many tooltips to show at once. 
+  * TODO fix bug where tooltip is shown below some other layers
+  */
   void selectBuilding()
   {
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
-      building.showTooltip = building.contains(mouseX, mouseY);
+      //Handle any horizontal scroll before checking contains
+      building.showTooltip = building.contains(mouseX - shiftX, mouseY);
     }
   }
 
@@ -72,11 +78,12 @@ class GNWMap
     }
   }
 
+  //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
   Building findBuilding() throws Exception {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();
-      if (building.contains(mouseX, mouseY))
+      if (building.contains(mouseX - shiftX, mouseY))
       {
         return building;
       }

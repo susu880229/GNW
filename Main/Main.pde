@@ -26,8 +26,8 @@ ControlP5 cp5;
 RadioButton r1;
 
 //use 0.50 for laptops; 1 for tablet
-float scaleFactor = .5;
-//float scaleFactor = 1;
+//float scaleFactor = .5;
+float scaleFactor = 1;
 
 void setup()
 {
@@ -132,15 +132,15 @@ void scaleMouse() {
 /**
  * Handles how to interpret mouse presses; both cases below checks raw values, so need to scale mouse values back to real size before checking
  * First case: select building use if mouse pressed onto interface
- * Second case: Handle any horizontal scroll and select building if mouse pressed onto map 
+ * Second case: select building if mouse pressed onto map 
  **/
 void mousePressed()
 {
   scaleMouse();
+
   if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
   } else {
-    mouseX = mouseX - shiftX;
     GNWMap.selectBuilding();
   }
 }
@@ -173,7 +173,6 @@ void mouseReleased()
 { 
   if (GNWInterface.selectedBUIcon != null && isOnMap()) {
     try {
-      mouseX = mouseX - shiftX;
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
     } 
     catch(Exception e) {
