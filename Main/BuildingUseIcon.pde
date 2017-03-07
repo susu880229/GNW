@@ -29,23 +29,17 @@ class BuildingUseIcon
     a = loadImage(icon_name);
   }
 
-  
+
   //the image is controlled by the bx, by parameters
   void render()
   {
     image(a, bx, by, w, h);
   }
-  
+
   void mouseDragged() 
   {
-
     //update the new position of the image everytime user drag it
     bx = mouseX;
     by = mouseY;
   }
-
-
-  
-
-  
 }

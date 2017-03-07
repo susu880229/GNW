@@ -18,14 +18,16 @@ int shiftY;
 
 //define the time selection parameter
 String cur_time = "morning";
+float prevTime;
+boolean timeChanged = false;
 
 //define the UI for radio button
 ControlP5 cp5;
 RadioButton r1;
 
 //use 0.50 for laptops; 1 for tablet
-//float scaleFactor = .5;
-float scaleFactor = 1;
+float scaleFactor = .5;
+//float scaleFactor = 1;
 
 void setup()
 {
@@ -74,6 +76,17 @@ void draw() {
   GNWMap.render();
   //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
+
+
+
+  if (GNWMap.isBuildingUseAdded || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  {
+    GNWMap.isBuildingUseAdded = false;
+    timeChanged = false;
+    GNWMap.flowInit();
+  }
+
+
   GNWMap.drawFlow();
   popMatrix();
 
@@ -85,21 +98,30 @@ void draw() {
 //update time 
 void update_time()
 {
-  r1.getValue();
-  if (r1.getValue() == 10)
+  float curTimeVal = r1.getValue();
+
+  if (curTimeVal == 10)
   {
     cur_time = "morning";
-  } else if (r1.getValue() == 14)
+  } else if (curTimeVal == 14)
   {
     cur_time = "mid_afternoon";
   } else 
   {
     cur_time = null;
   }
+
+  if (curTimeVal != prevTime)
+  {
+    timeChanged = true;
+  }
+
+  prevTime = curTimeVal;
 }
 
 void mousePressed()
 {
+
   mouseX = int(mouseX / scaleFactor);
   mouseY = int(mouseY / scaleFactor);
 

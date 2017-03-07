@@ -4,11 +4,15 @@ class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
+  boolean isBuildingUseAdded;
+  ArrayList<Path> flowPaths;
 
   GNWMap() 
   {
     mapImage = loadImage("map.png");
     buildings = new HashMap<String, Building>();
+    isBuildingUseAdded = false;
+    flowPaths = new ArrayList<Path>();
 
     createGNWMap();
   }
@@ -24,18 +28,35 @@ class GNWMap
     }
   }
 
-  void drawFlow() {
+  void flowInit()
+  {
+    flowPaths = new ArrayList<Path>();
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
-      building.generateFlow();
+      flowPaths = building.buildPaths(flowPaths);
+    }
+
+    for (int i = 0; i < flowPaths.size(); i++)
+    {
+      flowPaths.get(i).particleInit();
+    }
+  }
+
+  void drawFlow()
+  {
+    for (int i = 0; i < flowPaths.size(); i++) 
+    {
+      flowPaths.get(i).run();
     }
   }
 
   void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
     try {
       Building building = findBuilding();
+
       if (building.isCustomizable) {
         building.addBuildingUse(selectedBuildingUse);
+        isBuildingUseAdded = true;
       }
     } 
     catch (Exception e) {

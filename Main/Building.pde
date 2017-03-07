@@ -1,9 +1,8 @@
-/**  //<>// //<>//
+/**   //<>//
  * The Building class represents a physical building
  */
 class Building 
 {    
-  ArrayList<Person> persons;
   ArrayList<BuildingUse> buildingUses;
   int xpos1;
   int ypos1; 
@@ -52,7 +51,6 @@ class Building
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
 
-    persons = new ArrayList<Person>();
     buildingUses = new ArrayList<BuildingUse>();
   }
 
@@ -65,7 +63,6 @@ class Building
 
   void drawPolygon() 
   {
-    //fill(0);
     noFill();
     noStroke();
     beginShape();
@@ -79,7 +76,6 @@ class Building
   void drawBuildingUses() 
   {
     if (!buildingUses.isEmpty())
-    {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
         int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 50 + (i*60);
@@ -89,31 +85,34 @@ class Building
         fill(c);
         ellipse(dotX, dotY, 60, 60);
       }
-    }
   }
 
-  void generateFlow()
+  ArrayList<Path> buildPaths(ArrayList<Path> paths)
   {
     if (!buildingUses.isEmpty())
     {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
-        color flowColor = decide_color(bUse.name, bUse.matchBUse);
-        ArrayList<Building> destBuildings = findBuildingDoorNodes(bUse.matchBUse);    
+        float density = decide_density(bUse.name, bUse.matchBUse);
+        ArrayList<Building> destBuildings = findBuildingList(bUse.matchBUse);    
 
         if (destBuildings != null && !destBuildings.isEmpty()) {
           for (int j = 0; j < destBuildings.size(); j ++) {
             int destDoorNodeId = destBuildings.get(j).doorNodeId;
-            addPerson(destDoorNodeId, flowColor);
-            run();
+            FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
+            paths = fA.buildPathDensities(density, paths);
           }
         }
       }
     }
+    return paths;
   }
 
-  //TODO currently returns the first doornode of the first building in category; should should return all?
-  ArrayList<Building> findBuildingDoorNodes(String bUName)
+  /**
+   * Returns list of buildings with the same building use name
+   * @param buName is the name of building use
+   */
+  ArrayList<Building> findBuildingList(String bUName)
   {
     if (bUName == "artCulture" && !artCultureBuildings.isEmpty()) {
       return artCultureBuildings;
@@ -129,7 +128,11 @@ class Building
       return null;
     }
   }
-  
+
+  /**
+   * Adds building use to the building
+   * @param buildingUse is the building use object to be added
+   */
   void addBuildingUse(BuildingUse buildingUse) {
     if (buildingUses.size() < maxBuildingUses) {
       buildingUses.add(buildingUse);
@@ -148,79 +151,61 @@ class Building
     }
   }
 
-  void addPerson(int dest_doorNodeId, color c)
-  {     
-    Person pA = new Person(this.doorNodeId, dest_doorNodeId, c);
-    persons.add(pA);
-  }
-
-  void run()
+  //decide the path density from building use src to building use dest
+  float decide_density(String bUNameSrc, String bUNameDest)
   {
+    //three levels of density per unit length
+    float d1 = 0.08;
+    float d2 = 0.03;
+    float d3 = 0.01;
 
-    for (int i = 0; i < persons.size(); i++)
-    {
-      persons.get(i).run();
-      if (persons.get(i).isDead)
-      {
-        persons.remove(i);
-      }
-    }
-  }
-
-  //decide the path density from icon a to icon b
-  color decide_color(String icon_nameA, String icon_nameB)
-  {
-    //three level of density to show by color
-    color c1 = color(0, 0, 255);
-    color c2 = color(0, 191, 255);
-    color c3 = color(173, 216, 230);
-    //defaut color is the third level
-    color c = c3;
+    //defaut density is the third level
+    float d = d3;
 
     //morning time density rule
     if (cur_time == "morning")
     {
-      if (icon_nameA == "resident.png" || icon_nameA == "transit.png")
+      if (bUNameSrc == "residential" || bUNameSrc == "transit")
       {
-        if (icon_nameB == "restaurant.png")
+        if (bUNameDest == "retail")
         {
           //the second level density
-          c = c2;
-        } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
+          d = d2;
+        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
         {
           //the first level density
-          c = c1;
+          d = d1;
         }
-      } else if (icon_nameA == "restaurant.png")
+      } else if (bUNameSrc == "retail")
       {
-        if (icon_nameB == "office.png" || icon_nameB == "school.png")
+        if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
         {
           //the second level density
-          c = c2;
+          d = d2;
         }
       }
     }
     //around mid afternoon time density rule
     else if (cur_time == "mid_afternoon")
     {
-      if (icon_nameA == "resident.png" || icon_nameA == "transit.png")
+      if (bUNameSrc == "resident" || bUNameSrc == "transit")
       {
-        if (icon_nameB == "restaurant.png")
+        if (bUNameDest == "retail")
         {
           //the third level density
-          c = c3;
-        } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
+          d = d3;
+        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
         {
           //the third level density
-          c = c3;
-        } else if (icon_nameB == "recreation.png")
+          d = d3;
+        } else if (bUNameDest == "artCulture")
         {
           //the second level density
-          c = c2;
+          d = d2;
         }
       }
     }
-    return c;
+    return d;
   }
 
   boolean contains(int x, int y) {    
