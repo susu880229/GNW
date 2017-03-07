@@ -18,7 +18,7 @@ class Building
   float node_x;
   float node_y;
 
-  PImage tooltipImage;
+  BuildingTooltip tooltip;
   boolean showTooltip;
 
   //TODO this should be customizable depending on building; will implement in future
@@ -54,8 +54,8 @@ class Building
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
 
+    tooltip = new BuildingTooltip();
     buildingUses = new ArrayList<BuildingUse>();
-    tooltipImage = loadImage("tooltip.png");
   }
 
   //rendering the block
@@ -63,11 +63,25 @@ class Building
   {
     drawPolygon();
     drawBuildingUses();
-    if (showTooltip) {
-      drawTooltip();
-    }
   }
 
+  void showTooltip() 
+  {
+    boolean isOnRight = xpos3 < int(GNWMap.mapImage.width*9/10);
+    int tooltipX;
+    int tooltipY;
+    
+    if(isOnRight) {
+      tooltipX = xpos2;
+      tooltipY = ypos2 - 30; 
+    } else {
+      tooltipX = xpos4 - tooltip.tooltipImage_Left.width;
+      tooltipY = ypos1;       
+    }
+    
+    tooltip.drawTooltip(tooltipX, tooltipY, buildingUses, isOnRight);
+  }
+  
   void drawPolygon() 
   {
     noFill();
@@ -92,25 +106,6 @@ class Building
         fill(c);
         ellipse(dotX, dotY, 60, 60);
       }
-  }
-
-  void drawTooltip()
-  {
-    float tooltipX = xpos2;
-    float tooltipY = ypos2 - 30;
-    image(tooltipImage, tooltipX, tooltipY);
-    
-    if (buildingUses.isEmpty()) {
-      return;
-    } else {
-      for (int i = 0; i < buildingUses.size(); i++) {
-        BuildingUse bUse = buildingUses.get(i);
-        float space = (i == 0) ? 55 : 55 + i * (45 + bUse.img.width);
-        float bUX = tooltipX + space;
-        float bUY = tooltipY + 30;
-        image(bUse.img, bUX, bUY);
-      }
-    }
   }
 
   ArrayList<Path> buildPaths(ArrayList<Path> paths)

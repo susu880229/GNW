@@ -1,4 +1,4 @@
-import pathfinder.*; //<>//
+import pathfinder.*; //<>// //<>//
 import controlP5.*;
 
 GNWPathFinder GNWPathFinder;
@@ -26,8 +26,8 @@ ControlP5 cp5;
 RadioButton r1;
 
 //use 0.50 for laptops; 1 for tablet
-//float scaleFactor = .5;
-float scaleFactor = 1;
+float scaleFactor = .5;
+//float scaleFactor = 1;
 
 void setup()
 {
@@ -73,11 +73,7 @@ void draw() {
 
   pushMatrix();
   translate(shiftX, shiftY);
-  GNWMap.render();
-  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
-
-
 
   if (GNWMap.isBuildingUseAdded || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
@@ -86,8 +82,9 @@ void draw() {
     GNWMap.flowInit();
   }
 
-
   GNWMap.drawFlow();
+  GNWMap.render();
+  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   popMatrix();
 
   //render buildingUseBoxes and SelectedBUIcon
@@ -137,13 +134,14 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-
   if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
+    GNWMap.clearSelectedBuilding();
   } else {
     GNWMap.selectBuilding();
   }
 }
+
 
 /**
  * Handles how to interpret different mouse drags

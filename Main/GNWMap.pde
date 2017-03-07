@@ -6,6 +6,7 @@ class GNWMap
   PImage mapImage;
   boolean isBuildingUseAdded;
   ArrayList<Path> flowPaths;
+  Building selectedBuilding;
 
   GNWMap() 
   {
@@ -13,6 +14,7 @@ class GNWMap
     buildings = new HashMap<String, Building>();
     isBuildingUseAdded = false;
     flowPaths = new ArrayList<Path>();
+    selectedBuilding = null;
 
     createGNWMap();
   }
@@ -26,6 +28,10 @@ class GNWMap
       Building building = (Building) buildingEntry.getValue();
       building.render();
     }
+    
+    if(selectedBuilding != null) {
+      selectedBuilding.showTooltip();
+    }
   }
 
   /**
@@ -38,8 +44,17 @@ class GNWMap
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
       //Handle any horizontal scroll before checking contains
-      building.showTooltip = building.contains(mouseX - shiftX, mouseY);
+      if(building.contains(mouseX - shiftX, mouseY)) {
+        selectedBuilding = building; 
+        return;
+      }
     }
+    clearSelectedBuilding ();
+  }
+  
+  void clearSelectedBuilding() 
+  {
+    selectedBuilding = null;
   }
 
   void flowInit()
