@@ -1,6 +1,11 @@
 import pathfinder.*; //<>//
 import controlP5.*;
 
+//FOR OUTPUT OF GRAPH NODE COORDINATES
+//PrintWriter outputPathCoordinates;
+//int nodeCounter = 0;
+//-----------------------------------
+
 GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
 GNWInterface GNWInterface;
@@ -26,13 +31,16 @@ ControlP5 cp5;
 RadioButton r1;
 
 //use 0.50 for laptops; 1 for tablet
-float scaleFactor = .5;
+float scaleFactor = 1;
 //float scaleFactor = 1;
 
 void setup()
 {
+  //FOR OUTPUT OF GRAPH NODE COORDINATES
+  //outputPathCoordinates = createWriter("positions.txt"); 
+  
   //fullScreen();
-  size(2134, 1601);
+  size(2048, 1536);
   shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
@@ -187,3 +195,20 @@ void setBuildingUses()
 
 //println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
 //}
+
+
+//FOR OUTPUT OF GRAPH NODE COORDINATES
+//void mouseClicked() {
+//nodeCounter++;
+//mouseX = int(mouseX / scaleFactor);
+//mouseY = int(mouseY / scaleFactor);
+
+//outputPathCoordinates.println(nodeCounter + " " + (mouseX - shiftX) + " " + (mouseY - shiftY));
+//}
+
+//void keyPressed() {
+//  outputPathCoordinates.flush(); // Writes the remaining data to the file
+//  outputPathCoordinates.close(); // Finishes the file
+//  exit(); // Stops the program
+//}
+//----------------------------------------
