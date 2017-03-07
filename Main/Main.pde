@@ -73,6 +73,8 @@ void draw() {
 
   pushMatrix();
   translate(shiftX, shiftY);
+  GNWMap.render();
+  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
 
   if (GNWMap.isBuildingUseAdded || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
@@ -83,8 +85,7 @@ void draw() {
   }
 
   GNWMap.drawFlow();
-  GNWMap.render();
-  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
+  GNWMap.showTSelectedBuilding();
   popMatrix();
 
   //render buildingUseBoxes and SelectedBUIcon

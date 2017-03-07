@@ -28,30 +28,33 @@ class GNWMap
       Building building = (Building) buildingEntry.getValue();
       building.render();
     }
-    
-    if(selectedBuilding != null) {
+  }
+
+  void showTSelectedBuilding() 
+  {
+    if (selectedBuilding != null) {
       selectedBuilding.showTooltip();
     }
   }
 
   /**
-  * Reset all building showTooltip field depending on last mouse click by user;
-  * TODO check with team about how many tooltips to show at once. 
-  * TODO fix bug where tooltip is shown below some other layers
-  */
+   * Reset all building showTooltip field depending on last mouse click by user;
+   * TODO check with team about how many tooltips to show at once. 
+   * TODO fix bug where tooltip is shown below some other layers
+   */
   void selectBuilding()
   {
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
       //Handle any horizontal scroll before checking contains
-      if(building.contains(mouseX - shiftX, mouseY)) {
+      if (building.contains(mouseX - shiftX, mouseY) && building.isCustomizable) {
         selectedBuilding = building; 
         return;
       }
     }
     clearSelectedBuilding ();
   }
-  
+
   void clearSelectedBuilding() 
   {
     selectedBuilding = null;
