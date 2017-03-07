@@ -1,4 +1,4 @@
-/**  //<>//
+/**  //<>// //<>//
  * The Building class represents a physical building
  */
 class Building 
@@ -90,136 +90,96 @@ class Building
       }
     }
   }
-
-  void generateFlow()
-  {
-    if (!buildingUses.isEmpty())
-    {
-      for (int i = 0; i < buildingUses.size(); i++) {
-        BuildingUse bUse = buildingUses.get(i);
-        color flowColor = decide_color(bUse.name, bUse.matchBUse);
-        ArrayList<Building> destBuildings = findBuildingDoorNodes(bUse.matchBUse);    
-
-        if (destBuildings != null && !destBuildings.isEmpty()) {
-          for (int j = 0; j < destBuildings.size(); j ++) {
-            int destDoorNodeId = destBuildings.get(j).doorNodeId;
-            addPerson(destDoorNodeId, flowColor);
-            run();
-          }
-        }
-      }
-    }
-  }
-
-  //TODO currently returns the first doornode of the first building in category; should should return all?
-  ArrayList<Building> findBuildingDoorNodes(String buildingName)
-  {
-    if (buildingName == "Restaurant" && !restaurantBuildings.isEmpty()) {
-      return restaurantBuildings;
-    } else if (buildingName == "Office" && officeBuildings.size() > 0) {
-      return officeBuildings;
-    } else if (buildingName == "Recreation" && recBuildings.size() > 0) {
-      return recBuildings;
-    } else if (buildingName =="Resident" && residentBuildings.size() > 0) {
-      return residentBuildings;
-    } else if (buildingName =="Retail" && retailBuildings.size() > 0) {
-      return retailBuildings;
-    } else {
-      return null;
-    }
-  }
-
+  
+  
+  
+ //when the selectedUse is on the building hot spot, the use will be added to this building
   void addBuildingUse(BuildingUse buildingUse) {
-    if (buildingUses.size() < maxBuildingUses) {
+    if (buildingUses.size() <= maxBuildingUses && isCustomizable) {
       buildingUses.add(buildingUse);
-
-      if (buildingUse.name == "Restaurant") {
-        restaurantBuildings.add(this);
-      } else if (buildingUse.name == "Office") {
-        officeBuildings.add(this);
-      } else if (buildingUse.name == "Recreation") {
-        recBuildings.add(this);
-      } else if (buildingUse.name =="Resident") {
-        residentBuildings.add(this);
-      } else if (buildingUse.name =="Retail") {
-        retailBuildings.add(this);
-      }
+      
+    }
+    else
+    {
+      System.out.println("the building is not customizable or full");
     }
   }
 
-  void addPerson(int dest_doorNodeId, color c)
-  {     
-    Person pA = new Person(this.doorNodeId, dest_doorNodeId, c);
+  void addPerson(int dest_doorNodeId, int weight)
+  { 
+    
+    Person pA = new Person(this.doorNodeId, dest_doorNodeId, weight);
     persons.add(pA);
+    
+      
   }
-
+  
+  
+  //draw the circle as person and update the position info
   void run()
   {
 
     for (int i = 0; i < persons.size(); i++)
     {
+      
       persons.get(i).run();
+     
       if (persons.get(i).isDead)
       {
         persons.remove(i);
       }
-    }
+      
+    } 
   }
 
-  //decide the path density from icon a to icon b
-  color decide_color(String icon_nameA, String icon_nameB)
+  int generatePerson()
   {
-    //three level of density to show by color
-    color c1 = color(0, 0, 255);
-    color c2 = color(0, 191, 255);
-    color c3 = color(173, 216, 230);
-    //defaut color is the third level
-    color c = c3;
+    //boolean add = false;
+    //persons.clear();
+    int weight = 0;
+    pre_time = millis();
+    ArrayList<Building> destBuildings = new ArrayList<Building>();
+    if (!buildingUses.isEmpty())
+    {
+      for (int i = 0; i < buildingUses.size(); i++) 
+      {
+        BuildingUse bUse = buildingUses.get(i);
+        for (UseFlow flow : use_flows)
+        {
+          if(flow.time == cur_time && flow.from_use == bUse.name)
+          {
+            destBuildings = findBuildingDoorNodes(flow.to_use);
+            weight = flow.weight;
+            if (destBuildings != null && !destBuildings.isEmpty()) 
+            {
+              for (int j = 0; j < destBuildings.size(); j ++) 
+              {
+                int destDoorNodeId = destBuildings.get(j).doorNodeId;
+                //add this condition incase there flow generate inside the same building (findPah) get error
+                if(destDoorNodeId != this.doorNodeId)
+                {
+                  addPerson(destDoorNodeId, weight);
+                  //run();
+                  
+                }
+                
+              }
+            }
+          }
+        
+        }
+      }
+      
+    }
+    return weight;
+  }
 
-    //morning time density rule
-    if (cur_time == "morning")
-    {
-      if (icon_nameA == "resident.png" || icon_nameA == "transit.png")
-      {
-        if (icon_nameB == "restaurant.png")
-        {
-          //the second level density
-          c = c2;
-        } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
-        {
-          //the first level density
-          c = c1;
-        }
-      } else if (icon_nameA == "restaurant.png")
-      {
-        if (icon_nameB == "office.png" || icon_nameB == "school.png")
-        {
-          //the second level density
-          c = c2;
-        }
-      }
-    }
-    //around mid afternoon time density rule
-    else if (cur_time == "mid_afternoon")
-    {
-      if (icon_nameA == "resident.png" || icon_nameA == "transit.png")
-      {
-        if (icon_nameB == "restaurant.png")
-        {
-          //the third level density
-          c = c3;
-        } else if (icon_nameB == "office.png" || icon_nameB == "school.png")
-        {
-          //the third level density
-          c = c3;
-        } else if (icon_nameB == "recreation.png")
-        {
-          //the second level density
-          c = c2;
-        }
-      }
-    }
-    return c;
+  //
+  ArrayList<Building> findBuildingDoorNodes(String UseName)
+  {
+    ArrayList<Building> buildings = (ArrayList<Building>) use_buildings.get(UseName);
+    return buildings;  
+    
   }
 
   boolean contains(int x, int y) {    

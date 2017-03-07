@@ -15,8 +15,8 @@ class BuildingUseBox
     box_x = x;
     box_y = y;
     
-    box_width = 380;
-    box_height = 290;
+    box_width = 300;
+    box_height = 200;
   }
 
   //draw method

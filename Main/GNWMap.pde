@@ -4,13 +4,27 @@ class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
+  ArrayList<Building> LIndustryBuildings;
+  ArrayList<Building> businessBuildings;
+  ArrayList<Building> ACbuildings;
+  ArrayList<Building> residentBuildings;
+  ArrayList<Building> retailBuildings;
+ 
+  
 
   GNWMap() 
   {
     mapImage = loadImage("map.png");
     buildings = new HashMap<String, Building>();
-
     createGNWMap();
+    LIndustryBuildings = new ArrayList<Building>();
+    businessBuildings = new ArrayList<Building>();
+    ACbuildings = new ArrayList<Building>();
+    residentBuildings = new ArrayList<Building>();
+    retailBuildings = new ArrayList<Building>();
+    use_buildings(); //initialize the use_buildings hash
+    createUseFlow(); //load the all types of flow path 
+    //UpdatePerson = false;
   }
 
   void render()
@@ -23,18 +37,23 @@ class GNWMap
       building.render();
     }
   }
-
-  void drawFlow() {
+  
+  /*
+  void UpdateFlow() {
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
-      building.generateFlow();
+      building.generatePerson();
     }
+    //UpdatePerson = false;
   }
-
+  */
+  
   void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
     try {
       Building building = findBuilding();
       building.addBuildingUse(selectedBuildingUse);
+      add_useBuildings(selectedBuildingUse, building);
+      //UpdatePerson = true;
     } 
     catch (Exception e) {
       //if no building found, don't do anything
@@ -94,4 +113,87 @@ class GNWMap
     Building newBuilding = new Building(name, c, doorNodeId, x1, y1, x2, y2, x3, y3, x4, y4);
     buildings.put(name, newBuilding);
   }
+  
+  
+  void addUseFlow(int time, String from, String to, int number)
+  {
+    UseFlow use_flow = new UseFlow(time, from, to, number);
+    use_flows.add(use_flow);
+    
+  }
+  
+  void createUseFlow()
+  {
+    //business out
+    addUseFlow(12, "Business", "Art and Culture", 20 );
+    addUseFlow(12, "Business", "Park and Public", 20  );
+    addUseFlow(12, "Business", "Transit", 30 );
+    addUseFlow(12, "Business", "Neighborhood", 20 );
+    addUseFlow(12, "Business", "Retail", 50);
+    
+    //education out
+    addUseFlow(12, "Education", "Art and Culture", 30);
+    addUseFlow(12, "Education", "Park and Public", 20);
+    addUseFlow(12, "Education", "Transit", 30);
+    addUseFlow(12, "Education", "Neighborhood", 20);
+    addUseFlow(12, "Education", "Retail", 50);
+    
+    //resident out
+    addUseFlow(12, "Resident", "Art and Culture", 5);
+    addUseFlow(12, "Resident", "Park and Public", 5);
+    addUseFlow(12, "Resident", "Transit", 10);
+    addUseFlow(12, "Resident", "Neighborhood", 5);
+    addUseFlow(12, "Resident", "Retail", 20);
+    
+    //transit out
+    addUseFlow(12, "Transit", "Art and Culture", 10);
+    addUseFlow(12, "Transit", "Park and Public", 10);
+    addUseFlow(12, "Transit", "Neighborhood", 10);
+    addUseFlow(12, "Transit", "Retail", 30);
+    
+    //neighborhood out
+    addUseFlow(12, "Neighborhood", "Art and Culture", 10);
+    addUseFlow(12, "Neighborhood", "Park and Public", 10);
+    addUseFlow(12, "Neighborhood", "Transit", 30);
+    addUseFlow(12, "Neighborhood", "Retail", 30);
+    
+    //light induestry out
+    addUseFlow(12, "Light Industry", "Art and Culture", 10);
+    addUseFlow(12, "Light Industry", "Park and Public", 20);
+    addUseFlow(12, "Light Industry", "Transit", 30);
+    addUseFlow(12, "Light Industry", "Neighborhood", 20);
+    addUseFlow(12, "Light Industry", "Retail", 50);
+  }
+  
+  //initialize the five key and value paires for the use_buldings hashmap
+  void use_buildings()
+  {
+  
+    use_buildings.put("Resident", residentBuildings);
+    use_buildings.put("Business", businessBuildings);
+    use_buildings.put("Art and Culture", ACbuildings);
+    use_buildings.put("Light Industry", LIndustryBuildings);
+    use_buildings.put("Retail", retailBuildings);
+  
+  }
+  //add building to the use_buildings specific arraylist 
+  void add_useBuildings(BuildingUse selectedBuildingUse, Building building)
+  {
+    if (selectedBuildingUse.name == "Resident") {
+        residentBuildings.add(building);
+    } else if (selectedBuildingUse.name == "Business") {
+        businessBuildings.add(building);
+    } else if (selectedBuildingUse.name == "Art and Culture") {
+        ACbuildings.add(building);
+    } else if (selectedBuildingUse.name =="Light Industry") {
+        LIndustryBuildings.add(building);
+    } else if (selectedBuildingUse.name =="Retail") {
+        retailBuildings.add(building);
+    }
+    
+  }
+  
+  
+  
+  
 }

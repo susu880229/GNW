@@ -1,4 +1,4 @@
-class GNWInterface //<>//
+class GNWInterface //<>// //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
@@ -20,14 +20,17 @@ class GNWInterface //<>//
 
   void createBuildingUseBoxes() 
   {
-    int space = 418;
+    int space = 300;
 
-    for (int i = 0; i < buildingUses.size(); i++) {
+      for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse buildingUse = buildingUses.get(i);
-      BuildingUseBox buildingUseBox = new BuildingUseBox(buildingUse, xBuildingBox, yBuildingBox);
-      buildingUseBoxes.add(buildingUseBox);
-
-      xBuildingBox += space;
+      //only add the customizable buildinguses into buildingUseBoxes for rendering
+      if(buildingUse.cust == true)
+      {
+        BuildingUseBox buildingUseBox = new BuildingUseBox(buildingUse, xBuildingBox, yBuildingBox);
+        buildingUseBoxes.add(buildingUseBox);
+        xBuildingBox += space;
+      }
     }
   }
 
@@ -69,5 +72,6 @@ class GNWInterface //<>//
   void clearSelected ()
   {
     selectedBUIcon = null;
+    
   }
 }

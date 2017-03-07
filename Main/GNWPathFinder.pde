@@ -11,6 +11,7 @@ class GNWPathFinder
     nodeSize = 12.0f;
     GNWGraph = new Graph();
     createGNWGraph();
+    writeEdges();
   }
 
   /**
@@ -20,14 +21,23 @@ class GNWPathFinder
   {
     makeGraphFromFile(GNWGraph, "graph.txt");
     pathFinder = new GraphSearch_Astar(GNWGraph, new AshCrowFlight(1.0f));
-    //gNodes = GNWGraph.getNodeArray();
     gNodes = new ArrayList<GraphNode>();
     Node_arrayTolist();
-    //gEdges = GNWGraph.getAllEdgeArray();
     gEdges = new ArrayList<GraphEdge>();
     Edge_arrayToList();
   }
-
+  
+  //write the gEdges info to paths ArrayList
+  void writeEdges()
+  {
+    for(GraphEdge edge : gEdges)
+    {
+      paths.add(new Path(edge.from().id(), edge.to().id(), 0));
+    }
+    
+    
+  }
+  
   /**
    * Finds route
    * @return GraphNode[] List of nodes to visit to go from startNode to endNode
@@ -43,6 +53,7 @@ class GNWPathFinder
     return path_nodes;
   }
   
+  //change gnodes from Array to ArrayList
   void Node_arrayTolist()
   {
     
@@ -54,6 +65,7 @@ class GNWPathFinder
     
    }
    
+   //change gEdges from Array to ArrayList
    void Edge_arrayToList()
    {
      for(GraphEdge edge: GNWGraph.getAllEdgeArray())
