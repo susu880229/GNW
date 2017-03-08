@@ -1,4 +1,4 @@
-import pathfinder.*; //<>// //<>// //<>//
+import pathfinder.*; //<>//
 import controlP5.*;
 
 //FOR OUTPUT OF GRAPH NODE COORDINATES
@@ -31,22 +31,18 @@ ControlP5 cp5;
 RadioButton r1;
 
 //use 0.50 for laptops; 1 for tablet
-float scaleFactor = 1;
+float scaleFactor = .5;
 //float scaleFactor = 1;
 
 void setup()
 {
-  <<<<<<< HEAD
-    fullScreen();
-  //size(2134, 1601);
-  =======
-    //FOR OUTPUT OF GRAPH NODE COORDINATES
-    //outputPathCoordinates = createWriter("positions.txt"); 
+  //FOR OUTPUT OF GRAPH NODE COORDINATES
+  //outputPathCoordinates = createWriter("positions.txt"); 
 
-    //fullScreen();
-    size(2048, 1536);
-  >>>>>>> master
-    shiftX = 0;
+  //fullScreen();
+  size(2048, 1536);
+
+  shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
   GNWInterface = new GNWInterface();
@@ -64,7 +60,7 @@ void setup()
   cp5 = new ControlP5(this);
   r1 = cp5.addRadioButton("radioButton")
     .setPosition(100 * scaleFactor, 1300 * scaleFactor)
-    .setSize(int(scaleFactor* 100), int(scaleFactor * 50))
+    .setSize(int(scaleFactor* 200), int(scaleFactor * 100))
     .setColorForeground(color(120))
     .setColorActive(color(200))
     .setColorLabel(color(0))
@@ -152,6 +148,9 @@ void mousePressed()
     GNWInterface.selectBuildingUse();
     GNWMap.clearSelectedBuilding();
   } else {
+    if (GNWMap.selectedBuilding != null) {
+      //GNWMap.selectTooltip();
+    } 
     GNWMap.selectBuilding();
   }
 }

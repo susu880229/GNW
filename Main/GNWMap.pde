@@ -92,6 +92,7 @@ class GNWMap
       if (building.isCustomizable) {
         building.addBuildingUse(selectedBuildingUse);
         isBuildingUseAdded = true;
+        selectedBuilding = building;
       }
     } 
     catch (Exception e) {
