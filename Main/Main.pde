@@ -153,13 +153,6 @@ void setBuildingUses()
   GNWInterface.createBuildingUseBoxes();
 }
 
-void addBuildingUses(String name, String imgSrc, color colorId)
-{
-  BuildingUse build_use = new BuildingUse(name, imgSrc, colorId);
-  buildingUses.add(build_use);
-  
-}
-
 
 //USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
