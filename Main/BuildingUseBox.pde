@@ -14,9 +14,15 @@ class BuildingUseBox
     this.buildingUse = buildingUse;
     box_x = x;
     box_y = y;
+<<<<<<< HEAD
     
     box_width = 300;
     box_height = 200;
+=======
+
+    box_width = 385;
+    box_height = 290;
+>>>>>>> master
   }
 
   //draw method
@@ -30,7 +36,7 @@ class BuildingUseBox
   {
     boolean checkX = mouseX > box_x && mouseX < box_x + box_width;
     boolean checkY = mouseY > box_y && mouseY < box_y + box_height;
-    
+
     return checkX && checkY;
   }
 }

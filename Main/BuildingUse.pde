@@ -3,9 +3,13 @@ class BuildingUse
   String name;
   String imgSrc;
   color colorId;
+<<<<<<< HEAD
   boolean cust;
   
   
+=======
+
+>>>>>>> master
   //TODO this should be a hashmap to store all the locations depending on time of the day
   String matchBUse;
   /*
@@ -15,6 +19,7 @@ class BuildingUse
     this.imgSrc = imgSrc;
     this.colorId = colorId;
     this.matchBUse = matchBUse;
+<<<<<<< HEAD
   } 
   */
   BuildingUse(String name, String imgSrc, color colorId, boolean cust)
@@ -25,4 +30,7 @@ class BuildingUse
     this.cust = cust;
   } 
   
+=======
+  }
+>>>>>>> master
 }

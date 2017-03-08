@@ -46,22 +46,26 @@ class GNWPathFinder
   {
     ArrayList<GraphNode> path_nodes = new ArrayList<GraphNode>();
     pathFinder.search(startNode, endNode, true);
-    for(GraphNode node : pathFinder.getRoute())
+    for (GraphNode node : pathFinder.getRoute())
     {
       path_nodes.add(node);
     }
     return path_nodes;
   }
+<<<<<<< HEAD
   
   //change gnodes from Array to ArrayList
+=======
+
+>>>>>>> master
   void Node_arrayTolist()
   {
-    
-    for(GraphNode node: GNWGraph.getNodeArray())
+
+    for (GraphNode node : GNWGraph.getNodeArray())
     {
       gNodes.add(node);
-      
     }
+<<<<<<< HEAD
     
    }
    
@@ -69,25 +73,30 @@ class GNWPathFinder
    void Edge_arrayToList()
    {
      for(GraphEdge edge: GNWGraph.getAllEdgeArray())
+=======
+  }
+
+  void Edge_arrayToList()
+  {
+    for (GraphEdge edge : GNWGraph.getAllEdgeArray())
+>>>>>>> master
     {
       gEdges.add(edge);
-      
     }
-     
-   }
+  }
 
-/**
-* Draws nodes and edges of graph for debugging help
-*/
+  /**
+   * Draws nodes and edges of graph for debugging help
+   */
   void drawGraph()
   {
     drawNodes();
     drawEdges(gEdges, color(192, 192, 192, 128), 1.0f, true);
   }
 
-/** 
-* Helper to draw nodes
-*/
+  /** 
+   * Helper to draw nodes
+   */
   void drawNodes() 
   {
     pushStyle();
@@ -99,11 +108,11 @@ class GNWPathFinder
     }
     popStyle();
   }
-  
-  
-/** 
-* Helper to draw edges
-*/
+
+
+  /** 
+   * Helper to draw edges
+   */
   void drawEdges(ArrayList<GraphEdge> edges, int lineCol, float sWeight, boolean arrow) {
     if (edges != null) {
       pushStyle();
@@ -120,10 +129,10 @@ class GNWPathFinder
       popStyle();
     }
   }
-  
-/** 
-* Helper to draw arrows on edges to indicate which direction it allows
-*/
+
+  /** 
+   * Helper to draw arrows on edges to indicate which direction it allows
+   */
   void drawArrow(GraphNode fromNode, GraphNode toNode, float nodeRad, float arrowSize) {
     float fx, fy, tx, ty;
     float ax, ay, sx, sy, ex, ey;
@@ -162,9 +171,9 @@ class GNWPathFinder
     endShape();
   }
 
-/**
-* THIS FUNCTION IS ONLY TEMP HERE TO ILLUSTRATE ROUTES
-*/
+  /**
+   * THIS FUNCTION IS ONLY TEMP HERE TO ILLUSTRATE ROUTES
+   */
 
   //use the findpath result (a series of GraphNodes) as argument to draw lines between these nodes
   void drawRoute(ArrayList<GraphNode> r) 
@@ -178,7 +187,7 @@ class GNWPathFinder
       noFill();
       for (int i = 1; i < r.size(); i++)
         line(r.get(i-1).xf(), r.get(i-1).yf(), r.get(i).xf(), r.get(i).yf());
-       
+
       // Route start node
       strokeWeight(2.0f);
       stroke(0, 0, 160);
@@ -189,7 +198,6 @@ class GNWPathFinder
       fill(255, 0, 0);
       ellipse(r.get(r.size()-1).xf(), r.get(r.size()-1).yf(), nodeSize, nodeSize); 
       popStyle();
-      
     }
   }
 

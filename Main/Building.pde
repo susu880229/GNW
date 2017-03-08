@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 /**  //<>// //<>//
+=======
+/**   //<>//
+>>>>>>> master
  * The Building class represents a physical building
  */
 class Building 
 {    
-  ArrayList<Person> persons;
   ArrayList<BuildingUse> buildingUses;
   int xpos1;
   int ypos1; 
@@ -52,7 +55,6 @@ class Building
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
 
-    persons = new ArrayList<Person>();
     buildingUses = new ArrayList<BuildingUse>();
   }
 
@@ -78,25 +80,74 @@ class Building
   void drawBuildingUses() 
   {
     if (!buildingUses.isEmpty())
-    {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
-        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 30 + (i*20);
+        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 50 + (i*60);
         int dotY = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
-        
+
         color c = bUse.colorId;
         fill(c);
-        ellipse(dotX , dotY, 20, 20);
+        ellipse(dotX, dotY, 60, 60);
       }
-    }
   }
+<<<<<<< HEAD
   
   
   
  //when the selectedUse is on the building hot spot, the use will be added to this building
+=======
+
+  ArrayList<Path> buildPaths(ArrayList<Path> paths)
+  {
+    if (!buildingUses.isEmpty())
+    {
+      for (int i = 0; i < buildingUses.size(); i++) {
+        BuildingUse bUse = buildingUses.get(i);
+        float density = decide_density(bUse.name, bUse.matchBUse);
+        ArrayList<Building> destBuildings = findBuildingList(bUse.matchBUse);    
+
+        if (destBuildings != null && !destBuildings.isEmpty()) {
+          for (int j = 0; j < destBuildings.size(); j ++) {
+            int destDoorNodeId = destBuildings.get(j).doorNodeId;
+            FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
+            paths = fA.buildPathDensities(density, paths);
+          }
+        }
+      }
+    }
+    return paths;
+  }
+
+  /**
+   * Returns list of buildings with the same building use name
+   * @param buName is the name of building use
+   */
+  ArrayList<Building> findBuildingList(String bUName)
+  {
+    if (bUName == "artCulture" && !artCultureBuildings.isEmpty()) {
+      return artCultureBuildings;
+    } else if (bUName == "lightIndustrial" && lightIndustrialBuildings.size() > 0) {
+      return lightIndustrialBuildings;
+    } else if (bUName == "offices" && officesBuildings.size() > 0) {
+      return officesBuildings;
+    } else if (bUName =="retail" && residentalBuildings.size() > 0) {
+      return residentalBuildings;
+    } else if (bUName =="residential" && retailBuildings.size() > 0) {
+      return retailBuildings;
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Adds building use to the building
+   * @param buildingUse is the building use object to be added
+   */
+>>>>>>> master
   void addBuildingUse(BuildingUse buildingUse) {
     if (buildingUses.size() <= maxBuildingUses && isCustomizable) {
       buildingUses.add(buildingUse);
+<<<<<<< HEAD
       
     }
     else
@@ -117,8 +168,32 @@ class Building
   
   //draw the circle as person and update the position info
   void run()
-  {
+=======
 
+      if (buildingUse.name == "artCulture") {
+        artCultureBuildings.add(this);
+      } else if (buildingUse.name == "lightIndustrial") {
+        lightIndustrialBuildings.add(this);
+      } else if (buildingUse.name == "offices") {
+        officesBuildings.add(this);
+      } else if (buildingUse.name =="retail") {
+        residentalBuildings.add(this);
+      } else if (buildingUse.name =="residential") {
+        retailBuildings.add(this);
+      }
+    }
+  }
+
+  //decide the path density from building use src to building use dest
+  float decide_density(String bUNameSrc, String bUNameDest)
+>>>>>>> master
+  {
+    //three levels of density per unit length
+    float d1 = 0.08;
+    float d2 = 0.03;
+    float d3 = 0.01;
+
+<<<<<<< HEAD
     for (int i = 0; i < persons.size(); i++)
     {
       
@@ -167,10 +242,56 @@ class Building
             }
           }
         
+=======
+    //defaut density is the third level
+    float d = d3;
+
+    //morning time density rule
+    if (cur_time == "morning")
+    {
+      if (bUNameSrc == "residential" || bUNameSrc == "transit")
+      {
+        if (bUNameDest == "retail")
+        {
+          //the second level density
+          d = d2;
+        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
+        {
+          //the first level density
+          d = d1;
+        }
+      } else if (bUNameSrc == "retail")
+      {
+        if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
+        {
+          //the second level density
+          d = d2;
+        }
+      }
+    }
+    //around mid afternoon time density rule
+    else if (cur_time == "mid_afternoon")
+    {
+      if (bUNameSrc == "resident" || bUNameSrc == "transit")
+      {
+        if (bUNameDest == "retail")
+        {
+          //the third level density
+          d = d3;
+        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
+        {
+          //the third level density
+          d = d3;
+        } else if (bUNameDest == "artCulture")
+        {
+          //the second level density
+          d = d2;
+>>>>>>> master
         }
       }
       
     }
+<<<<<<< HEAD
     return weight;
   }
 
@@ -180,6 +301,9 @@ class Building
     ArrayList<Building> buildings = (ArrayList<Building>) use_buildings.get(UseName);
     return buildings;  
     
+=======
+    return d;
+>>>>>>> master
   }
 
   boolean contains(int x, int y) {    
