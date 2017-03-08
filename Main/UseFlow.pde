@@ -5,7 +5,7 @@ class UseFlow
   float time;
   float density;
   
-  UseFlow (int time_select, String from, String to, float number)
+  UseFlow (float time_select, String from, String to, float number)
   {
     time = time_select;
     from_use = from;
