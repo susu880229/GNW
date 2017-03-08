@@ -4,38 +4,30 @@ class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
-<<<<<<< HEAD
-  ArrayList<Building> LIndustryBuildings;
-  ArrayList<Building> businessBuildings;
-  ArrayList<Building> ACbuildings;
-  ArrayList<Building> residentBuildings;
+  ArrayList<Building> artCultureBuildings;
+  ArrayList<Building> lightIndustrialBuildings;
+  ArrayList<Building> officesBuildings;
+  ArrayList<Building> residentalBuildings;
   ArrayList<Building> retailBuildings;
- 
-  
-=======
   boolean isBuildingUseAdded;
   ArrayList<Path> flowPaths;
->>>>>>> master
-
+  
   GNWMap() 
   {
     mapImage = loadImage("map.png");
     buildings = new HashMap<String, Building>();
-<<<<<<< HEAD
-=======
     isBuildingUseAdded = false;
     flowPaths = new ArrayList<Path>();
-
->>>>>>> master
     createGNWMap();
-    LIndustryBuildings = new ArrayList<Building>();
-    businessBuildings = new ArrayList<Building>();
-    ACbuildings = new ArrayList<Building>();
-    residentBuildings = new ArrayList<Building>();
+    artCultureBuildings = new ArrayList<Building>();
+    lightIndustrialBuildings = new ArrayList<Building>();
+    officesBuildings = new ArrayList<Building>();
+    residentalBuildings = new ArrayList<Building>();
     retailBuildings = new ArrayList<Building>();
-    use_buildings(); //initialize the use_buildings hash
-    createUseFlow(); //load the all types of flow path 
-    //UpdatePerson = false;
+    use_buildings();
+    createUseFlow();
+   
+    
   }
 
   void render()
@@ -48,14 +40,7 @@ class GNWMap
       building.render();
     }
   }
-<<<<<<< HEAD
-  
-  /*
-  void UpdateFlow() {
-    for (Map.Entry buildingEntry : buildings.entrySet()) {
-      Building building = (Building) buildingEntry.getValue();
-      building.generatePerson();
-=======
+
 
   void flowInit()
   {
@@ -76,26 +61,17 @@ class GNWMap
     for (int i = 0; i < flowPaths.size(); i++) 
     {
       flowPaths.get(i).run();
->>>>>>> master
     }
-    //UpdatePerson = false;
   }
-  */
+
   
   void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
     try {
       Building building = findBuilding();
-<<<<<<< HEAD
-      building.addBuildingUse(selectedBuildingUse);
-      add_useBuildings(selectedBuildingUse, building);
-      //UpdatePerson = true;
-=======
-
       if (building.isCustomizable) {
         building.addBuildingUse(selectedBuildingUse);
         isBuildingUseAdded = true;
       }
->>>>>>> master
     } 
     catch (Exception e) {
       //if no building found, don't do anything
@@ -210,25 +186,24 @@ class GNWMap
   //initialize the five key and value paires for the use_buldings hashmap
   void use_buildings()
   {
-  
-    use_buildings.put("Resident", residentBuildings);
-    use_buildings.put("Business", businessBuildings);
-    use_buildings.put("Art and Culture", ACbuildings);
-    use_buildings.put("Light Industry", LIndustryBuildings);
+    use_buildings.put("Resident", residentalBuildings);
+    use_buildings.put("Business", officesBuildings);
+    use_buildings.put("Art and Culture", artCultureBuildings);
+    use_buildings.put("Light Industry", lightIndustrialBuildings);
     use_buildings.put("Retail", retailBuildings);
-  
-  }
+    
+   }
   //add building to the use_buildings specific arraylist 
   void add_useBuildings(BuildingUse selectedBuildingUse, Building building)
   {
     if (selectedBuildingUse.name == "Resident") {
-        residentBuildings.add(building);
+        residentalBuildings.add(building);
     } else if (selectedBuildingUse.name == "Business") {
-        businessBuildings.add(building);
+        officesBuildings.add(building);
     } else if (selectedBuildingUse.name == "Art and Culture") {
-        ACbuildings.add(building);
+        artCultureBuildings.add(building);
     } else if (selectedBuildingUse.name =="Light Industry") {
-        LIndustryBuildings.add(building);
+        lightIndustrialBuildings.add(building);
     } else if (selectedBuildingUse.name =="Retail") {
         retailBuildings.add(building);
     }
