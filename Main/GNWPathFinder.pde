@@ -11,7 +11,6 @@ class GNWPathFinder
     nodeSize = 12.0f;
     GNWGraph = new Graph();
     createGNWGraph();
-    writeEdges();
   }
 
   /**
