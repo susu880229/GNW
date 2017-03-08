@@ -1,11 +1,9 @@
-import java.util.Map;
-
 class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
   PImage mapDoorsImage;
-  boolean isBuildingUseAdded;
+  boolean isBuildingUseChanged;
   ArrayList<Path> flowPaths;
   Building selectedBuilding;
 
@@ -14,7 +12,7 @@ class GNWMap
     mapImage = loadImage("map.png");
     mapDoorsImage = loadImage("mapDoors.png");
     buildings = new HashMap<String, Building>();
-    isBuildingUseAdded = false;
+    isBuildingUseChanged = false;
     flowPaths = new ArrayList<Path>();
     selectedBuilding = null;
 
@@ -33,7 +31,7 @@ class GNWMap
     }
   }
 
-  void showTSelectedBuilding() 
+  void showSelectedBuilding() 
   {
     if (selectedBuilding != null) {
       selectedBuilding.showTooltip();
@@ -41,9 +39,21 @@ class GNWMap
   }
 
   /**
-   * Reset all building showTooltip field depending on last mouse click by user;
-   * TODO check with team about how many tooltips to show at once. 
-   * TODO fix bug where tooltip is shown below some other layers
+   * check 
+   */
+  void selectTooltip() throws Exception
+  {
+    if (selectedBuilding != null) {
+      selectedBuilding.deleteBuildingUse();
+      isBuildingUseChanged = true;
+      return;
+    } else {
+      throw new Exception ("No tooltip selected");
+    }
+  }
+
+  /**
+   * Select building to show tooltip for if mouse clicked on a building; otherwise clear selected building
    */
   void selectBuilding()
   {
@@ -85,13 +95,14 @@ class GNWMap
     }
   }
 
-  void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
+  void assignBuildingUse(BuildingUse selectedBuildingUse) 
+  {
     try {
       Building building = findBuilding();
 
       if (building.isCustomizable) {
         building.addBuildingUse(selectedBuildingUse);
-        isBuildingUseAdded = true;
+        isBuildingUseChanged = true;
         selectedBuilding = building;
       }
     } 
@@ -101,7 +112,8 @@ class GNWMap
   }
 
   //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
-  Building findBuilding() throws Exception {
+  Building findBuilding() throws Exception 
+  {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();

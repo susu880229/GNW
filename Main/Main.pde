@@ -1,5 +1,6 @@
 import pathfinder.*; //<>//
 import controlP5.*;
+import java.util.Map;
 
 //FOR OUTPUT OF GRAPH NODE COORDINATES
 //PrintWriter outputPathCoordinates;
@@ -12,11 +13,11 @@ GNWInterface GNWInterface;
 
 ArrayList<BuildingUse> buildingUses;
 
-ArrayList<Building> artCultureBuildings;
-ArrayList<Building> lightIndustrialBuildings;
-ArrayList<Building> officesBuildings;
-ArrayList<Building> residentalBuildings;
-ArrayList<Building> retailBuildings;
+HashMap<String, Building> artCultureBuildings;
+HashMap<String, Building> lightIndustrialBuildings;
+HashMap<String, Building> officesBuildings;
+HashMap<String, Building> residentalBuildings;
+HashMap<String, Building> retailBuildings;
 
 int shiftX;
 int shiftY;
@@ -50,11 +51,11 @@ void setup()
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
 
-  artCultureBuildings = new ArrayList<Building>();
-  lightIndustrialBuildings = new ArrayList<Building>();
-  officesBuildings = new ArrayList<Building>();
-  residentalBuildings = new ArrayList<Building>();
-  retailBuildings = new ArrayList<Building>();
+  artCultureBuildings = new HashMap<String, Building>();
+  lightIndustrialBuildings = new HashMap<String, Building>();
+  officesBuildings = new HashMap<String, Building>();
+  residentalBuildings = new HashMap<String, Building>();
+  retailBuildings = new HashMap<String, Building>();
 
   //create the radio button interface to change the time
   cp5 = new ControlP5(this);
@@ -86,15 +87,15 @@ void draw() {
   //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
 
-  if (GNWMap.isBuildingUseAdded || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
-    GNWMap.isBuildingUseAdded = false;
+    GNWMap.isBuildingUseChanged = false;
     timeChanged = false;
     GNWMap.flowInit();
   }
 
   GNWMap.drawFlow();
-  GNWMap.showTSelectedBuilding();
+  GNWMap.showSelectedBuilding();
   popMatrix();
 
   //render buildingUseBoxes and SelectedBUIcon
@@ -148,10 +149,13 @@ void mousePressed()
     GNWInterface.selectBuildingUse();
     GNWMap.clearSelectedBuilding();
   } else {
-    if (GNWMap.selectedBuilding != null) {
-      //GNWMap.selectTooltip();
+    try {
+      GNWMap.selectTooltip();
     } 
-    GNWMap.selectBuilding();
+    catch(Exception e) {
+      println(e);
+      GNWMap.selectBuilding();
+    }
   }
 }
 
