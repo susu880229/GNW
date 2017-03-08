@@ -62,7 +62,7 @@ void draw() {
   translate(shiftX, shiftY);
   GNWMap.render();
   //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
-  update_time();
+  //update_time();
   if (GNWMap.isBuildingUseAdded || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
     GNWMap.isBuildingUseAdded = false;
