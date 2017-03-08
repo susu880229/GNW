@@ -10,7 +10,7 @@ class GNWInterface //<>//
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
-    interfaceImage.resize(2148, 1536);
+    interfaceImage.resize(2048, 1536);
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
 
     selectedBUIcon = null;

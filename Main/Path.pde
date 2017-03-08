@@ -8,7 +8,7 @@ class Path
   int devChance = 10;          //chance of particle deviating: a higher value means a lower chance
   int devScale = 3;            //how large each deviating step is
   int particleSize = 15;       //size of particle drawn on the map
-  int randomVelocity = 3;      //the lower value of how fast the particles move
+  float randomVelocity = 3.0;      //the lower value of how fast the particles move
 
   float density;
   float velocity;

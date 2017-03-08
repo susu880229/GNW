@@ -4,6 +4,7 @@ class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
+  PImage mapDoorsImage;
   boolean isBuildingUseAdded;
   ArrayList<Path> flowPaths;
   Building selectedBuilding;
@@ -11,6 +12,7 @@ class GNWMap
   GNWMap() 
   {
     mapImage = loadImage("map.png");
+    mapDoorsImage = loadImage("mapDoors.png");
     buildings = new HashMap<String, Building>();
     isBuildingUseAdded = false;
     flowPaths = new ArrayList<Path>();
@@ -22,6 +24,7 @@ class GNWMap
   void render()
   {
     image(mapImage, 0, 0);
+    image(mapDoorsImage, 0, 0);
 
     //walk through the GNWmap to render building
     for (Map.Entry buildingEntry : buildings.entrySet()) {
