@@ -5,15 +5,11 @@ import java.util.Map;
 GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
 GNWInterface GNWInterface;
-
-
 ArrayList<BuildingUse> buildingUses;
 ArrayList<UseFlow> use_flows;
 HashMap<String, ArrayList<Building>> use_buildings;
-
 int shiftX;
 int shiftY;
-
 //define the time selection parameter
 float cur_time = 12;
 float pre_time = -1;
@@ -21,8 +17,6 @@ boolean timeChanged = false;
 //define the UI for radio button
 ControlP5 cp5;
 RadioButton r1;
-
-
 //use 0.50 for laptops; 1 for tablet
 float scaleFactor = .5;
 //float scaleFactor = 1;
@@ -36,7 +30,6 @@ void setup()
   shiftY = 0;
   use_flows = new ArrayList<UseFlow>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
-  paths = new ArrayList<Path>();
   GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows arraylist
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
@@ -63,10 +56,8 @@ void setup()
  */
 void draw() {
   background(255);
-
   pushMatrix();
   scale(scaleFactor);
-
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
@@ -156,16 +147,15 @@ void setBuildingUses()
   buildingUses.add(new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
   buildingUses.add(new BuildingUse("Light Industry", "lightIndustrial.png", #8ACE8A));
   buildingUses.add(new BuildingUse("Business", "offices.png", #66D9E2));
-  buildingUses.add(new BuildingUse(("Resident", "residential.png", #F9D463));
+  buildingUses.add(new BuildingUse("Resident", "residential.png", #F9D463));
 
 
   GNWInterface.createBuildingUseBoxes();
 }
 
-void addBuildingUses(String name, String imgSrc, color colorId, boolean cust)
+void addBuildingUses(String name, String imgSrc, color colorId)
 {
-  BuildingUse build_use = new BuildingUse(name, imgSrc, colorId, cust);
-  //buildingUses_hash.put(name, build_use);
+  BuildingUse build_use = new BuildingUse(name, imgSrc, colorId);
   buildingUses.add(build_use);
   
 }
