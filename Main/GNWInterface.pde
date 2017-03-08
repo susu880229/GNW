@@ -21,22 +21,16 @@ class GNWInterface //<>// //<>//
 
   void createBuildingUseBoxes() 
   {
-<<<<<<< HEAD
-    int space = 300;
-=======
     int space = 420;
->>>>>>> master
 
-      for (int i = 0; i < buildingUses.size(); i++) {
+    for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse buildingUse = buildingUses.get(i);
-      //only add the customizable buildinguses into buildingUseBoxes for rendering
-      if(buildingUse.cust == true)
-      {
-        BuildingUseBox buildingUseBox = new BuildingUseBox(buildingUse, xBuildingBox, yBuildingBox);
-        buildingUseBoxes.add(buildingUseBox);
-        xBuildingBox += space;
-      }
+      BuildingUseBox buildingUseBox = new BuildingUseBox(buildingUse, xBuildingBox, yBuildingBox);
+      buildingUseBoxes.add(buildingUseBox);
+
+      xBuildingBox += space;
     }
+    
   }
 
   void render() 
