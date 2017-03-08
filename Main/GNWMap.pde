@@ -43,7 +43,7 @@ class GNWMap
    */
   void selectTooltip() throws Exception
   {
-    if (selectedBuilding != null) {
+    if (selectedBuilding != null) {   
       selectedBuilding.deleteBuildingUse();
       isBuildingUseChanged = true;
       return;

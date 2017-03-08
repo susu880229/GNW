@@ -1,65 +1,62 @@
 class BuildingTooltip
 {
   PImage tooltipImage;
-  HashMap<String, float[]> bUIconCoords;
   boolean isOnRight;
   float initialIconX;
   float initialIconY;
+  float tooltipX;
+  float tooltipY;
   float dividerSpace = 45;
 
   BuildingTooltip()
   {
     tooltipImage = loadImage("tooltip_right.png");
-    bUIconCoords = new HashMap<String, float[]>();
   }
 
-  void drawTooltip(float tooltipX, float tooltipY, ArrayList<BuildingUse> buildingUses, boolean isOnRight)
+  void drawTooltip(float x, float y, ArrayList<BuildingUse> buildingUses, boolean isOnRight)
   {
     this.isOnRight = isOnRight;
     initialIconX = (isOnRight) ? 55 : 30;
-    initialIconY = tooltipY + 30;
+    initialIconY = y + 30;
+
+    tooltipX = x;
+    tooltipY = y;
     tooltipImage = (isOnRight) ? loadImage("tooltip_right.png") : loadImage("tooltip_left.png");
     image(tooltipImage, tooltipX, tooltipY);
 
     if (buildingUses.isEmpty()) {
       return;
     } else {
-      for (int i = 0; i < buildingUses.size(); i++) {
+      for (int i = 0; i < buildingUses.size(); i++) {        
         BuildingUse bUse = buildingUses.get(i);
         float space = (i == 0) ? initialIconX : initialIconX + i * (dividerSpace + bUse.img.width);
         float bUX = tooltipX + space;
         float bUY = initialIconY;
         image(bUse.img, bUX, bUY);
-
-        float[] bUCoord = {bUX, bUY};
-        bUIconCoords.put(bUse.name, bUCoord);
       }
     }
   }
 
-  String selectBuildingUse() throws Exception
+  String selectBuildingUse(ArrayList<BuildingUse> buildingUses) throws Exception
   {
-    int count = 1;
-    for (Map.Entry bUIconCoordEntry : bUIconCoords.entrySet()) {
-      String bUName = (String) bUIconCoordEntry.getKey();
-      float[] bUTooltipCoords = (float[]) bUIconCoordEntry.getValue();
+    for (int i = 0; i < buildingUses.size(); i++) {        
+      String bUName = buildingUses.get(i).name;
+
       float bUTooltipWidth = (tooltipImage.width - initialIconX) /3;
 
       int currentMouseX = mouseX - shiftX;
-      
-      Boolean inX = bUTooltipCoords[0] < currentMouseX && bUTooltipCoords[0] + (count * bUTooltipWidth) > currentMouseX; 
-      Boolean inY = bUTooltipCoords[1] < mouseY && bUTooltipCoords[1] + tooltipImage.height > mouseY;
+
+      Boolean inX = tooltipX + (i * bUTooltipWidth) < currentMouseX && tooltipX + ((i+1) * bUTooltipWidth) > currentMouseX; 
+      Boolean inY = tooltipY < mouseY && tooltipY + tooltipImage.height > mouseY;
 
 
-//      println(currentMouseX + " " + mouseY);
-//      println(bUTooltipCoords[0] + " " + bUTooltipCoords[1]);
-//      println( (bUTooltipCoords[0] + (count * bUTooltipWidth) ) + " " + (bUTooltipCoords[1] + tooltipImage.height));
-      
-      
+      println(currentMouseX + " " + mouseY);
+      println(initialIconX + (i * bUTooltipWidth) + " " + tooltipY);
+      println( (initialIconX + ((i+1) * bUTooltipWidth)) + " " + (tooltipY + tooltipImage.height));
+
       if (inX && inY) {
         return bUName;
       }
-      count ++;
     }
     throw new Exception ("No building use selected");
   }

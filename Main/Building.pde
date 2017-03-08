@@ -1,4 +1,4 @@
-/** //<>//
+/** //<>// //<>//
  * The Building class represents a physical building
  */
 class Building 
@@ -143,7 +143,6 @@ class Building
     } else if (bUName == "offices" && !officesBuildings.isEmpty()) {
       return officesBuildings;
     } else if (bUName =="retail" && !retailBuildings.isEmpty()) {
-      println(retailBuildings.isEmpty());
       return retailBuildings;
     } else if (bUName =="residential" && !residentalBuildings.isEmpty()) {
       return residentalBuildings;
@@ -176,7 +175,7 @@ class Building
 
   void deleteBuildingUse() throws Exception
   {
-    String bUtoDelete = tooltip.selectBuildingUse();
+    String bUtoDelete = tooltip.selectBuildingUse(buildingUses);
 
     for (int i = 0; i < buildingUses.size(); i++) {
       String bUName = buildingUses.get(i).name;      
