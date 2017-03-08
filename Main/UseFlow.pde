@@ -2,26 +2,15 @@ class UseFlow
 {
   String from_use;
   String to_use;
-  int time;
-  int weight;
+  float time;
+  float density;
   
-  UseFlow (int time_select, String from, String to, int number)
+  UseFlow (int time_select, String from, String to, float number)
   {
     time = time_select;
     from_use = from;
     to_use = to;
-    weight = number;
+    density = number;
     
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
 }
