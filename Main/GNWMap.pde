@@ -68,8 +68,10 @@ class GNWMap
   void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
     try {
       Building building = findBuilding();
+
       if (building.isCustomizable) {
         building.addBuildingUse(selectedBuildingUse);
+        add_useBuildings(selectedBuildingUse, building);
         isBuildingUseAdded = true;
       }
     } 
