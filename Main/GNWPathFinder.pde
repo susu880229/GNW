@@ -27,17 +27,7 @@ class GNWPathFinder
     Edge_arrayToList();
   }
   
-  //write the gEdges info to paths ArrayList
-  void writeEdges()
-  {
-    for(GraphEdge edge : gEdges)
-    {
-      paths.add(new Path(edge.from().id(), edge.to().id(), 0));
-    }
-    
-    
-  }
-  
+
   /**
    * Finds route
    * @return GraphNode[] List of nodes to visit to go from startNode to endNode
@@ -52,12 +42,10 @@ class GNWPathFinder
     }
     return path_nodes;
   }
-<<<<<<< HEAD
-  
-  //change gnodes from Array to ArrayList
-=======
-
->>>>>>> master
+ 
+  /**
+    *change gNodes from Array to ArrayList
+    */
   void Node_arrayTolist()
   {
 
@@ -65,21 +53,16 @@ class GNWPathFinder
     {
       gNodes.add(node);
     }
-<<<<<<< HEAD
     
    }
    
-   //change gEdges from Array to ArrayList
-   void Edge_arrayToList()
-   {
-     for(GraphEdge edge: GNWGraph.getAllEdgeArray())
-=======
-  }
-
+  
+  /**
+     *change gEdges from Array to ArrayList
+     */
   void Edge_arrayToList()
   {
     for (GraphEdge edge : GNWGraph.getAllEdgeArray())
->>>>>>> master
     {
       gEdges.add(edge);
     }
