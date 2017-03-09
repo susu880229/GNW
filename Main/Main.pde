@@ -1,5 +1,6 @@
 import pathfinder.*; //<>//
 import controlP5.*;
+import java.util.Map;
 
 //FOR OUTPUT OF GRAPH NODE COORDINATES
 //PrintWriter outputPathCoordinates;
@@ -12,14 +13,16 @@ GNWInterface GNWInterface;
 
 ArrayList<BuildingUse> buildingUses;
 
-ArrayList<Building> artCultureBuildings;
-ArrayList<Building> lightIndustrialBuildings;
-ArrayList<Building> officesBuildings;
-ArrayList<Building> residentalBuildings;
-ArrayList<Building> retailBuildings;
+HashMap<String, Building> artCultureBuildings;
+HashMap<String, Building> lightIndustrialBuildings;
+HashMap<String, Building> officesBuildings;
+HashMap<String, Building> residentalBuildings;
+HashMap<String, Building> retailBuildings;
 
+//transformations
 int shiftX;
 int shiftY;
+float scaleFactor;
 
 //define the time selection parameter
 String cur_time = "morning";
@@ -30,17 +33,13 @@ boolean timeChanged = false;
 ControlP5 cp5;
 RadioButton r1;
 
-//use 0.50 for laptops; 1 for tablet
-float scaleFactor = 1;
-//float scaleFactor = 1;
-
 void setup()
 {
   //FOR OUTPUT OF GRAPH NODE COORDINATES
   //outputPathCoordinates = createWriter("positions.txt"); 
+
+  fullScreen();
   
-  //fullScreen();
-  size(2048, 1536);
   shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
@@ -48,18 +47,20 @@ void setup()
   GNWPathFinder = new GNWPathFinder();
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
+  
+  scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
-  artCultureBuildings = new ArrayList<Building>();
-  lightIndustrialBuildings = new ArrayList<Building>();
-  officesBuildings = new ArrayList<Building>();
-  residentalBuildings = new ArrayList<Building>();
-  retailBuildings = new ArrayList<Building>();
+  artCultureBuildings = new HashMap<String, Building>();
+  lightIndustrialBuildings = new HashMap<String, Building>();
+  officesBuildings = new HashMap<String, Building>();
+  residentalBuildings = new HashMap<String, Building>();
+  retailBuildings = new HashMap<String, Building>();
 
   //create the radio button interface to change the time
   cp5 = new ControlP5(this);
   r1 = cp5.addRadioButton("radioButton")
     .setPosition(100 * scaleFactor, 1300 * scaleFactor)
-    .setSize(int(scaleFactor* 100), int(scaleFactor * 50))
+    .setSize(int(scaleFactor* 200), int(scaleFactor * 100))
     .setColorForeground(color(120))
     .setColorActive(color(200))
     .setColorLabel(color(0))
@@ -85,17 +86,15 @@ void draw() {
   //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
   update_time();
 
-
-
-  if (GNWMap.isBuildingUseAdded || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
-    GNWMap.isBuildingUseAdded = false;
+    GNWMap.isBuildingUseChanged = false;
     timeChanged = false;
     GNWMap.flowInit();
   }
 
-
   GNWMap.drawFlow();
+  GNWMap.showSelectedBuilding();
   popMatrix();
 
   //render buildingUseBoxes and SelectedBUIcon
@@ -127,32 +126,62 @@ void update_time()
   prevTime = curTimeVal;
 }
 
-void mousePressed()
-{
-
+/**
+ * Calculates mouse value if it was on original size sketch (i.e. if scaleFactor = 1)
+ */
+void scaleMouse() {
+  pmouseX = int(pmouseX / scaleFactor);
+  pmouseY = int(pmouseY / scaleFactor);
   mouseX = int(mouseX / scaleFactor);
   mouseY = int(mouseY / scaleFactor);
+}
 
+/**
+ * Handles how to interpret mouse presses; both cases below checks raw values, so need to scale mouse values back to real size before checking
+ * First case: select building use if mouse pressed onto interface
+ * Second case: select building if mouse pressed onto map 
+ **/
+void mousePressed()
+{
+  scaleMouse();
   if (!isOnMap()) {
     GNWInterface.selectBuildingUse();
+    GNWMap.clearSelectedBuilding();
+  } else {
+    try {
+      GNWMap.selectTooltip();
+    } 
+    catch(Exception e) {
+      GNWMap.selectBuilding();
+    }
   }
 }
 
+
+/**
+ * Handles how to interpret different mouse drags
+ * First case: moving building use icon - it updates raw interface values, so need to scaleMouse() first
+ * Second case: moving map - scaled map is being updated, so don't need to scaleMouse(); however, isOnMap() checks raw y values, so need to revert mouseY
+ **/
 void mouseDragged()
 {
-  //differiate between icon move and map move
   if (GNWInterface.selectedBUIcon != null) {
-    pmouseX = int(pmouseX / scaleFactor);
-    mouseX = int(mouseX / scaleFactor);
-    mouseY = int(mouseY / scaleFactor);
-
+    scaleMouse();
     GNWInterface.update();
-  } else if (isOnMap()) {
-    shiftX = shiftX - (pmouseX - mouseX);
-    shiftX = constrain(shiftX, width-GNWMap.mapImage.width, 0);
+  } else {
+    mouseY = int(mouseY / scaleFactor);
+    if (isOnMap()) {
+      shiftX = shiftX - (pmouseX - mouseX);
+      shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
+    }
   }
 } 
 
+/**
+ * Handles what happens when user releases icon; 
+ * If dropped onto a building, handle any horizontal stroll and add building use to building
+ * Icon is always removed from sketch wherever icon is released
+ */
 void mouseReleased()
 { 
   if (GNWInterface.selectedBUIcon != null && isOnMap()) {
@@ -163,17 +192,16 @@ void mouseReleased()
       GNWInterface.clearSelected();
     }
   }
-  //remove the icon after release the mouse
   GNWInterface.clearSelected();
 }
 
 /**
- * Checks if mouse position is on map
- * TODO: update to actual pixel. Currently assuming first half of app is map
+ * Checks if mouse position is on map; this checks raw coordinates (i.e. when scaleFactor is 1)
  */
 boolean isOnMap()
 {
-  return mouseY< height/2;
+  int midY = 913;
+  return mouseY < midY;
 }
 
 void setBuildingUses()
@@ -188,22 +216,19 @@ void setBuildingUses()
 }
 
 
-//USED FOR DEBUGGING - prints x & y coordinate values of mouse click
+////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
-//mouseX = int(mouseX / scaleFactor);
-//mouseY = int(mouseY / scaleFactor);
-
-//println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
+//  scaleMouse();
+//  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
 //}
 
-
-//FOR OUTPUT OF GRAPH NODE COORDINATES
+////FOR OUTPUT OF GRAPH NODE COORDINATES
 //void mouseClicked() {
-//nodeCounter++;
-//mouseX = int(mouseX / scaleFactor);
-//mouseY = int(mouseY / scaleFactor);
+//  nodeCounter++;
+//  mouseX = int(mouseX / scaleFactor);
+//  mouseY = int(mouseY / scaleFactor);
 
-//outputPathCoordinates.println(nodeCounter + " " + (mouseX - shiftX) + " " + (mouseY - shiftY));
+//  outputPathCoordinates.println(nodeCounter + " " + (mouseX - shiftX) + " " + (mouseY - shiftY));
 //}
 
 //void keyPressed() {
@@ -211,4 +236,3 @@ void setBuildingUses()
 //  outputPathCoordinates.close(); // Finishes the file
 //  exit(); // Stops the program
 //}
-//----------------------------------------

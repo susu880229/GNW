@@ -1,7 +1,7 @@
 class BuildingUse
 {
   String name;
-  String imgSrc;
+  PImage img;
   color colorId;
 
   //TODO this should be a hashmap to store all the locations depending on time of the day
@@ -10,8 +10,9 @@ class BuildingUse
   BuildingUse(String name, String imgSrc, color colorId, String matchBUse)
   {
     this.name = name;
-    this.imgSrc = imgSrc;
     this.colorId = colorId;
     this.matchBUse = matchBUse;
+    img = loadImage(imgSrc);
+    img.resize(90, 0);
   }
 }

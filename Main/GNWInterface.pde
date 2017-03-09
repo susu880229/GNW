@@ -21,7 +21,7 @@ class GNWInterface //<>//
 
   void createBuildingUseBoxes() 
   {
-    int space = 420;
+    int space = 400;
 
     for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse buildingUse = buildingUses.get(i);
@@ -44,6 +44,9 @@ class GNWInterface //<>//
     if (selectedBUIcon != null) {
       selectedBUIcon.render();
     }
+
+    fill(0);        
+    rect(interfaceImage.width, 0, interfaceImage.width - width + 10, interfaceImage.height);
   }
 
   void selectBuildingUse()

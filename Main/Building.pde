@@ -1,4 +1,4 @@
-/**   //<>//
+/**  //<>//
  * The Building class represents a physical building
  */
 class Building 
@@ -17,6 +17,9 @@ class Building
   int doorNodeId;
   float node_x;
   float node_y;
+
+  BuildingTooltip tooltip;
+  boolean showTooltip;
 
   //TODO this should be customizable depending on building; will implement in future
   //TODO implement delete to allow user to replace building use
@@ -51,6 +54,7 @@ class Building
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
 
+    tooltip = new BuildingTooltip();
     buildingUses = new ArrayList<BuildingUse>();
   }
 
@@ -59,6 +63,23 @@ class Building
   {
     drawPolygon();
     drawBuildingUses();
+  }
+
+  void showTooltip() 
+  {
+    boolean isOnRight = xpos3 < int(GNWMap.mapImage.width*9/10);
+    int tooltipX;
+    int tooltipY;
+
+    if (isOnRight) {
+      tooltipX = xpos2;
+      tooltipY = ypos2 - 30;
+    } else {
+      tooltipX = xpos4 - tooltip.tooltipImage.width;
+      tooltipY = ypos1;
+    }
+
+    tooltip.drawTooltip(tooltipX, tooltipY, buildingUses, isOnRight);
   }
 
   void drawPolygon() 
@@ -94,11 +115,12 @@ class Building
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
         float density = decide_density(bUse.name, bUse.matchBUse);
-        ArrayList<Building> destBuildings = findBuildingList(bUse.matchBUse);    
+        HashMap<String, Building> destBuildings = findBuildingList(bUse.matchBUse);    
 
         if (destBuildings != null && !destBuildings.isEmpty()) {
-          for (int j = 0; j < destBuildings.size(); j ++) {
-            int destDoorNodeId = destBuildings.get(j).doorNodeId;
+          for (Map.Entry buildingEntry : destBuildings.entrySet()) {
+            Building destBuilding = (Building) buildingEntry.getValue();
+            int destDoorNodeId = destBuilding.doorNodeId;
             FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
             paths = fA.buildPathDensities(density, paths);
           }
@@ -112,18 +134,18 @@ class Building
    * Returns list of buildings with the same building use name
    * @param buName is the name of building use
    */
-  ArrayList<Building> findBuildingList(String bUName)
+  HashMap<String, Building> findBuildingList(String bUName)
   {
     if (bUName == "artCulture" && !artCultureBuildings.isEmpty()) {
       return artCultureBuildings;
-    } else if (bUName == "lightIndustrial" && lightIndustrialBuildings.size() > 0) {
+    } else if (bUName == "lightIndustrial" && !lightIndustrialBuildings.isEmpty()) {
       return lightIndustrialBuildings;
-    } else if (bUName == "offices" && officesBuildings.size() > 0) {
+    } else if (bUName == "offices" && !officesBuildings.isEmpty()) {
       return officesBuildings;
-    } else if (bUName =="retail" && residentalBuildings.size() > 0) {
-      return residentalBuildings;
-    } else if (bUName =="residential" && retailBuildings.size() > 0) {
+    } else if (bUName =="retail" && !retailBuildings.isEmpty()) {
       return retailBuildings;
+    } else if (bUName =="residential" && !residentalBuildings.isEmpty()) {
+      return residentalBuildings;
     } else {
       return null;
     }
@@ -138,16 +160,40 @@ class Building
       buildingUses.add(buildingUse);
 
       if (buildingUse.name == "artCulture") {
-        artCultureBuildings.add(this);
+        artCultureBuildings.put(buildingName, this);
       } else if (buildingUse.name == "lightIndustrial") {
-        lightIndustrialBuildings.add(this);
+        lightIndustrialBuildings.put(buildingName, this);
       } else if (buildingUse.name == "offices") {
-        officesBuildings.add(this);
+        officesBuildings.put(buildingName, this);
       } else if (buildingUse.name =="retail") {
-        residentalBuildings.add(this);
+        retailBuildings.put(buildingName, this);
       } else if (buildingUse.name =="residential") {
-        retailBuildings.add(this);
+        residentalBuildings.put(buildingName, this);
       }
+    }
+  }
+
+  void deleteBuildingUse() throws Exception
+  {
+    String bUtoDelete = tooltip.selectBuildingUse(buildingUses);
+
+    for (int i = 0; i < buildingUses.size(); i++) {
+      String bUName = buildingUses.get(i).name;      
+      if (bUtoDelete == bUName) {
+        buildingUses.remove(i);
+      }
+    }
+
+    if (bUtoDelete == "artCulture") {
+      artCultureBuildings.remove(buildingName);
+    } else if (bUtoDelete == "lightIndustrial") {
+      lightIndustrialBuildings.remove(buildingName);
+    } else if (bUtoDelete == "offices") {
+      officesBuildings.remove(buildingName);
+    } else if (bUtoDelete =="retail") {
+      retailBuildings.remove(buildingName);
+    } else if (bUtoDelete =="residential") {
+      residentalBuildings.remove(buildingName);
     }
   }
 
