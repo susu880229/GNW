@@ -19,8 +19,10 @@ HashMap<String, Building> officesBuildings;
 HashMap<String, Building> residentalBuildings;
 HashMap<String, Building> retailBuildings;
 
+//transformations
 int shiftX;
 int shiftY;
+float scaleFactor;
 
 //define the time selection parameter
 String cur_time = "morning";
@@ -31,18 +33,13 @@ boolean timeChanged = false;
 ControlP5 cp5;
 RadioButton r1;
 
-//use 0.50 for laptops; 1 for tablet
-float scaleFactor = .5;
-//float scaleFactor = 1;
-
 void setup()
 {
   //FOR OUTPUT OF GRAPH NODE COORDINATES
   //outputPathCoordinates = createWriter("positions.txt"); 
 
-  //fullScreen();
-  size(2048, 1536);
-
+  fullScreen();
+  
   shiftX = 0;
   shiftY = 0;
   GNWMap = new GNWMap();
@@ -50,6 +47,8 @@ void setup()
   GNWPathFinder = new GNWPathFinder();
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
+  
+  scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   artCultureBuildings = new HashMap<String, Building>();
   lightIndustrialBuildings = new HashMap<String, Building>();
