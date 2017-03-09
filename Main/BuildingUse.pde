@@ -13,5 +13,6 @@ class BuildingUse
     this.colorId = colorId;
     this.matchBUse = matchBUse;
     img = loadImage(imgSrc);
+    img.resize(90, 0);
   }
 }

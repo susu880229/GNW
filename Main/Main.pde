@@ -32,8 +32,8 @@ ControlP5 cp5;
 RadioButton r1;
 
 //use 0.50 for laptops; 1 for tablet
-//float scaleFactor = .5;
-float scaleFactor = 1;
+float scaleFactor = .5;
+//float scaleFactor = 1;
 
 void setup()
 {
