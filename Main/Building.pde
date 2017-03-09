@@ -105,23 +105,28 @@ class Building
   {
     float density = 0;
     ArrayList<Building> destBuildings = new ArrayList<Building>();
+    ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
     if (!buildingUses.isEmpty())
     {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse FromUse = buildingUses.get(i);
-        for(UseFlow flow: use_flows)
+        if(cur_time == 12 || cur_time == 23)
         {
-          if(flow.time == cur_time && flow.from_use == FromUse.name)
+          time_flows = findFlows(cur_time);
+          for(UseFlow flow: time_flows)
           {
-            destBuildings = findBuildingDoorNodes(flow.to_use);
-            density = flow.density / 1000;
-            if (destBuildings != null && !destBuildings.isEmpty()) {
-              for (int j = 0; j < destBuildings.size(); j ++) {
-                int destDoorNodeId = destBuildings.get(j).doorNodeId;
-                if(destDoorNodeId != this.doorNodeId)
-                {
-                  FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
-                  paths = fA.buildPathDensities(density, paths);
+            if(flow.from_use == FromUse.name)
+            {
+              destBuildings = findBuildingDoorNodes(flow.to_use);
+              density = flow.density / 1000;
+              if (destBuildings != null && !destBuildings.isEmpty()) {
+                for (int j = 0; j < destBuildings.size(); j ++) {
+                  int destDoorNodeId = destBuildings.get(j).doorNodeId;
+                  if(destDoorNodeId != this.doorNodeId)
+                  {
+                    FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
+                    paths = fA.buildPathDensities(density, paths);
+                  }
                 }
               }
             }
@@ -141,6 +146,13 @@ class Building
     ArrayList<Building> buildings = (ArrayList<Building>) use_buildings.get(UseName);
     return buildings;  
     
+  }
+  
+  ArrayList<UseFlow> findFlows(int time)
+  {
+    
+    ArrayList<UseFlow> flows = (ArrayList<UseFlow>) use_flows.get(time);
+    return flows;
   }
 
   /**

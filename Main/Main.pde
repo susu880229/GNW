@@ -1,4 +1,4 @@
-import pathfinder.*; //<>// //<>//
+import pathfinder.*; //<>// //<>// //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -6,13 +6,14 @@ GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
 GNWInterface GNWInterface;
 ArrayList<BuildingUse> buildingUses;
-ArrayList<UseFlow> use_flows;
+//ArrayList<UseFlow> use_flows;
 HashMap<String, ArrayList<Building>> use_buildings;
+HashMap<Integer, ArrayList<UseFlow>> use_flows;
 int shiftX;
 int shiftY;
 //define the time selection parameter
-float cur_time = 12;
-float pre_time = -1;
+int cur_time = 12;
+int pre_time = -1;
 boolean timeChanged = false;
 //define the UI for radio button
 ControlP5 cp5;
@@ -28,9 +29,9 @@ void setup()
   size(2134, 1601);
   shiftX = 0;
   shiftY = 0;
-  use_flows = new ArrayList<UseFlow>();
+  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
-  GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows arraylist
+  GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
   buildingUses = new ArrayList<BuildingUse>();
@@ -45,8 +46,8 @@ void setup()
     .setColorLabel(color(0))
     .setItemsPerRow(5)
     .setSpacingColumn(70)
-    .addItem("8AM", 8)
     .addItem("12PM", 12)
+    .addItem("11PM", 23)
     ;
  
 }
@@ -61,9 +62,9 @@ void draw() {
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
-  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
-  //update_time();
-  if (GNWMap.isBuildingUseAdded || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  //GNWPathFinder.drawGraph();
+  update_time();
+  if (GNWMap.isBuildingUseAdded || timeChanged == true )           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
     GNWMap.isBuildingUseAdded = false;
     timeChanged = false;
@@ -74,18 +75,21 @@ void draw() {
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
   popMatrix();
+  System.out.println(timeChanged);
+  
 }
 
-//update time 
+//update time and time change does not work
 void update_time()
 {
-  cur_time = r1.getValue();
+  cur_time = (int)r1.getValue();
   if (cur_time != pre_time)
   {
     timeChanged = true;
+    pre_time = cur_time;
   }
-
-  pre_time = cur_time;
+ 
+  
 }
 
 void mousePressed()

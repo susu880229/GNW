@@ -4,12 +4,16 @@ class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
+  //define the five use categories ArrayList
   ArrayList<Building> artCultureBuildings;
   ArrayList<Building> lightIndustrialBuildings;
   ArrayList<Building> officesBuildings;
   ArrayList<Building> residentalBuildings;
   ArrayList<Building> retailBuildings;
   boolean isBuildingUseAdded;
+  //define the two time use_flow matrix
+  ArrayList<UseFlow> noonFlow;
+  ArrayList<UseFlow> midNightFlow;
   ArrayList<Path> flowPaths;
   
   GNWMap() 
@@ -19,12 +23,19 @@ class GNWMap
     isBuildingUseAdded = false;
     flowPaths = new ArrayList<Path>();
     createGNWMap();
+    //initialize the five use ArrayList
     artCultureBuildings = new ArrayList<Building>();
     lightIndustrialBuildings = new ArrayList<Building>();
     officesBuildings = new ArrayList<Building>();
     residentalBuildings = new ArrayList<Building>();
     retailBuildings = new ArrayList<Building>();
+    //initialize the two time flows
+    noonFlow = new ArrayList<UseFlow>();
+    midNightFlow = new ArrayList<UseFlow>();
+    //initialize the hashmap use_buildings
     use_buildings();
+    //initialize the hashmap use_flows
+    use_flows();
     createUseFlow();
    
     
@@ -137,13 +148,21 @@ class GNWMap
   
   void addUseFlow(int time, String from, String to, int number)
   {
+   
     UseFlow use_flow = new UseFlow(time, from, to, number);
-    use_flows.add(use_flow);
+    if(time == 12)
+    {
+      noonFlow.add(use_flow);
+    }
+    else if(time == 23)
+    {
+      midNightFlow.add(use_flow);
+    }
     
   }
   
   void createUseFlow()
-  {
+  { 
     //business out
     addUseFlow(12, "Business", "Art and Culture", 20 );
     addUseFlow(12, "Business", "Park and Public", 20  );
@@ -183,6 +202,30 @@ class GNWMap
     addUseFlow(12, "Light Industry", "Transit", 30);
     addUseFlow(12, "Light Industry", "Neighborhood", 20);
     addUseFlow(12, "Light Industry", "Retail", 50);
+    
+    //Park and public realms out
+    addUseFlow(23, "Park and Public", "Transit", 5);
+    addUseFlow(23, "Park and Public", "Neighborhood", 5);
+    addUseFlow(23, "Park and Public", "Resident", 5);
+    
+    //Transit out
+    addUseFlow(23, "Transit", "Neighborhood", 10);
+    addUseFlow(23, "Transit", "Resident", 10);
+    addUseFlow(23, "Transit", "Retail", 5);
+    
+    //Neighbourhood out
+    addUseFlow(23, "Neighborhood", "Park and Public", 5);
+    addUseFlow(23, "Neighborhood", "Retail", 5);
+    
+    //Resident out
+    addUseFlow(23, "Resident", "Park and Public", 5);
+    addUseFlow(23, "Resident", "Retail", 5);
+    
+    //retail out
+    addUseFlow(23, "Retail", "Transit", 20);
+    addUseFlow(23, "Retail", "Neighborhood", 10);
+    addUseFlow(23, "Retail", "Resident", 10);
+    
   }
   
   //initialize the five key and value paires for the use_buldings hashmap
@@ -195,6 +238,15 @@ class GNWMap
     use_buildings.put("Retail", retailBuildings);
     
    }
+   
+  //initialize the time key and the matrix respond for the use_flows hashmap 
+  void use_flows()
+  {
+    use_flows.put(12, noonFlow);
+    use_flows.put(23, midNightFlow);
+    
+  }
+  
   //add building to the use_buildings specific arraylist 
   void add_useBuildings(BuildingUse selectedBuildingUse, Building building)
   {
