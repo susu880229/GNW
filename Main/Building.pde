@@ -1,4 +1,4 @@
-/**  //<>//
+/** //<>//
  * The Building class represents a physical building
  */
 class Building 
@@ -13,7 +13,7 @@ class Building
   int xpos4;
   int ypos4; 
   String buildingName;
-  boolean isCustomizable;
+  int dotSize;
   int doorNodeId;
   float node_x;
   float node_y;
@@ -28,7 +28,7 @@ class Building
   /**
    * The Building constructor
    * @param name This is the id of the building
-   * @param c Sets if the building is customizable by user or not
+   * @param smallDot This sets if building use feedback dot is small size
    * @param doorNode The door id to the building.
    * @param x1 This is the x-coordinate of the top-left corner of the building
    * @param y1 This is the y-coordinate of the top-left corner of the building
@@ -39,7 +39,7 @@ class Building
    * @param x4 This is the x-coordinate of the bottom-left corner of the building
    * @param y4 This is the y-coordinate of the bottom-left corner of the building
    */
-  Building (String name, boolean c, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
+  Building (String name, boolean smallDot, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
   {
     xpos1 = x1;
     ypos1 = y1;
@@ -51,7 +51,7 @@ class Building
     ypos4 = y4;
 
     buildingName = name;
-    isCustomizable = c;
+    dotSize = (smallDot) ? 40 : 60;
     this.doorNodeId = doorNodeId;
 
     tooltip = new BuildingTooltip();
@@ -99,12 +99,12 @@ class Building
     if (!buildingUses.isEmpty())
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
-        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 50 + (i*60);
+        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 50 + (i*dotSize);
         int dotY = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
 
         color c = bUse.colorId;
         fill(c);
-        ellipse(dotX, dotY, 60, 60);
+        ellipse(dotX, dotY, dotSize, dotSize);
       }
   }
 
