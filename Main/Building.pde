@@ -4,14 +4,7 @@
 class Building 
 {    
   ArrayList<BuildingUse> buildingUses;
-  int xpos1;
-  int ypos1; 
-  int xpos2;
-  int ypos2; 
-  int xpos3;
-  int ypos3; 
-  int xpos4;
-  int ypos4; 
+  BuildingCoords buildingCoords;
   String buildingName;
   int dotSize;
   int doorNodeId;
@@ -30,29 +23,14 @@ class Building
    * @param name This is the id of the building
    * @param smallDot This sets if building use feedback dot is small size
    * @param doorNode The door id to the building.
-   * @param x1 This is the x-coordinate of the top-left corner of the building
-   * @param y1 This is the y-coordinate of the top-left corner of the building
-   * @param x2 This is the x-coordinate of the top-right corner of the building
-   * @param y2 This is the y-coordinate of the top-righteft corner of the building
-   * @param x3 This is the x-coordinate of the bottom-right corner of the building
-   * @param y3 This is the y-coordinate of the bottom-right corner of the building
-   * @param x4 This is the x-coordinate of the bottom-left corner of the building
-   * @param y4 This is the y-coordinate of the bottom-left corner of the building
+   * @param buildingCoords This is the 4 coordinates of the building block
    */
-  Building (String name, boolean smallDot, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
+  Building (String name, boolean smallDot, int doorNodeId, BuildingCoords buildingCoords) 
   {
-    xpos1 = x1;
-    ypos1 = y1;
-    xpos2 = x2;
-    ypos2 = y2;
-    xpos3 = x3;
-    ypos3 = y3;
-    xpos4 = x4;
-    ypos4 = y4;
-
     buildingName = name;
     dotSize = (smallDot) ? 40 : 60;
     this.doorNodeId = doorNodeId;
+    this.buildingCoords = buildingCoords;
 
     tooltip = new BuildingTooltip();
     buildingUses = new ArrayList<BuildingUse>();
@@ -67,16 +45,16 @@ class Building
 
   void showTooltip() 
   {
-    boolean isOnRight = xpos3 < int(GNWMap.mapImage.width*9/10);
-    int tooltipX;
-    int tooltipY;
+    boolean isOnRight = buildingCoords.bottomRight.x < GNWMap.mapImage.width*9/10;
+    float tooltipX;
+    float tooltipY;
 
     if (isOnRight) {
-      tooltipX = xpos2;
-      tooltipY = ypos2 - 30;
+      tooltipX = buildingCoords.topRight.x;
+      tooltipY =  buildingCoords.topRight.y - 30;
     } else {
-      tooltipX = xpos4 - tooltip.tooltipImage.width;
-      tooltipY = ypos1;
+      tooltipX = buildingCoords.bottomLeft.x - tooltip.tooltipImage.width;
+      tooltipY = buildingCoords.topLeft.y;
     }
 
     tooltip.drawTooltip(tooltipX, tooltipY, buildingUses, isOnRight);
@@ -87,10 +65,10 @@ class Building
     noFill();
     noStroke();
     beginShape();
-    vertex(xpos1, ypos1);
-    vertex(xpos2, ypos2);
-    vertex(xpos3, ypos3);
-    vertex(xpos4, ypos4);
+    vertex(buildingCoords.topLeft.x, buildingCoords.topLeft.y);
+    vertex(buildingCoords.topRight.x, buildingCoords.topRight.y);
+    vertex(buildingCoords.bottomRight.x, buildingCoords.bottomRight.y);
+    vertex(buildingCoords.bottomLeft.x, buildingCoords.bottomLeft.y);
     endShape(CLOSE);
   }
 
@@ -99,8 +77,8 @@ class Building
     if (!buildingUses.isEmpty())
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
-        int dotX = ((xpos1 + xpos2 + xpos3 + xpos4) /4) - 50 + (i*dotSize);
-        int dotY = ((ypos1 + ypos2 + ypos3 + ypos4) /4) + 5;
+        float dotX = ((buildingCoords.topLeft.x +  buildingCoords.topRight.x) /2) + (i*dotSize);
+        float dotY = ((buildingCoords.topLeft.y +  buildingCoords.bottomLeft.y) /2) + 5;
 
         color c = bUse.colorId;
         fill(c);
@@ -255,7 +233,7 @@ class Building
   }
 
   boolean contains(int x, int y) {    
-    PVector[] verts = { new PVector(xpos1, ypos1), new PVector(xpos2, ypos2), new PVector(xpos3, ypos3), new PVector(xpos4, ypos4) }; 
+    PVector[] verts = {  buildingCoords.topLeft, buildingCoords.topRight, buildingCoords.bottomRight, buildingCoords.bottomLeft }; 
     PVector pos = new PVector(x, y);
     int i, j;
     boolean c=false;
@@ -267,5 +245,33 @@ class Building
       }
     }
     return c;
+  }
+}
+
+
+// ====================================
+class BuildingCoords
+{
+  PVector topLeft;
+  PVector topRight;
+  PVector bottomRight;
+  PVector bottomLeft;
+
+  /**
+   * @param x1 This is the x-coordinate of the top-left corner of the building
+   * @param y1 This is the y-coordinate of the top-left corner of the building
+   * @param x2 This is the x-coordinate of the top-right corner of the building
+   * @param y2 This is the y-coordinate of the top-righteft corner of the building
+   * @param x3 This is the x-coordinate of the bottom-right corner of the building
+   * @param y3 This is the y-coordinate of the bottom-right corner of the building
+   * @param x4 This is the x-coordinate of the bottom-left corner of the building
+   * @param y4 This is the y-coordinate of the bottom-left corner of the building
+   */
+  BuildingCoords(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
+  {
+    topLeft = new PVector(x1, y1);
+    topRight = new PVector(x2, y2);
+    bottomRight = new PVector(x3, y3);
+    bottomLeft = new PVector(x4, y4);
   }
 }

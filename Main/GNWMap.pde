@@ -151,7 +151,8 @@ class GNWMap
    */
   void addBuilding(String name, Boolean c, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) 
   {
-    Building newBuilding = new Building(name, c, doorNodeId, x1, y1, x2, y2, x3, y3, x4, y4);
+    BuildingCoords buildingCoords = new BuildingCoords(x1, y1, x2, y2, x3, y3, x4, y4);
+    Building newBuilding = new Building(name, c, doorNodeId, buildingCoords);
     buildings.put(name, newBuilding);
   }
 }
