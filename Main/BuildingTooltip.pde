@@ -8,24 +8,30 @@ class BuildingTooltip
   float tooltipX;
   float tooltipY;
   float dividerSpace = 60;
+  int maxSlots;
 
-  BuildingTooltip()
+  BuildingTooltip(BuildingCoords buildingCoords, int maxSlots)
   {
-    tooltipImage = loadImage("tooltip_right.png");
+    isOnRight = buildingCoords.bottomRight.x < loadImage("map.png").width * 9/10;
+
+    String imageName = (isOnRight) ? "tooltip_right" : "tooltip_left";
+    imageName += "_" + maxSlots + ".png";
+    tooltipImage = loadImage(imageName);
+
     crossImage = loadImage("cross_sign.png");
     crossImage.resize(50, 0);
-    //todo finish loading crossimages
+
+    initialIconX = (isOnRight) ? 50 : 25;
+    initialIconY = 40;
+
+    tooltipX = (isOnRight) ? buildingCoords.topRight.x :  buildingCoords.bottomLeft.x - tooltipImage.width;
+    tooltipY = (isOnRight) ? buildingCoords.topRight.y - 30 : buildingCoords.topLeft.y;
+    
+    this.maxSlots = maxSlots;
   }
 
-  void drawTooltip(float x, float y, ArrayList<BuildingUse> buildingUses, boolean isOnRight)
+  void drawTooltip(ArrayList<BuildingUse> buildingUses)
   {
-    this.isOnRight = isOnRight;
-    initialIconX = (isOnRight) ? 50 : 25;
-    initialIconY = y + 40;
-
-    tooltipX = x;
-    tooltipY = y;
-    tooltipImage = (isOnRight) ? loadImage("tooltip_right.png") : loadImage("tooltip_left.png");
     image(tooltipImage, tooltipX, tooltipY);
 
     if (buildingUses.isEmpty()) {
@@ -35,7 +41,7 @@ class BuildingTooltip
         BuildingUse bUse = buildingUses.get(i);
         float space = (i == 0) ? initialIconX : initialIconX + i * (dividerSpace + bUse.img.width);
         float bUX = tooltipX + space;
-        float bUY = initialIconY;
+        float bUY = tooltipY + initialIconY;
         image(bUse.img, bUX, bUY);
         image(crossImage, bUX + bUse.img.width - 20, bUY - 25);
       }
@@ -47,7 +53,7 @@ class BuildingTooltip
     for (int i = 0; i < buildingUses.size(); i++) {        
       String bUName = buildingUses.get(i).name;
 
-      float bUTooltipWidth = (tooltipImage.width - initialIconX) /3;
+      float bUTooltipWidth = (tooltipImage.width - initialIconX) / maxSlots;
 
       int currentMouseX = mouseX - shiftX;
 

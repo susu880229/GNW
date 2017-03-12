@@ -218,7 +218,6 @@ void setBuildingUses()
 
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
-//  scaleMouse();
 //  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
 //}
 

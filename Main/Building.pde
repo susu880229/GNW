@@ -1,10 +1,11 @@
-/** //<>//
+/** //<>// //<>// //<>//
  * The Building class represents a physical building
  */
 class Building 
 {    
   ArrayList<BuildingUse> buildingUses;
   BuildingCoords buildingCoords;
+  PVector[] bUDotCoords;
   String buildingName;
   int dotSize;
   int doorNodeId;
@@ -13,10 +14,7 @@ class Building
 
   BuildingTooltip tooltip;
   boolean showTooltip;
-
-  //TODO this should be customizable depending on building; will implement in future
-  //TODO implement delete to allow user to replace building use
-  int maxBuildingUses = 3;
+  int maxBuildingUses;
 
   /**
    * The Building constructor
@@ -24,16 +22,18 @@ class Building
    * @param smallDot This sets if building use feedback dot is small size
    * @param doorNode The door id to the building.
    * @param buildingCoords This is the 4 coordinates of the building block
+   * @param bUDotCoords This is a list of possible dot locations
    */
-  Building (String name, boolean smallDot, int doorNodeId, BuildingCoords buildingCoords) 
+  Building (String name, boolean smallDot, int doorNodeId, BuildingCoords buildingCoords, PVector[] bUDotCoords) 
   {
     buildingName = name;
-    dotSize = (smallDot) ? 40 : 60;
+    dotSize = (smallDot) ? 40 : 70;
     this.doorNodeId = doorNodeId;
     this.buildingCoords = buildingCoords;
-
-    tooltip = new BuildingTooltip();
+    this.bUDotCoords = bUDotCoords;
+    maxBuildingUses = bUDotCoords.length;
     buildingUses = new ArrayList<BuildingUse>();
+    tooltip = new BuildingTooltip(buildingCoords, maxBuildingUses);
   }
 
   //rendering the block
@@ -41,23 +41,6 @@ class Building
   {
     drawPolygon();
     drawBuildingUses();
-  }
-
-  void showTooltip() 
-  {
-    boolean isOnRight = buildingCoords.bottomRight.x < GNWMap.mapImage.width*9/10;
-    float tooltipX;
-    float tooltipY;
-
-    if (isOnRight) {
-      tooltipX = buildingCoords.topRight.x;
-      tooltipY =  buildingCoords.topRight.y - 30;
-    } else {
-      tooltipX = buildingCoords.bottomLeft.x - tooltip.tooltipImage.width;
-      tooltipY = buildingCoords.topLeft.y;
-    }
-
-    tooltip.drawTooltip(tooltipX, tooltipY, buildingUses, isOnRight);
   }
 
   void drawPolygon() 
@@ -77,13 +60,16 @@ class Building
     if (!buildingUses.isEmpty())
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse bUse = buildingUses.get(i);
-        float dotX = ((buildingCoords.topLeft.x +  buildingCoords.topRight.x) /2) + (i*dotSize);
-        float dotY = ((buildingCoords.topLeft.y +  buildingCoords.bottomLeft.y) /2) + 5;
 
         color c = bUse.colorId;
         fill(c);
-        ellipse(dotX, dotY, dotSize, dotSize);
+        ellipse(bUDotCoords[i].x, bUDotCoords[i].y, dotSize, dotSize);
       }
+  }
+  
+  void drawTooltip()
+  {
+    tooltip.drawTooltip(buildingUses);
   }
 
   ArrayList<Path> buildPaths(ArrayList<Path> paths)
