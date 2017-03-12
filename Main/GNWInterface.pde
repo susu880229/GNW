@@ -1,4 +1,4 @@
-class GNWInterface //<>//
+class GNWInterface //<>// //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
@@ -46,7 +46,7 @@ class GNWInterface //<>//
     }
 
     fill(0);        
-    rect(interfaceImage.width, 0, interfaceImage.width - width + 10, interfaceImage.height);
+    rect(interfaceImage.width, 0, width, interfaceImage.height);
   }
 
   void selectBuildingUse()

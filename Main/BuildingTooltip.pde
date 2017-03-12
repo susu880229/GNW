@@ -54,11 +54,6 @@ class BuildingTooltip
       Boolean inX = tooltipX + (i * bUTooltipWidth) < currentMouseX && tooltipX + ((i+1) * bUTooltipWidth) > currentMouseX; 
       Boolean inY = tooltipY < mouseY && tooltipY + tooltipImage.height > mouseY;
 
-
-      println(currentMouseX + " " + mouseY);
-      println(initialIconX + (i * bUTooltipWidth) + " " + tooltipY);
-      println( (initialIconX + ((i+1) * bUTooltipWidth)) + " " + (tooltipY + tooltipImage.height));
-
       if (inX && inY) {
         return bUName;
       }
