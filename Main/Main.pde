@@ -1,4 +1,4 @@
-import pathfinder.*; //<>//
+import pathfinder.*; //<>// //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -40,7 +40,7 @@ void setup()
   //outputPathCoordinates = createWriter("positions.txt"); 
 
   fullScreen();
-  
+
   shiftX = 0;
   shiftY = 0;
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
@@ -50,7 +50,7 @@ void setup()
   GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
-  
+
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   artCultureBuildings = new HashMap<String, Building>();
@@ -72,7 +72,6 @@ void setup()
     .addItem("12PM", 12)
     .addItem("11PM", 23)
     ;
- 
 }
 
 /** 
@@ -99,8 +98,6 @@ void draw() {
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
   popMatrix();
-  System.out.println(timeChanged);
-  
 }
 
 //update time and time change does not work
@@ -112,8 +109,6 @@ void update_time()
     timeChanged = true;
     pre_time = cur_time;
   }
- 
-  
 }
 
 /**
@@ -179,7 +174,6 @@ void mouseReleased()
       //add use to building as well as add building to use arraylist 
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
       //UpdateFlow();
-  
     } 
     catch(Exception e) {
       GNWInterface.clearSelected();
@@ -213,7 +207,6 @@ void setBuildingUses()
 
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
-//  scaleMouse();
 //  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
 //}
 
