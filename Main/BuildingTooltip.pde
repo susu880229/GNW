@@ -12,7 +12,7 @@ class BuildingTooltip
 
   BuildingTooltip(BuildingCoords buildingCoords, int maxSlots)
   {
-    isOnRight = buildingCoords.bottomRight.x < loadImage("map.png").width * 9/10;
+    isOnRight = buildingCoords.bottomRight.x < loadImage("map.png").width * 2/10;
 
     String imageName = (isOnRight) ? "tooltip_right" : "tooltip_left";
     imageName += "_" + maxSlots + ".png";
@@ -52,12 +52,14 @@ class BuildingTooltip
   {
     for (int i = 0; i < buildingUses.size(); i++) {        
       String bUName = buildingUses.get(i).name;
-
-      float bUTooltipWidth = (tooltipImage.width - initialIconX) / maxSlots;
-
+      
+      float lengthOfArrow = 25;
+      float bUTooltipWidth = (tooltipImage.width - lengthOfArrow) / maxSlots;
+      float tooltipXShift = (isOnRight) ? lengthOfArrow: 0; 
+      
       int currentMouseX = mouseX - shiftX;
 
-      Boolean inX = tooltipX + (i * bUTooltipWidth) < currentMouseX && tooltipX + ((i+1) * bUTooltipWidth) > currentMouseX; 
+      Boolean inX = tooltipX + tooltipXShift + (i * bUTooltipWidth) < currentMouseX && tooltipX  + tooltipXShift + ((i+1) * bUTooltipWidth) > currentMouseX; 
       Boolean inY = tooltipY < mouseY && tooltipY + tooltipImage.height > mouseY;
 
       if (inX && inY) {
