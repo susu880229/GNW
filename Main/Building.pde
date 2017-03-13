@@ -76,7 +76,7 @@ class Building
   ArrayList<Path> buildPaths(ArrayList<Path> paths)
   {
     float density = 0;
-    ArrayList<Building> destBuildings = new ArrayList<Building>();
+    HashMap<String, Building> destBuildings = new  HashMap<String, Building>();
     ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
     if (!buildingUses.isEmpty())
     {
@@ -89,11 +89,13 @@ class Building
           {
             if (flow.from_use == FromUse.name)
             {
-              destBuildings = findBuildingDoorNodes(flow.to_use);
+              destBuildings = findBuildings(flow.to_use);
               density = flow.density / 1000;
               if (destBuildings != null && !destBuildings.isEmpty()) {
-                for (int j = 0; j < destBuildings.size(); j ++) {
-                  int destDoorNodeId = destBuildings.get(j).doorNodeId;
+                for (Map.Entry buildingEntry : destBuildings.entrySet()) {
+                  Building destBuilding = (Building) buildingEntry.getValue();
+
+                  int destDoorNodeId = destBuilding.doorNodeId;
                   if (destDoorNodeId != this.doorNodeId)
                   {
                     FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
@@ -110,12 +112,12 @@ class Building
   }
 
   /**
-   * Returns list of buildings with the same building use name
+   * Returns hashmap of buildings for specific building use
    * @param buName is the name of building use
    */
-  ArrayList<Building> findBuildingDoorNodes(String UseName)
+  HashMap<String, Building> findBuildings(String UseName)
   {
-    ArrayList<Building> buildings = (ArrayList<Building>) use_buildings.get(UseName);
+    HashMap<String, Building> buildings = (HashMap<String, Building>) use_buildings.get(UseName);
     return buildings;
   }
 
@@ -131,19 +133,8 @@ class Building
    */
   void addBuildingUse(BuildingUse buildingUse) {
     if (buildingUses.size() < maxBuildingUses) {
-      buildingUses.add(buildingUse);
-
-      if (buildingUse.name == "artCulture") {
-        artCultureBuildings.put(buildingName, this);
-      } else if (buildingUse.name == "lightIndustrial") {
-        lightIndustrialBuildings.put(buildingName, this);
-      } else if (buildingUse.name == "offices") {
-        officesBuildings.put(buildingName, this);
-      } else if (buildingUse.name =="retail") {
-        retailBuildings.put(buildingName, this);
-      } else if (buildingUse.name =="residential") {
-        residentalBuildings.put(buildingName, this);
-      }
+      buildingUses.add(buildingUse);      
+      use_buildings.get(buildingUse.name).put(buildingName, this);
     }
   }
 
@@ -157,18 +148,7 @@ class Building
         buildingUses.remove(i);
       }
     }
-
-    if (bUtoDelete == "artCulture") {
-      artCultureBuildings.remove(buildingName);
-    } else if (bUtoDelete == "lightIndustrial") {
-      lightIndustrialBuildings.remove(buildingName);
-    } else if (bUtoDelete == "offices") {
-      officesBuildings.remove(buildingName);
-    } else if (bUtoDelete =="retail") {
-      retailBuildings.remove(buildingName);
-    } else if (bUtoDelete =="residential") {
-      residentalBuildings.remove(buildingName);
-    }
+    use_buildings.get(bUtoDelete).remove(buildingName);
   }
 
   /**

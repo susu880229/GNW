@@ -37,8 +37,7 @@ class GNWMap
     //initialize the two time flows
     noonFlow = new ArrayList<UseFlow>();
     midNightFlow = new ArrayList<UseFlow>();
-    //initialize the hashmap use_buildings
-    use_buildings();
+    
     //initialize the hashmap use_flows
     use_flows();
     createUseFlow();
@@ -275,15 +274,15 @@ class GNWMap
     addUseFlow(23, "Retail", "Resident", 10);
   }
 
-  //initialize the five key and value paires for the use_buldings hashmap
-  void use_buildings()
-  {
-    use_buildings.put("Resident", residentalBuildings);
-    use_buildings.put("Business", officesBuildings);
-    use_buildings.put("Art and Culture", artCultureBuildings);
-    use_buildings.put("Light Industry", lightIndustrialBuildings);
-    use_buildings.put("Retail", retailBuildings);
-  }
+  ////initialize the five key and value paires for the use_buldings hashmap
+  //void use_buildings()
+  //{
+  //  use_buildings.put("Resident", residentalBuildings);
+  //  use_buildings.put("Business", officesBuildings);
+  //  use_buildings.put("Art and Culture", artCultureBuildings);
+  //  use_buildings.put("Light Industry", lightIndustrialBuildings);
+  //  use_buildings.put("Retail", retailBuildings);
+  //}
 
   //initialize the time key and the matrix respond for the use_flows hashmap 
   void use_flows()
