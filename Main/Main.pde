@@ -1,4 +1,4 @@
-import pathfinder.*;  //<>//
+import pathfinder.*; //<>// //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -11,9 +11,7 @@ GNWMap GNWMap;
 GNWInterface GNWInterface;
 
 ArrayList<BuildingUse> buildingUses;
-
-//use_building representts: <buildingUseName, <buildingName, building>>
-HashMap<String, HashMap<String, Building>> use_buildings;
+HashMap<String, ArrayList<Building>> use_buildings;
 HashMap<Integer, ArrayList<UseFlow>> use_flows;
 
 //transformations
@@ -39,7 +37,7 @@ void setup()
   shiftX = 0;
   shiftY = 0;
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
-  use_buildings = new HashMap<String, HashMap<String, Building>>();
+  use_buildings = new HashMap<String, ArrayList<Building>>();
   GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
@@ -189,11 +187,11 @@ void setBuildingUses()
   buildingUses.add(new BuildingUse("Business", "offices.png", #66D9E2));
   buildingUses.add(new BuildingUse("Resident", "residential.png", #F9D463));
 
-  use_buildings.put("Retail", new HashMap<String, Building>());
-  use_buildings.put("Art and Culture", new HashMap<String, Building>());
-  use_buildings.put("Light Industry", new HashMap<String, Building>());
-  use_buildings.put("Business", new HashMap<String, Building>());
-  use_buildings.put("Resident", new HashMap<String, Building>());
+  use_buildings.put("Retail", new ArrayList<Building>());
+  use_buildings.put("Art and Culture", new ArrayList<Building>());
+  use_buildings.put("Light Industry", new ArrayList<Building>());
+  use_buildings.put("Business", new ArrayList<Building>());
+  use_buildings.put("Resident", new ArrayList<Building>());
 
   GNWInterface.createBuildingUseBoxes();
 }

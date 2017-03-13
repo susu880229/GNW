@@ -11,9 +11,10 @@ class Building
   int doorNodeId;
   float node_x;
   float node_y;
+  Boolean isCustomizable;
 
   BuildingTooltip tooltip;
-  boolean showTooltip;
+  Boolean showTooltip;
   int maxBuildingUses;
 
   /**
@@ -24,16 +25,17 @@ class Building
    * @param buildingCoords This is the 4 coordinates of the building block
    * @param bUDotCoords This is a list of possible dot locations
    */
-  Building (String name, boolean smallDot, int doorNodeId, BuildingCoords buildingCoords, PVector[] bUDotCoords) 
+  Building (String name, Boolean smallDot, int doorNodeId, BuildingCoords buildingCoords, PVector[] bUDotCoords) 
   {
     buildingName = name;
     dotSize = (smallDot) ? 40 : 70;
     this.doorNodeId = doorNodeId;
     this.buildingCoords = buildingCoords;
     this.bUDotCoords = bUDotCoords;
-    maxBuildingUses = bUDotCoords.length;
+    maxBuildingUses = (bUDotCoords!= null && bUDotCoords.length > 0) ? bUDotCoords.length : 0;
     buildingUses = new ArrayList<BuildingUse>();
-    tooltip = new BuildingTooltip(buildingCoords, maxBuildingUses);
+    isCustomizable = maxBuildingUses > 0;
+    tooltip = (isCustomizable) ? new BuildingTooltip(buildingCoords, maxBuildingUses) :  null;
   }
 
   //rendering the block
@@ -69,14 +71,17 @@ class Building
 
   void drawTooltip()
   {
-    tooltip.drawTooltip(buildingUses);
+    if (maxBuildingUses > 0) 
+    {
+      tooltip.drawTooltip(buildingUses);
+    }
   }
 
   //write and read from the ArrayList paths to update the edges and their density
   ArrayList<Path> buildPaths(ArrayList<Path> paths)
   {
     float density = 0;
-    HashMap<String, Building> destBuildings = new  HashMap<String, Building>();
+    ArrayList<Building> destBuildings = new ArrayList<Building>();
     ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
     if (!buildingUses.isEmpty())
     {
@@ -92,10 +97,8 @@ class Building
               destBuildings = findBuildings(flow.to_use);
               density = flow.density / 1000;
               if (destBuildings != null && !destBuildings.isEmpty()) {
-                for (Map.Entry buildingEntry : destBuildings.entrySet()) {
-                  Building destBuilding = (Building) buildingEntry.getValue();
-
-                  int destDoorNodeId = destBuilding.doorNodeId;
+                for (int j = 0; j < destBuildings.size(); j++) {
+                  int destDoorNodeId = destBuildings.get(j).doorNodeId;
                   if (destDoorNodeId != this.doorNodeId)
                   {
                     FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
@@ -112,12 +115,12 @@ class Building
   }
 
   /**
-   * Returns hashmap of buildings for specific building use
+   * Returns list of buildings for specific building use
    * @param buName is the name of building use
    */
-  HashMap<String, Building> findBuildings(String UseName)
+  ArrayList<Building> findBuildings(String UseName)
   {
-    HashMap<String, Building> buildings = (HashMap<String, Building>) use_buildings.get(UseName);
+    ArrayList<Building> buildings = (ArrayList<Building>) use_buildings.get(UseName);
     return buildings;
   }
 
@@ -135,7 +138,7 @@ class Building
   {
     if (buildingUses.size() < maxBuildingUses) {
       buildingUses.add(buildingUse);      
-      use_buildings.get(buildingUse.name).put(buildingName, this);
+      use_buildings.get(buildingUse.name).add(this);
     } else {
       throw new Exception ("too many building uses");
     }
@@ -149,10 +152,13 @@ class Building
       String bUName = buildingUses.get(i).name;      
       if (bUtoDelete == bUName) {
         buildingUses.remove(i);
+        ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDelete);        
+        bUBuildings.remove(this);
+        return;
       }
     }
-    use_buildings.get(bUtoDelete).remove(buildingName);
   }
+
 
   /**
    * to detect one point(the mouse) if within this building's hot pot or not

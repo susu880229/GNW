@@ -1,4 +1,4 @@
-class GNWInterface //<>// //<>//
+class GNWInterface //<>// //<>// //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
