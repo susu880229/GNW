@@ -1,16 +1,15 @@
 class BuildingUse
 {
   String name;
-  String imgSrc;
+  PImage img;
   color colorId;
 
 
   BuildingUse(String name, String imgSrc, color colorId)
   {
     this.name = name;
-    this.imgSrc = imgSrc;
     this.colorId = colorId;
-  } 
-  
-
+    img = loadImage(imgSrc);
+    img.resize(90, 0);
+  }
 }

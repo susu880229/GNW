@@ -1,5 +1,4 @@
-
-/**
+/** 
  * The Building class represents a physical building
  */
 class Building 
@@ -18,6 +17,9 @@ class Building
   int doorNodeId;
   float node_x;
   float node_y;
+
+  BuildingTooltip tooltip;
+  boolean showTooltip;
 
   //TODO this should be customizable depending on building; will implement in future
   //TODO implement delete to allow user to replace building use
@@ -52,6 +54,7 @@ class Building
     isCustomizable = c;
     this.doorNodeId = doorNodeId;
 
+    tooltip = new BuildingTooltip();
     buildingUses = new ArrayList<BuildingUse>();
   }
 
@@ -60,6 +63,23 @@ class Building
   {
     drawPolygon();
     drawBuildingUses();
+  }
+
+  void showTooltip() 
+  {
+    boolean isOnRight = xpos3 < int(GNWMap.mapImage.width*9/10);
+    int tooltipX;
+    int tooltipY;
+
+    if (isOnRight) {
+      tooltipX = xpos2;
+      tooltipY = ypos2 - 30;
+    } else {
+      tooltipX = xpos4 - tooltip.tooltipImage.width;
+      tooltipY = ypos1;
+    }
+
+    tooltip.drawTooltip(tooltipX, tooltipY, buildingUses, isOnRight);
   }
 
   void drawPolygon() 
@@ -86,18 +106,6 @@ class Building
         fill(c);
         ellipse(dotX, dotY, 60, 60);
       }
-  }
-
-  //when the selectedUse is on the building hot spot, the use will be added to this building
-  void addBuildingUse(BuildingUse buildingUse) {
-    if (buildingUses.size() <  maxBuildingUses && isCustomizable) {
-      buildingUses.add(buildingUse);
-      
-    }
-    else
-    {
-      System.out.println("the building is not customizable or full");
-    }
   }
   
   //write and read from the ArrayList paths to update the edges and their density
@@ -145,14 +153,58 @@ class Building
   {
     ArrayList<Building> buildings = (ArrayList<Building>) use_buildings.get(UseName);
     return buildings;  
-    
   }
   
-  ArrayList<UseFlow> findFlows(int time)
-  {
-    
+   ArrayList<UseFlow> findFlows(int time)
+  {    
     ArrayList<UseFlow> flows = (ArrayList<UseFlow>) use_flows.get(time);
     return flows;
+  }
+  
+  /**
+   * Adds building use to the building
+   * @param buildingUse is the building use object to be added
+   */
+  void addBuildingUse(BuildingUse buildingUse) {
+    if (buildingUses.size() < maxBuildingUses) {
+      buildingUses.add(buildingUse);
+
+      if (buildingUse.name == "artCulture") {
+        artCultureBuildings.put(buildingName, this);
+      } else if (buildingUse.name == "lightIndustrial") {
+        lightIndustrialBuildings.put(buildingName, this);
+      } else if (buildingUse.name == "offices") {
+        officesBuildings.put(buildingName, this);
+      } else if (buildingUse.name =="retail") {
+        retailBuildings.put(buildingName, this);
+      } else if (buildingUse.name =="residential") {
+        residentalBuildings.put(buildingName, this);
+      }
+    }
+  }
+
+  void deleteBuildingUse() throws Exception
+  {
+    String bUtoDelete = tooltip.selectBuildingUse(buildingUses);
+
+    for (int i = 0; i < buildingUses.size(); i++) {
+      String bUName = buildingUses.get(i).name;      
+      if (bUtoDelete == bUName) {
+        buildingUses.remove(i);
+      }
+    }
+
+    if (bUtoDelete == "artCulture") {
+      artCultureBuildings.remove(buildingName);
+    } else if (bUtoDelete == "lightIndustrial") {
+      lightIndustrialBuildings.remove(buildingName);
+    } else if (bUtoDelete == "offices") {
+      officesBuildings.remove(buildingName);
+    } else if (bUtoDelete =="retail") {
+      retailBuildings.remove(buildingName);
+    } else if (bUtoDelete =="residential") {
+      residentalBuildings.remove(buildingName);
+    }
   }
 
   /**

@@ -10,7 +10,7 @@ class GNWInterface //<>// //<>//
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
-    interfaceImage.resize(2148, 1536);
+    interfaceImage.resize(2048, 1536);
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
 
     selectedBUIcon = null;
@@ -21,7 +21,7 @@ class GNWInterface //<>// //<>//
 
   void createBuildingUseBoxes() 
   {
-    int space = 420;
+    int space = 400;
 
     for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse buildingUse = buildingUses.get(i);
@@ -45,6 +45,9 @@ class GNWInterface //<>// //<>//
     if (selectedBUIcon != null) {
       selectedBUIcon.render();
     }
+
+    fill(0);        
+    rect(interfaceImage.width, 0, width, interfaceImage.height);
   }
 
   void selectBuildingUse()

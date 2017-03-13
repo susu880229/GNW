@@ -1,27 +1,32 @@
-import java.util.Map;
-
 class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
+  PImage mapDoorsImage;
+
   //define the five use categories ArrayList
   ArrayList<Building> artCultureBuildings;
   ArrayList<Building> lightIndustrialBuildings;
   ArrayList<Building> officesBuildings;
   ArrayList<Building> residentalBuildings;
   ArrayList<Building> retailBuildings;
-  boolean isBuildingUseAdded;
   //define the two time use_flow matrix
   ArrayList<UseFlow> noonFlow;
   ArrayList<UseFlow> midNightFlow;
   ArrayList<Path> flowPaths;
   
+  boolean isBuildingUseChanged;
+  Building selectedBuilding;
+
   GNWMap() 
   {
     mapImage = loadImage("map.png");
+    mapDoorsImage = loadImage("mapDoors.png");
     buildings = new HashMap<String, Building>();
-    isBuildingUseAdded = false;
+    isBuildingUseChanged = false;
     flowPaths = new ArrayList<Path>();
+    selectedBuilding = null;
+
     createGNWMap();
     //initialize the five use ArrayList
     artCultureBuildings = new ArrayList<Building>();
@@ -38,12 +43,12 @@ class GNWMap
     use_flows();
     createUseFlow();
    
-    
   }
 
   void render()
   {
     image(mapImage, 0, 0);
+    image(mapDoorsImage, 0, 0);
 
     //walk through the GNWmap to render building
     for (Map.Entry buildingEntry : buildings.entrySet()) {
@@ -52,6 +57,47 @@ class GNWMap
     }
   }
 
+  void showSelectedBuilding() 
+  {
+    if (selectedBuilding != null) {
+      selectedBuilding.showTooltip();
+    }
+  }
+
+  /**
+   * check 
+   */
+  void selectTooltip() throws Exception
+  {
+    if (selectedBuilding != null) {   
+      selectedBuilding.deleteBuildingUse();
+      isBuildingUseChanged = true;
+      return;
+    } else {
+      throw new Exception ("No tooltip selected");
+    }
+  }
+
+  /**
+   * Select building to show tooltip for if mouse clicked on a building; otherwise clear selected building
+   */
+  void selectBuilding()
+  {
+    for (Map.Entry buildingEntry : buildings.entrySet()) {
+      Building building = (Building) buildingEntry.getValue();
+      //Handle any horizontal scroll before checking contains
+      if (building.contains(mouseX - shiftX, mouseY) && building.isCustomizable) {
+        selectedBuilding = building; 
+        return;
+      }
+    }
+    clearSelectedBuilding ();
+  }
+
+  void clearSelectedBuilding() 
+  {
+    selectedBuilding = null;
+  }
 
   void flowInit()
   {
@@ -75,15 +121,16 @@ class GNWMap
     }
   }
 
-  
-  void assignBuildingUse(BuildingUse selectedBuildingUse) throws Exception {
+  void assignBuildingUse(BuildingUse selectedBuildingUse) {
+
     try {
       Building building = findBuilding();
 
       if (building.isCustomizable) {
         building.addBuildingUse(selectedBuildingUse);
         add_useBuildings(selectedBuildingUse, building);
-        isBuildingUseAdded = true;
+        isBuildingUseChanged = true;
+        selectedBuilding = building;
       }
     } 
     catch (Exception e) {
@@ -92,7 +139,8 @@ class GNWMap
   }
 
   //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
-  Building findBuilding() throws Exception {
+  Building findBuilding() throws Exception 
+  {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();
