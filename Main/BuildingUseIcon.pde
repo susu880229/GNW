@@ -12,11 +12,7 @@ class BuildingUseIcon
   String icon_name;
   PImage a;
   int Icon_class = -1;
-  String building_name = null;
-  String building_cur = null;
-  String building_pre = null;
-
-
+  
   //constructor
   BuildingUseIcon(BuildingUse buildingUse, int x, int y)
   {

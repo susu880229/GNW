@@ -30,6 +30,7 @@ class GNWInterface //<>// //<>//
 
       xBuildingBox += space;
     }
+    
   }
 
   void render() 
@@ -73,5 +74,6 @@ class GNWInterface //<>// //<>//
   void clearSelected ()
   {
     selectedBUIcon = null;
+    
   }
 }

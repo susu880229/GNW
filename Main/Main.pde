@@ -5,7 +5,6 @@ import java.util.Map;
 //FOR OUTPUT OF GRAPH NODE COORDINATES
 //PrintWriter outputPathCoordinates;
 //int nodeCounter = 0;
-//-----------------------------------
 
 GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
@@ -19,16 +18,18 @@ HashMap<String, Building> officesBuildings;
 HashMap<String, Building> residentalBuildings;
 HashMap<String, Building> retailBuildings;
 
+HashMap<String, ArrayList<Building>> use_buildings;
+HashMap<Integer, ArrayList<UseFlow>> use_flows;
+
 //transformations
 int shiftX;
 int shiftY;
 float scaleFactor;
 
 //define the time selection parameter
-String cur_time = "morning";
-float prevTime;
+int cur_time = 12;
+int pre_time = -1;
 boolean timeChanged = false;
-
 //define the UI for radio button
 ControlP5 cp5;
 RadioButton r1;
@@ -42,9 +43,11 @@ void setup()
   
   shiftX = 0;
   shiftY = 0;
-  GNWMap = new GNWMap();
+  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
+  use_buildings = new HashMap<String, ArrayList<Building>>();
+  GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
   GNWInterface = new GNWInterface();
-  GNWPathFinder = new GNWPathFinder();
+  GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
   buildingUses = new ArrayList<BuildingUse>();
   setBuildingUses();
   
@@ -66,9 +69,10 @@ void setup()
     .setColorLabel(color(0))
     .setItemsPerRow(5)
     .setSpacingColumn(70)
-    .addItem("8AM", 10)
-    .addItem("2PM", 14)
+    .addItem("12PM", 12)
+    .addItem("11PM", 23)
     ;
+ 
 }
 
 /** 
@@ -76,54 +80,40 @@ void setup()
  */
 void draw() {
   background(255);
-
   pushMatrix();
   scale(scaleFactor);
-
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
-  //GNWPathFinder.drawGraph();  //show node and edges for debugging purposes
+  //GNWPathFinder.drawGraph();
   update_time();
-
-  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  if (GNWMap.isBuildingUseChanged || timeChanged == true )           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
     GNWMap.isBuildingUseChanged = false;
     timeChanged = false;
     GNWMap.flowInit();
   }
-
   GNWMap.drawFlow();
   GNWMap.showSelectedBuilding();
   popMatrix();
-
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
   popMatrix();
+  System.out.println(timeChanged);
+  
 }
 
-//update time 
+//update time and time change does not work
 void update_time()
 {
-  float curTimeVal = r1.getValue();
-
-  if (curTimeVal == 10)
-  {
-    cur_time = "morning";
-  } else if (curTimeVal == 14)
-  {
-    cur_time = "mid_afternoon";
-  } else 
-  {
-    cur_time = null;
-  }
-
-  if (curTimeVal != prevTime)
+  cur_time = (int)r1.getValue();
+  if (cur_time != pre_time)
   {
     timeChanged = true;
+    pre_time = cur_time;
   }
-
-  prevTime = curTimeVal;
+ 
+  
 }
 
 /**
@@ -186,7 +176,10 @@ void mouseReleased()
 { 
   if (GNWInterface.selectedBUIcon != null && isOnMap()) {
     try {
+      //add use to building as well as add building to use arraylist 
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
+      //UpdateFlow();
+  
     } 
     catch(Exception e) {
       GNWInterface.clearSelected();
@@ -206,11 +199,13 @@ boolean isOnMap()
 
 void setBuildingUses()
 {
-  buildingUses.add(new BuildingUse("retail", "retail.png", #EA6C90, "offices"));
-  buildingUses.add(new BuildingUse("artCulture", "artCulture.png", #AA96CC, "offices"));
-  buildingUses.add(new BuildingUse("lightIndustrial", "lightIndustrial.png", #8ACE8A, "retail"));
-  buildingUses.add(new BuildingUse("offices", "offices.png", #66D9E2, "retail"));
-  buildingUses.add(new BuildingUse("residential", "residential.png", #F9D463, "artCulture"));
+
+  buildingUses.add(new BuildingUse("Retail", "retail.png", #EA6C90));
+  buildingUses.add(new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
+  buildingUses.add(new BuildingUse("Light Industry", "lightIndustrial.png", #8ACE8A));
+  buildingUses.add(new BuildingUse("Business", "offices.png", #66D9E2));
+  buildingUses.add(new BuildingUse("Resident", "residential.png", #F9D463));
+
 
   GNWInterface.createBuildingUseBoxes();
 }

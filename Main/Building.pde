@@ -1,4 +1,4 @@
-/**  //<>//
+/** 
  * The Building class represents a physical building
  */
 class Building 
@@ -107,50 +107,60 @@ class Building
         ellipse(dotX, dotY, 60, 60);
       }
   }
-
+  
+  //write and read from the ArrayList paths to update the edges and their density
   ArrayList<Path> buildPaths(ArrayList<Path> paths)
   {
+    float density = 0;
+    ArrayList<Building> destBuildings = new ArrayList<Building>();
+    ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
     if (!buildingUses.isEmpty())
     {
       for (int i = 0; i < buildingUses.size(); i++) {
-        BuildingUse bUse = buildingUses.get(i);
-        float density = decide_density(bUse.name, bUse.matchBUse);
-        HashMap<String, Building> destBuildings = findBuildingList(bUse.matchBUse);    
-
-        if (destBuildings != null && !destBuildings.isEmpty()) {
-          for (Map.Entry buildingEntry : destBuildings.entrySet()) {
-            Building destBuilding = (Building) buildingEntry.getValue();
-            int destDoorNodeId = destBuilding.doorNodeId;
-            FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
-            paths = fA.buildPathDensities(density, paths);
+        BuildingUse FromUse = buildingUses.get(i);
+        if(cur_time == 12 || cur_time == 23)
+        {
+          time_flows = findFlows(cur_time);
+          for(UseFlow flow: time_flows)
+          {
+            if(flow.from_use == FromUse.name)
+            {
+              destBuildings = findBuildingDoorNodes(flow.to_use);
+              density = flow.density / 1000;
+              if (destBuildings != null && !destBuildings.isEmpty()) {
+                for (int j = 0; j < destBuildings.size(); j ++) {
+                  int destDoorNodeId = destBuildings.get(j).doorNodeId;
+                  if(destDoorNodeId != this.doorNodeId)
+                  {
+                    FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
+                    paths = fA.buildPathDensities(density, paths);
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
-    return paths;
+    return paths;  
   }
 
   /**
    * Returns list of buildings with the same building use name
    * @param buName is the name of building use
    */
-  HashMap<String, Building> findBuildingList(String bUName)
+  ArrayList<Building> findBuildingDoorNodes(String UseName)
   {
-    if (bUName == "artCulture" && !artCultureBuildings.isEmpty()) {
-      return artCultureBuildings;
-    } else if (bUName == "lightIndustrial" && !lightIndustrialBuildings.isEmpty()) {
-      return lightIndustrialBuildings;
-    } else if (bUName == "offices" && !officesBuildings.isEmpty()) {
-      return officesBuildings;
-    } else if (bUName =="retail" && !retailBuildings.isEmpty()) {
-      return retailBuildings;
-    } else if (bUName =="residential" && !residentalBuildings.isEmpty()) {
-      return residentalBuildings;
-    } else {
-      return null;
-    }
+    ArrayList<Building> buildings = (ArrayList<Building>) use_buildings.get(UseName);
+    return buildings;  
   }
-
+  
+   ArrayList<UseFlow> findFlows(int time)
+  {    
+    ArrayList<UseFlow> flows = (ArrayList<UseFlow>) use_flows.get(time);
+    return flows;
+  }
+  
   /**
    * Adds building use to the building
    * @param buildingUse is the building use object to be added
@@ -197,63 +207,9 @@ class Building
     }
   }
 
-  //decide the path density from building use src to building use dest
-  float decide_density(String bUNameSrc, String bUNameDest)
-  {
-    //three levels of density per unit length
-    float d1 = 0.08;
-    float d2 = 0.03;
-    float d3 = 0.01;
-
-    //defaut density is the third level
-    float d = d3;
-
-    //morning time density rule
-    if (cur_time == "morning")
-    {
-      if (bUNameSrc == "residential" || bUNameSrc == "transit")
-      {
-        if (bUNameDest == "retail")
-        {
-          //the second level density
-          d = d2;
-        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
-        {
-          //the first level density
-          d = d1;
-        }
-      } else if (bUNameSrc == "retail")
-      {
-        if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
-        {
-          //the second level density
-          d = d2;
-        }
-      }
-    }
-    //around mid afternoon time density rule
-    else if (cur_time == "mid_afternoon")
-    {
-      if (bUNameSrc == "resident" || bUNameSrc == "transit")
-      {
-        if (bUNameDest == "retail")
-        {
-          //the third level density
-          d = d3;
-        } else if (bUNameDest == "offices" || bUNameDest == "lightIndustrial")
-        {
-          //the third level density
-          d = d3;
-        } else if (bUNameDest == "artCulture")
-        {
-          //the second level density
-          d = d2;
-        }
-      }
-    }
-    return d;
-  }
-
+  /**
+    * to detect one point(the mouse) if within this building's hot pot or not
+    */
   boolean contains(int x, int y) {    
     PVector[] verts = { new PVector(xpos1, ypos1), new PVector(xpos2, ypos2), new PVector(xpos3, ypos3), new PVector(xpos4, ypos4) }; 
     PVector pos = new PVector(x, y);
