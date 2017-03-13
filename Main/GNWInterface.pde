@@ -70,6 +70,23 @@ class GNWInterface //<>// //<>//
       selectedBUIcon.mouseDragged();
     }
   }
+  
+  void dropFeedback(boolean isOnMap)
+  {
+    if (selectedBUIcon != null && mousePressed == true && isOnMap)
+    {
+      try {
+         Building building = GNWMap.findBuilding();
+  
+        if (building.bUDotCoords.length > 0) {
+          building.highlight();
+        }
+      } 
+      catch (Exception e) {
+        //if no building found, don't do anything
+      }
+    }
+  }
 
   void clearSelected ()
   {

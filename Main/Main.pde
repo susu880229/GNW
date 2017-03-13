@@ -34,6 +34,20 @@ boolean timeChanged = false;
 ControlP5 cp5;
 RadioButton r1;
 
+//images for the drop feedback
+PImage glowImage_515;
+PImage glowImage_521;
+PImage glowImage_701;
+PImage glowImage_887;
+PImage glowImage_901;
+PImage glowImage_1933;
+PImage glowImage_1980;
+PImage glowImage_lot4;
+PImage glowImage_lot5;
+PImage glowImage_lot7;
+PImage glowImage_naturesPath;
+PImage glowImage_shaw;
+
 void setup()
 {
   //FOR OUTPUT OF GRAPH NODE COORDINATES
@@ -49,6 +63,7 @@ void setup()
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
   buildingUses = new ArrayList<BuildingUse>();
+  loadDropFeedbackImages();
   setBuildingUses();
 
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
@@ -92,6 +107,7 @@ void draw() {
     timeChanged = false;
     GNWMap.flowInit();
   }
+  GNWInterface.dropFeedback(isOnMap());
   GNWMap.drawFlow();
   GNWMap.showSelectedBuilding();
   popMatrix();
@@ -202,6 +218,22 @@ void setBuildingUses()
 
 
   GNWInterface.createBuildingUseBoxes();
+}
+
+void loadDropFeedbackImages()
+{
+    glowImage_515 = loadImage("highlight_515.png");
+    glowImage_521 = loadImage("highlight_521.png");
+    glowImage_701 = loadImage("highlight_701.png");
+    glowImage_887 = loadImage("highlight_887.png");
+    glowImage_901 = loadImage("highlight_901.png");
+    glowImage_1933 = loadImage("highlight_1933.png");
+    glowImage_1980 = loadImage("highlight_1980.png");
+    glowImage_lot4 = loadImage("highlight_lot4.png");
+    glowImage_lot5 = loadImage("highlight_lot5.png");
+    glowImage_lot7 = loadImage("highlight_lot7.png");
+    glowImage_naturesPath = loadImage("highlight_naturesPath.png");
+    glowImage_shaw = loadImage("highlight_shaw.png");
 }
 
 

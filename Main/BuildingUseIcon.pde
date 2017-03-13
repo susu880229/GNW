@@ -12,15 +12,16 @@ class BuildingUseIcon
   String icon_name;
   PImage a;
   int Icon_class = -1;
-  
+  int iconWidth = 100;
+  int iconHeight = 100;
   //constructor
   BuildingUseIcon(BuildingUse buildingUse, int x, int y)
   {
     this.buildingUse = buildingUse;
     w = 100;
     h = 100;
-    bx = x;
-    by = y;
+    bx = x - (iconWidth/2);
+    by = y - (iconHeight/2);
     a = buildingUse.img;
   }
 
@@ -34,7 +35,7 @@ class BuildingUseIcon
   void mouseDragged() 
   {
     //update the new position of the image everytime user drag it
-    bx = mouseX;
-    by = mouseY;
+    bx = mouseX - (iconWidth/2);
+    by = mouseY - (iconHeight/2);
   }
 }
