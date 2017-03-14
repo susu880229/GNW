@@ -152,7 +152,7 @@ class GNWMap
     PVector[] dotCoords_Shaw = {new PVector(3653, 384), new PVector(3773, 376), new PVector(3901, 336)};
     PVector[] dotCoords_NaturesPath = {new PVector(4102, 302), new PVector(4338, 250)};
     PVector[] dotCoords_null = null;
-    
+
     addBuilding("Lot5", true, 64, 285, 155, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
     addBuilding("Park", false, 5, 274, 333, 383, 330, 376, 525, 279, 520, dotCoords_null);
     addBuilding("Lot7", true, 7, 272, 571, 379, 580, 392, 698, 280, 720, dotCoords_lot7);
@@ -174,7 +174,7 @@ class GNWMap
     addBuilding("887", false, 48, 2578, 173, 2904, 198, 2899, 448, 2765, 444, dotCoords_887);
     addBuilding("901", false, 50, 2932, 203, 3211, 231, 3197, 459, 2923, 444, dotCoords_901);
     addBuilding("Mec", false, 52, 3241, 240, 3460, 248, 3518, 473, 3221, 457, dotCoords_null);
-    
+
     addBuilding("Shaw", false, 55, 3569, 251, 3935, 247, 3965, 385, 3627, 457, dotCoords_Shaw);
     addBuilding("NaturesPath", false, 59, 4043, 241, 4392, 214, 4407, 284, 4081, 354, dotCoords_NaturesPath);
   }
@@ -189,6 +189,38 @@ class GNWMap
     buildings.put(name, newBuilding);
   }
 
+  void addDefaultBuildingUses() 
+  {
+    BuildingUse park = buildingUses.get("Park and Public");
+    BuildingUse school = buildingUses.get("Education");
+    BuildingUse transit = buildingUses.get("Transit");
+    BuildingUse neighbour = buildingUses.get("Neighbourhood");
+    BuildingUse retail = buildingUses.get("Retail");
+    BuildingUse art = buildingUses.get("Art and Culture");
+    BuildingUse office = buildingUses.get("Business");
+    BuildingUse resident = buildingUses.get("Resident");
+
+    buildings.get("Park").addPermanentUse(park);
+    buildings.get("Plaza").addPermanentUse(park);
+    buildings.get("Lot7").addPermanentUse(transit);
+    buildings.get("EmilyCarr").addPermanentUse(school);
+    buildings.get("EmilyCarr").addPermanentUse(art);
+    buildings.get("569").addPermanentUse(retail);
+    buildings.get("569").addPermanentUse(office);
+    buildings.get("CDM1").addPermanentUse(school);
+    buildings.get("CDM2").addPermanentUse(school);
+    buildings.get("CDM2").addPermanentUse(resident);
+    buildings.get("887").addPermanentUse(office);
+    buildings.get("Mec").addPermanentUse(office);
+    
+    try {
+      buildings.get("901").addBuildingUse(office);
+      buildings.get("Shaw").addBuildingUse(office);
+    } 
+    catch (Exception e) {
+      println("Initial setup error: " + e);
+    }
+  }
 
   void addUseFlow(int time, String from, String to, int number)
   {

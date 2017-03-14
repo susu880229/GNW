@@ -3,7 +3,8 @@
  */
 class Building 
 {    
-  ArrayList<BuildingUse> buildingUses;
+  ArrayList<BuildingUse> customizableUses;
+  ArrayList<BuildingUse> permanentUses;
   BuildingCoords buildingCoords;
   PVector[] bUDotCoords;
   String buildingName;
@@ -33,7 +34,8 @@ class Building
     this.buildingCoords = buildingCoords;
     this.bUDotCoords = bUDotCoords;
     maxBuildingUses = (bUDotCoords!= null && bUDotCoords.length > 0) ? bUDotCoords.length : 0;
-    buildingUses = new ArrayList<BuildingUse>();
+    customizableUses = new ArrayList<BuildingUse>();
+    permanentUses = new ArrayList<BuildingUse>();
     isCustomizable = maxBuildingUses > 0;
     tooltip = (isCustomizable) ? new BuildingTooltip(buildingCoords, maxBuildingUses) :  null;
   }
@@ -59,9 +61,9 @@ class Building
 
   void drawBuildingUses() 
   {
-    if (!buildingUses.isEmpty())
-      for (int i = 0; i < buildingUses.size(); i++) {
-        BuildingUse bUse = buildingUses.get(i);
+    if (!customizableUses.isEmpty())
+      for (int i = 0; i < customizableUses.size(); i++) {
+        BuildingUse bUse = customizableUses.get(i);
 
         color c = bUse.colorId;
         fill(c);
@@ -73,7 +75,7 @@ class Building
   {
     if (maxBuildingUses > 0) 
     {
-      tooltip.drawTooltip(buildingUses);
+      tooltip.drawTooltip(customizableUses);
     }
   }
 
@@ -83,10 +85,10 @@ class Building
     float density = 0;
     ArrayList<Building> destBuildings = new ArrayList<Building>();
     ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
-    if (!buildingUses.isEmpty())
+    if (!customizableUses.isEmpty())
     {
-      for (int i = 0; i < buildingUses.size(); i++) {
-        BuildingUse FromUse = buildingUses.get(i);
+      for (int i = 0; i < customizableUses.size(); i++) {
+        BuildingUse FromUse = customizableUses.get(i);
         if (cur_time == 12 || cur_time == 23)
         {
           time_flows = findFlows(cur_time);
@@ -136,22 +138,28 @@ class Building
    */
   void addBuildingUse(BuildingUse buildingUse) throws Exception
   {
-    if (buildingUses.size() < maxBuildingUses) {
-      buildingUses.add(buildingUse);      
+    if (customizableUses.size() < maxBuildingUses) {
+      customizableUses.add(buildingUse);      
       use_buildings.get(buildingUse.name).add(this);
     } else {
       throw new Exception ("too many building uses");
     }
   }
 
+  void addPermanentUse(BuildingUse buildingUse) 
+  {
+    permanentUses.add(buildingUse);      
+    use_buildings.get(buildingUse.name).add(this);
+  }
+
   void deleteBuildingUse() throws Exception
   {
-    String bUtoDelete = tooltip.selectBuildingUse(buildingUses);
+    String bUtoDelete = tooltip.selectBuildingUse(customizableUses);
 
-    for (int i = 0; i < buildingUses.size(); i++) {
-      String bUName = buildingUses.get(i).name;      
+    for (int i = 0; i < customizableUses.size(); i++) {
+      String bUName = customizableUses.get(i).name;      
       if (bUtoDelete == bUName) {
-        buildingUses.remove(i);
+        customizableUses.remove(i);
         ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDelete);        
         bUBuildings.remove(this);
         return;

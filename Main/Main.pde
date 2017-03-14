@@ -10,7 +10,7 @@ GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
 GNWInterface GNWInterface;
 
-ArrayList<BuildingUse> buildingUses;
+HashMap<String, BuildingUse> buildingUses;
 HashMap<String, ArrayList<Building>> use_buildings;
 HashMap<Integer, ArrayList<UseFlow>> use_flows;
 
@@ -36,13 +36,14 @@ void setup()
 
   shiftX = 0;
   shiftY = 0;
+
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
+  buildingUses = new HashMap<String, BuildingUse>();
+
   GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
-  buildingUses = new ArrayList<BuildingUse>();
-  setBuildingUses();
 
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
@@ -59,6 +60,8 @@ void setup()
     .addItem("12PM", 12)
     .addItem("11PM", 23)
     ;
+
+  setBuildingUses();
 }
 
 /** 
@@ -181,19 +184,29 @@ boolean isOnMap()
 void setBuildingUses()
 {
 
-  buildingUses.add(new BuildingUse("Retail", "retail.png", #EA6C90));
-  buildingUses.add(new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
-  buildingUses.add(new BuildingUse("Light Industry", "lightIndustrial.png", #8ACE8A));
-  buildingUses.add(new BuildingUse("Business", "offices.png", #66D9E2));
-  buildingUses.add(new BuildingUse("Resident", "residential.png", #F9D463));
+  buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
+  buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
+  buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #8ACE8A));
+  buildingUses.put("Business", new BuildingUse("Business", "offices.png", #66D9E2));
+  buildingUses.put("Resident", new BuildingUse("Resident", "residential.png", #F9D463));
+
+  buildingUses.put("Transit", new BuildingUse("Transit", "", 0));
+  buildingUses.put("Neighborhood", new BuildingUse("Neighborhood", "", 0));
+  buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
+  buildingUses.put("Education", new BuildingUse("Education", "", 0));
 
   use_buildings.put("Retail", new ArrayList<Building>());
   use_buildings.put("Art and Culture", new ArrayList<Building>());
   use_buildings.put("Light Industry", new ArrayList<Building>());
   use_buildings.put("Business", new ArrayList<Building>());
   use_buildings.put("Resident", new ArrayList<Building>());
+  
+  use_buildings.put("Transit", new ArrayList<Building>());
+  use_buildings.put("Neighborhood", new ArrayList<Building>());
+  use_buildings.put("Park and Public", new ArrayList<Building>());
+  use_buildings.put("Education", new ArrayList<Building>());
 
-  GNWInterface.createBuildingUseBoxes();
+  GNWMap.addDefaultBuildingUses();
 }
 
 
