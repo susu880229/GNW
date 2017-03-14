@@ -131,10 +131,13 @@ class Building
    * Adds building use to the building
    * @param buildingUse is the building use object to be added
    */
-  void addBuildingUse(BuildingUse buildingUse) {
+  void addBuildingUse(BuildingUse buildingUse) throws Exception
+  {
     if (buildingUses.size() < maxBuildingUses) {
       buildingUses.add(buildingUse);      
       use_buildings.get(buildingUse.name).put(buildingName, this);
+    } else {
+      throw new Exception ("too many building uses");
     }
   }
 

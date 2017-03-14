@@ -120,7 +120,6 @@ class GNWMap
   }
 
   void assignBuildingUse(BuildingUse selectedBuildingUse) {
-
     try {
       Building building = findBuilding();
       building.addBuildingUse(selectedBuildingUse);
@@ -129,7 +128,7 @@ class GNWMap
       selectedBuilding = building;
     } 
     catch (Exception e) {
-      //if no building found, don't do anything
+      selectedBuilding = null;
     }
   }
 
