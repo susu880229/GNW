@@ -4,12 +4,6 @@ class GNWMap
   PImage mapImage;
   PImage mapDoorsImage;
 
-  //define the five use categories ArrayList
-  ArrayList<Building> artCultureBuildings;
-  ArrayList<Building> lightIndustrialBuildings;
-  ArrayList<Building> officesBuildings;
-  ArrayList<Building> residentalBuildings;
-  ArrayList<Building> retailBuildings;
   //define the two time use_flow matrix
   ArrayList<UseFlow> noonFlow;
   ArrayList<UseFlow> midNightFlow;
@@ -28,12 +22,6 @@ class GNWMap
     selectedBuilding = null;
 
     createGNWMap();
-    //initialize the five use ArrayList
-    artCultureBuildings = new ArrayList<Building>();
-    lightIndustrialBuildings = new ArrayList<Building>();
-    officesBuildings = new ArrayList<Building>();
-    residentalBuildings = new ArrayList<Building>();
-    retailBuildings = new ArrayList<Building>();
     //initialize the two time flows
     noonFlow = new ArrayList<UseFlow>();
     midNightFlow = new ArrayList<UseFlow>();
@@ -123,7 +111,6 @@ class GNWMap
     try {
       Building building = findBuilding();
       building.addBuildingUse(selectedBuildingUse);
-      add_useBuildings(selectedBuildingUse, building);
       isBuildingUseChanged = true;
       selectedBuilding = building;
     } 
@@ -166,7 +153,7 @@ class GNWMap
     PVector[] dotCoords_NaturesPath = {new PVector(4102, 302), new PVector(4338, 250)};
     PVector[] dotCoords_null = null;
     
-    addBuilding("Lot5",true, 64, 285, 155, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
+    addBuilding("Lot5", true, 64, 285, 155, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
     addBuilding("Park", false, 5, 274, 333, 383, 330, 376, 525, 279, 520, dotCoords_null);
     addBuilding("Lot7", true, 7, 272, 571, 379, 580, 392, 698, 280, 720, dotCoords_lot7);
 
@@ -282,36 +269,10 @@ class GNWMap
     addUseFlow(23, "Retail", "Resident", 10);
   }
 
-  ////initialize the five key and value paires for the use_buldings hashmap
-  //void use_buildings()
-  //{
-  //  use_buildings.put("Resident", residentalBuildings);
-  //  use_buildings.put("Business", officesBuildings);
-  //  use_buildings.put("Art and Culture", artCultureBuildings);
-  //  use_buildings.put("Light Industry", lightIndustrialBuildings);
-  //  use_buildings.put("Retail", retailBuildings);
-  //}
-
   //initialize the time key and the matrix respond for the use_flows hashmap 
   void use_flows()
   {
     use_flows.put(12, noonFlow);
     use_flows.put(23, midNightFlow);
-  }
-
-  //add building to the use_buildings specific arraylist 
-  void add_useBuildings(BuildingUse selectedBuildingUse, Building building)
-  {
-    if (selectedBuildingUse.name == "Resident") {
-      residentalBuildings.add(building);
-    } else if (selectedBuildingUse.name == "Business") {
-      officesBuildings.add(building);
-    } else if (selectedBuildingUse.name == "Art and Culture") {
-      artCultureBuildings.add(building);
-    } else if (selectedBuildingUse.name =="Light Industry") {
-      lightIndustrialBuildings.add(building);
-    } else if (selectedBuildingUse.name =="Retail") {
-      retailBuildings.add(building);
-    }
   }
 }
