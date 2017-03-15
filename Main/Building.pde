@@ -144,27 +144,37 @@ class Building
     int delay = 0;
     ArrayList<Building> destBuildings = new ArrayList<Building>();
     ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
-    if (!customizableUses.isEmpty())
-    {
-      for (int i = 0; i < customizableUses.size(); i++) {
-        BuildingUse FromUse = customizableUses.get(i);
-        if (cur_time == 9 || cur_time == 12 || cur_time == 15 || cur_time == 19 ||  cur_time == 23)
+    if (!customizableUses.isEmpty()) {
+      findParticleGenRateHelper(customizableUses, delay, destBuildings, time_flows, flowRoutes);
+    }
+
+    if (!permanentUses.isEmpty()) {
+      findParticleGenRateHelper(permanentUses, delay, destBuildings, time_flows, flowRoutes);
+    }
+    
+    return flowRoutes;
+  }
+
+  void findParticleGenRateHelper( ArrayList<BuildingUse> buildingUses, int delay, ArrayList<Building> destBuildings,  ArrayList<UseFlow> time_flows, ArrayList<FlowRoute> flowRoutes)
+  {
+    for (int i = 0; i < buildingUses.size(); i++) {
+      BuildingUse FromUse = buildingUses.get(i);
+      if (cur_time == 9 || cur_time == 12 || cur_time == 15 || cur_time == 19 ||  cur_time == 23)
+      {
+        time_flows = findFlows(cur_time);
+        for (UseFlow flow : time_flows)
         {
-          time_flows = findFlows(cur_time);
-          for (UseFlow flow : time_flows)
+          if (flow.from_use == FromUse.name)
           {
-            if (flow.from_use == FromUse.name)
-            {
-              destBuildings = findBuildings(flow.to_use);
-              delay = flow.delay * FLOW_DELAY_MULTIPLIER;
-              if (destBuildings != null && !destBuildings.isEmpty()) {
-                for (int j = 0; j < destBuildings.size(); j++) {
-                  int destDoorNodeId = destBuildings.get(j).doorNodeId;
-                  if (destDoorNodeId != this.doorNodeId)
-                  {
-                    FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, delay, flow.from_use, flow.to_use);
-                    flowRoutes.add(fA);
-                  }
+            destBuildings = findBuildings(flow.to_use);
+            delay = flow.delay * FLOW_DELAY_MULTIPLIER;
+            if (destBuildings != null && !destBuildings.isEmpty()) {
+              for (int j = 0; j < destBuildings.size(); j++) {
+                int destDoorNodeId = destBuildings.get(j).doorNodeId;
+                if (destDoorNodeId != this.doorNodeId)
+                {
+                  FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, delay, flow.from_use, flow.to_use);
+                  flowRoutes.add(fA);
                 }
               }
             }
@@ -172,7 +182,6 @@ class Building
         }
       }
     }
-    return flowRoutes;
   }
 
   /**
