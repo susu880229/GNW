@@ -205,9 +205,9 @@ void setBuildingUses()
 
   buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
   buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
-  buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #8ACE8A));
+  buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #F9D463));
   buildingUses.put("Business", new BuildingUse("Business", "offices.png", #66D9E2));
-  buildingUses.put("Resident", new BuildingUse("Resident", "residential.png", #F9D463));
+  buildingUses.put("Resident", new BuildingUse("Resident", "residential.png", #8ACE8A));
 
   buildingUses.put("Transit", new BuildingUse("Transit", "", 0));
   buildingUses.put("Neighborhood", new BuildingUse("Neighborhood", "", 0));
@@ -246,9 +246,9 @@ void loadDropFeedbackImages()
 
 
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
-void mouseClicked() {
-  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
-}
+//void mouseClicked() {
+//  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
+//}
 
 ////FOR OUTPUT OF GRAPH NODE COORDINATES
 //void mouseClicked() {
