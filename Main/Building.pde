@@ -1,4 +1,4 @@
-/** 
+ /**
  * The Building class represents a physical building
  */
 class Building 
@@ -41,6 +41,58 @@ class Building
   {
     drawPolygon();
     drawBuildingUses();
+  }
+
+  void highlight()
+  { 
+    if (buildingUses.size() < bUDotCoords.length)
+    {
+      switch(doorNodeId)    //use doorNodeId because Android does not support switch(String)
+      {
+        case 64:    //Lot5
+          image(glowImage_lot5, 0, 0);
+          break;
+        case 17:    //Lot4
+          image(glowImage_lot4, 0, 0);
+          break;
+        case 14:     //521
+          image(glowImage_521, 0, 0);
+          break;
+        case 7:    //Lot7
+          image(glowImage_lot7, 0, 0);
+          break;
+        case 12:    //515
+          image(glowImage_515, 0, 0);
+          break;
+        
+        //images starting from 1/4 of the width to save memory
+        case 38:    //1933
+          image(glowImage_1933, 1154, 0);
+          break;
+        case 44:    //701
+          image(glowImage_701, 1154, 0);
+          break;
+        case 46:    //1980
+          image(glowImage_1980, 1154, 0);
+          break;
+          
+        //images starting from 1/2 of the width to save memory
+        case 48:    //887
+          image(glowImage_887, 2308, 0);
+          break;
+        case 50:    //901
+          image(glowImage_901, 2308, 0);
+          break;
+        case 55:    //Shaw
+          image(glowImage_shaw, 2308, 0);
+          break;
+          
+        //images starting from 3/4 of the width to save memory
+        case 59:    //Nature's Path
+          image(glowImage_naturesPath, 3462, 0);
+          break;
+      }
+    }
   }
 
   void drawPolygon() 
