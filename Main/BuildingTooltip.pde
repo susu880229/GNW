@@ -54,7 +54,6 @@ class BuildingTooltip
       String bUName = buildingUses.get(i).name;
 
       float bUTooltipWidth = (tooltipImage.width - initialIconX) / maxSlots;
-
       int currentMouseX = mouseX - shiftX;
 
       Boolean inX = tooltipX + (i * bUTooltipWidth) < currentMouseX && tooltipX + ((i+1) * bUTooltipWidth) > currentMouseX; 

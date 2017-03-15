@@ -151,11 +151,11 @@ class Building
     if (!permanentUses.isEmpty()) {
       findParticleGenRateHelper(permanentUses, delay, destBuildings, time_flows, flowRoutes);
     }
-    
+
     return flowRoutes;
   }
 
-  void findParticleGenRateHelper( ArrayList<BuildingUse> buildingUses, int delay, ArrayList<Building> destBuildings,  ArrayList<UseFlow> time_flows, ArrayList<FlowRoute> flowRoutes)
+  void findParticleGenRateHelper( ArrayList<BuildingUse> buildingUses, int delay, ArrayList<Building> destBuildings, ArrayList<UseFlow> time_flows, ArrayList<FlowRoute> flowRoutes)
   {
     for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse FromUse = buildingUses.get(i);
@@ -224,7 +224,7 @@ class Building
   {
     String bUtoDelete = tooltip.selectBuildingUse(customizableUses);
 
-    for (int i = 0; i < customizableUses.size(); i++) {
+    for (int i = 0; i < customizableUses.size() +1; i++) {
       String bUName = customizableUses.get(i).name;      
       if (bUtoDelete == bUName) {
         customizableUses.remove(i);
@@ -238,11 +238,11 @@ class Building
             particles.remove(j);
           }
         }
-      }
-      ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDelete);        
-      bUBuildings.remove(this);
+        ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDelete);        
+        bUBuildings.remove(this);
 
-      return particles;
+        return particles;
+      }
     }
     throw new Exception("Can't delete building use");
   }
