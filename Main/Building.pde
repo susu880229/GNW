@@ -224,7 +224,7 @@ class Building
   {
     String bUtoDelete = tooltip.selectBuildingUse(customizableUses);
 
-    for (int i = 0; i < customizableUses.size() +1; i++) {
+    for (int i = 0; i < customizableUses.size(); i++) {
       String bUName = customizableUses.get(i).name;      
       if (bUtoDelete == bUName) {
         customizableUses.remove(i);
