@@ -1,4 +1,4 @@
-class GNWInterface //<>// //<>//
+class GNWInterface //<>// //<>// //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
@@ -46,7 +46,7 @@ class GNWInterface //<>// //<>//
   void render() 
   {
     createBuildingUseBoxes();
-    
+
     for (int i = 0; i < buildingUseBoxes.size(); i++) {
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
       buildingUseBox.render();
@@ -82,23 +82,23 @@ class GNWInterface //<>// //<>//
       selectedBUIcon.mouseDragged();
     }
   }
-  
+
   void dropFeedback(boolean isOnMap)
   {
     if (selectedBUIcon != null && mousePressed == true && isOnMap)
     {
       try {
-         Building building = GNWMap.findBuilding();
-  
-        if (building.bUDotCoords.length > 0) {
+        Building building = GNWMap.findBuilding();
+        if (building.isCustomizable) {
           building.highlight();
         }
       } 
       catch (Exception e) {
-        //if no building found, don't do anything
+        //println(e);
       }
     }
   }
+
 
   void clearSelected ()
   {

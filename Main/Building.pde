@@ -56,7 +56,7 @@ class Building
 
   void highlight()
   { 
-    if (buildingUses.size() < bUDotCoords.length)
+    if (customizableUses.size() < maxBuildingUses)
     {
       switch(doorNodeId)    //use doorNodeId because Android does not support switch(String)
       {
