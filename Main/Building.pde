@@ -34,7 +34,7 @@ class Building
   Building (String name, Boolean smallDot, int doorNodeId, BuildingCoords buildingCoords, PVector[] bUDotCoords) 
   {
     buildingName = name;
-    dotSize = (smallDot) ? 40 : 70;
+    dotSize = (smallDot) ? 35 : 70;
     this.doorNodeId = doorNodeId;
     this.buildingCoords = buildingCoords;
     this.bUDotCoords = bUDotCoords;
