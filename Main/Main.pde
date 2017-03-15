@@ -1,4 +1,4 @@
-import pathfinder.*;  //<>//
+import pathfinder.*; //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -26,6 +26,20 @@ boolean timeChanged = false;
 //define the UI for radio button
 ControlP5 cp5;
 RadioButton r1;
+
+//images for the drop feedback
+PImage glowImage_515;
+PImage glowImage_521;
+PImage glowImage_701;
+PImage glowImage_887;
+PImage glowImage_901;
+PImage glowImage_1933;
+PImage glowImage_1980;
+PImage glowImage_lot4;
+PImage glowImage_lot5;
+PImage glowImage_lot7;
+PImage glowImage_naturesPath;
+PImage glowImage_shaw;
 
 void setup()
 {
@@ -57,10 +71,14 @@ void setup()
     .setColorLabel(color(0))
     .setItemsPerRow(5)
     .setSpacingColumn(70)
-    .addItem("12PM", 12)
-    .addItem("11PM", 23)
+    .addItem("Morning", 9)
+    .addItem("Noon", 12)
+    .addItem("Afternoon", 15)
+    .addItem("Evening", 19)
+    .addItem("Late Night", 23)
     ;
-
+    
+  loadDropFeedbackImages();
   setBuildingUses();
 }
 
@@ -76,12 +94,13 @@ void draw() {
   GNWMap.render();
   //GNWPathFinder.drawGraph();
   update_time();
-  if (GNWMap.isBuildingUseChanged || timeChanged == true )           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
+    GNWMap.flowInit(timeChanged);
     GNWMap.isBuildingUseChanged = false;
     timeChanged = false;
-    GNWMap.flowInit();
   }
+  GNWInterface.dropFeedback(isOnMap());
   GNWMap.drawFlow();
   GNWMap.showSelectedBuilding();
   popMatrix();
@@ -207,6 +226,22 @@ void setBuildingUses()
   use_buildings.put("Education", new ArrayList<Building>());
 
   GNWMap.addDefaultBuildingUses();
+}
+
+void loadDropFeedbackImages()
+{
+    glowImage_515 = loadImage("highlight_515.png");
+    glowImage_521 = loadImage("highlight_521.png");
+    glowImage_701 = loadImage("highlight_701.png");
+    glowImage_887 = loadImage("highlight_887.png");
+    glowImage_901 = loadImage("highlight_901.png");
+    glowImage_1933 = loadImage("highlight_1933.png");
+    glowImage_1980 = loadImage("highlight_1980.png");
+    glowImage_lot4 = loadImage("highlight_lot4.png");
+    glowImage_lot5 = loadImage("highlight_lot5.png");
+    glowImage_lot7 = loadImage("highlight_lot7.png");
+    glowImage_naturesPath = loadImage("highlight_naturesPath.png");
+    glowImage_shaw = loadImage("highlight_shaw.png");
 }
 
 

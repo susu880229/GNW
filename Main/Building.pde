@@ -1,10 +1,14 @@
-/** 
+/**
  * The Building class represents a physical building
  */
 class Building 
 {    
+
   ArrayList<BuildingUse> customizableUses;
   ArrayList<BuildingUse> permanentUses;
+
+  int FLOW_DELAY_MULTIPLIER = 50;
+
   BuildingCoords buildingCoords;
   PVector[] bUDotCoords;
   String buildingName;
@@ -13,6 +17,7 @@ class Building
   float node_x;
   float node_y;
   Boolean isCustomizable;
+  float particleGenRate;
 
   BuildingTooltip tooltip;
   Boolean showTooltip;
@@ -33,11 +38,13 @@ class Building
     this.doorNodeId = doorNodeId;
     this.buildingCoords = buildingCoords;
     this.bUDotCoords = bUDotCoords;
+
     maxBuildingUses = (bUDotCoords!= null && bUDotCoords.length > 0) ? bUDotCoords.length : 0;
     customizableUses = new ArrayList<BuildingUse>();
     permanentUses = new ArrayList<BuildingUse>();
     isCustomizable = maxBuildingUses > 0;
     tooltip = (isCustomizable) ? new BuildingTooltip(buildingCoords, maxBuildingUses) :  null;
+    particleGenRate = 0;
   }
 
   //rendering the block
@@ -45,6 +52,58 @@ class Building
   {
     drawPolygon();
     drawBuildingUses();
+  }
+
+  void highlight()
+  { 
+    if (buildingUses.size() < bUDotCoords.length)
+    {
+      switch(doorNodeId)    //use doorNodeId because Android does not support switch(String)
+      {
+      case 64:    //Lot5
+        image(glowImage_lot5, 0, 0);
+        break;
+      case 17:    //Lot4
+        image(glowImage_lot4, 0, 0);
+        break;
+      case 14:     //521
+        image(glowImage_521, 0, 0);
+        break;
+      case 7:    //Lot7
+        image(glowImage_lot7, 0, 0);
+        break;
+      case 12:    //515
+        image(glowImage_515, 0, 0);
+        break;
+
+        //images starting from 1/4 of the width to save memory
+      case 38:    //1933
+        image(glowImage_1933, 1154, 0);
+        break;
+      case 44:    //701
+        image(glowImage_701, 1154, 0);
+        break;
+      case 46:    //1980
+        image(glowImage_1980, 1154, 0);
+        break;
+
+        //images starting from 1/2 of the width to save memory
+      case 48:    //887
+        image(glowImage_887, 2308, 0);
+        break;
+      case 50:    //901
+        image(glowImage_901, 2308, 0);
+        break;
+      case 55:    //Shaw
+        image(glowImage_shaw, 2308, 0);
+        break;
+
+        //images starting from 3/4 of the width to save memory
+      case 59:    //Nature's Path
+        image(glowImage_naturesPath, 3462, 0);
+        break;
+      }
+    }
   }
 
   void drawPolygon() 
@@ -79,17 +138,17 @@ class Building
     }
   }
 
-  //write and read from the ArrayList paths to update the edges and their density
-  ArrayList<Path> buildPaths(ArrayList<Path> paths)
+  //find the particle generation rate of each FlowRoute and add the FlowRoutes into an array
+  ArrayList<FlowRoute> findParticleGenRate(ArrayList<FlowRoute> flowRoutes)
   {
-    float density = 0;
+    int delay = 0;
     ArrayList<Building> destBuildings = new ArrayList<Building>();
     ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
     if (!customizableUses.isEmpty())
     {
       for (int i = 0; i < customizableUses.size(); i++) {
         BuildingUse FromUse = customizableUses.get(i);
-        if (cur_time == 12 || cur_time == 23)
+        if (cur_time == 9 || cur_time == 12 || cur_time == 15 || cur_time == 19 ||  cur_time == 23)
         {
           time_flows = findFlows(cur_time);
           for (UseFlow flow : time_flows)
@@ -97,14 +156,14 @@ class Building
             if (flow.from_use == FromUse.name)
             {
               destBuildings = findBuildings(flow.to_use);
-              density = flow.density / 1000;
+              delay = flow.delay * FLOW_DELAY_MULTIPLIER;
               if (destBuildings != null && !destBuildings.isEmpty()) {
                 for (int j = 0; j < destBuildings.size(); j++) {
                   int destDoorNodeId = destBuildings.get(j).doorNodeId;
                   if (destDoorNodeId != this.doorNodeId)
                   {
-                    FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
-                    paths = fA.buildPathDensities(density, paths);
+                    FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, delay, flow.from_use, flow.to_use);
+                    flowRoutes.add(fA);
                   }
                 }
               }
@@ -113,7 +172,7 @@ class Building
         }
       }
     }
-    return paths;
+    return flowRoutes;
   }
 
   /**
@@ -152,7 +211,7 @@ class Building
     use_buildings.get(buildingUse.name).add(this);
   }
 
-  void deleteBuildingUse() throws Exception
+  ArrayList<Particle> deleteBuildingUse(ArrayList<Particle> particles) throws Exception
   {
     String bUtoDelete = tooltip.selectBuildingUse(customizableUses);
 
@@ -160,11 +219,23 @@ class Building
       String bUName = customizableUses.get(i).name;      
       if (bUtoDelete == bUName) {
         customizableUses.remove(i);
-        ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDelete);        
-        bUBuildings.remove(this);
-        return;
+
+        //remove the particles associated with the removed building use
+        for (int j = particles.size() - 1; j >= 0; j--)
+        {
+          Particle curParticle = particles.get(j);
+          if (curParticle.initial_nodeID == doorNodeId &&  curParticle.from_buildingUse == bUName || curParticle.dest_nodeID == doorNodeId && curParticle.to_buildingUse == bUName)
+          {
+            particles.remove(j);
+          }
+        }
       }
+      ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDelete);        
+      bUBuildings.remove(this);
+
+      return particles;
     }
+    throw new Exception("Can't delete building use");
   }
 
 

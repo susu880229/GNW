@@ -4,10 +4,15 @@ class GNWMap
   PImage mapImage;
   PImage mapDoorsImage;
 
-  //define the two time use_flow matrix
+  //define the five time use_flow matrix
+  ArrayList<UseFlow> morningFlow;
   ArrayList<UseFlow> noonFlow;
+  ArrayList<UseFlow> afternoonFlow;
+  ArrayList<UseFlow> eveningFlow;
   ArrayList<UseFlow> midNightFlow;
-  ArrayList<Path> flowPaths;
+ 
+  ArrayList<FlowRoute> flowRoutes;
+  ArrayList<Particle> particles;
 
   boolean isBuildingUseChanged;
   Building selectedBuilding;
@@ -18,12 +23,17 @@ class GNWMap
     mapDoorsImage = loadImage("mapDoors.png");
     buildings = new HashMap<String, Building>();
     isBuildingUseChanged = false;
-    flowPaths = new ArrayList<Path>();
+    flowRoutes = new ArrayList<FlowRoute>();
+    particles = new ArrayList<Particle>();
     selectedBuilding = null;
 
     createGNWMap();
-    //initialize the two time flows
+    
+    //initialize the five time flows
+    morningFlow = new ArrayList<UseFlow>();
     noonFlow = new ArrayList<UseFlow>();
+    afternoonFlow = new ArrayList<UseFlow>();
+    eveningFlow = new ArrayList<UseFlow>();
     midNightFlow = new ArrayList<UseFlow>();
 
     //initialize the hashmap use_flows
@@ -56,7 +66,7 @@ class GNWMap
   void selectTooltip() throws Exception
   {
     if (selectedBuilding != null) {   
-      selectedBuilding.deleteBuildingUse();
+      particles = selectedBuilding.deleteBuildingUse(particles);
       isBuildingUseChanged = true;
       return;
     } else {
@@ -85,29 +95,53 @@ class GNWMap
     selectedBuilding = null;
   }
 
-  void flowInit()
+  //build all the FlowRoutes on the map and set their particle generation rate
+  void flowInit(boolean timeIsChanged)
   {
-    flowPaths = new ArrayList<Path>();
+    flowRoutes = new ArrayList<FlowRoute>();
+    if (timeIsChanged)
+    {
+      particles = new ArrayList<Particle>();
+    }
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
-      flowPaths = building.buildPaths(flowPaths);
-    }
-
-    for (int i = 0; i < flowPaths.size(); i++)
-    {
-      flowPaths.get(i).particleInit();
+      flowRoutes = building.findParticleGenRate(flowRoutes);
     }
   }
 
+  /*Check if new particles should be generated. 
+  *Draw each particle on the map and calculate its next position.
+  *If the particle has reached the end of the route, remove the particle.
+  */
   void drawFlow()
   {
-    for (int i = 0; i < flowPaths.size(); i++) 
+    for (int i = 0; i < flowRoutes.size(); i++) 
     {
-      flowPaths.get(i).run();
+      if (flowRoutes.get(i).timeToNextParticleGen == 0)
+      {
+        flowRoutes.get(i).addNewParticle(particles);
+        flowRoutes.get(i).timeToNextParticleGen = flowRoutes.get(i).delay;
+      }
+      
+      else
+      {
+        flowRoutes.get(i).timeToNextParticleGen -= 1;
+      }
+    }
+    
+    for (int j = particles.size() - 1; j >= 0; j--)      //loop backwards as we may remove some particles
+    {
+      particles.get(j).run();
+      
+      if(particles.get(j).isEndOfRoute == true)
+      {
+        particles.remove(j);
+      }
     }
   }
 
   void assignBuildingUse(BuildingUse selectedBuildingUse) {
+
     try {
       Building building = findBuilding();
       building.addBuildingUse(selectedBuildingUse);
@@ -115,7 +149,7 @@ class GNWMap
       selectedBuilding = building;
     } 
     catch (Exception e) {
-      selectedBuilding = null;
+      //if no building found, don't do anything
     }
   }
 
@@ -212,6 +246,7 @@ class GNWMap
     buildings.get("CDM2").addPermanentUse(resident);
     buildings.get("887").addPermanentUse(office);
     buildings.get("Mec").addPermanentUse(office);
+   // buildings.get("NaturesPath").addPermanentUse(transit);
     
     try {
       buildings.get("901").addBuildingUse(office);
@@ -226,10 +261,23 @@ class GNWMap
   {
 
     UseFlow use_flow = new UseFlow(time, from, to, number);
-    if (time == 12)
+    if (time == 9)
+    {
+      morningFlow.add(use_flow);
+    }
+    else if (time == 12)
     {
       noonFlow.add(use_flow);
-    } else if (time == 23)
+    } 
+    else if (time == 15)
+    {
+      afternoonFlow.add(use_flow);
+    } 
+    else if (time == 19)
+    {
+      eveningFlow.add(use_flow);
+    } 
+    else if (time == 23)
     {
       midNightFlow.add(use_flow);
     }
@@ -237,74 +285,216 @@ class GNWMap
 
   void createUseFlow()
   { 
+    /*MORNING
+    *********/
+    
     //business out
-    addUseFlow(12, "Business", "Art and Culture", 20 );
-    addUseFlow(12, "Business", "Park and Public", 20  );
-    addUseFlow(12, "Business", "Transit", 30 );
-    addUseFlow(12, "Business", "Neighborhood", 20 );
-    addUseFlow(12, "Business", "Retail", 50);
+    addUseFlow(9, "Business", "Park and Public", 5);
+    addUseFlow(9, "Business", "Retail", 4);
 
     //education out
-    addUseFlow(12, "Education", "Art and Culture", 30);
-    addUseFlow(12, "Education", "Park and Public", 20);
-    addUseFlow(12, "Education", "Transit", 30);
-    addUseFlow(12, "Education", "Neighborhood", 20);
-    addUseFlow(12, "Education", "Retail", 50);
+    addUseFlow(9, "Education", "Park and Public", 5);
+    addUseFlow(9, "Education", "Retail", 5);
 
     //resident out
-    addUseFlow(12, "Resident", "Art and Culture", 5);
-    addUseFlow(12, "Resident", "Park and Public", 5);
-    addUseFlow(12, "Resident", "Transit", 10);
-    addUseFlow(12, "Resident", "Neighborhood", 5);
-    addUseFlow(12, "Resident", "Retail", 20);
+    addUseFlow(9, "Resident", "Business", 2);
+    addUseFlow(9, "Resident", "Art and Culture", 5);
+    addUseFlow(9, "Resident", "Education", 2);
+    addUseFlow(9, "Resident", "Park and Public", 4);
+    addUseFlow(9, "Resident", "Transit", 2);
+    addUseFlow(9, "Resident", "Neighborhood", 4);
+    addUseFlow(9, "Resident", "Retail", 4);
+    addUseFlow(9, "Resident", "Light Industry", 2);
 
     //transit out
-    addUseFlow(12, "Transit", "Art and Culture", 10);
-    addUseFlow(12, "Transit", "Park and Public", 10);
-    addUseFlow(12, "Transit", "Neighborhood", 10);
-    addUseFlow(12, "Transit", "Retail", 30);
+    addUseFlow(9, "Transit", "Business", 1);
+    addUseFlow(9, "Transit", "Art and Culture", 4);
+    addUseFlow(9, "Transit", "Education", 1);
+    addUseFlow(9, "Transit", "Park and Public", 4);
+    addUseFlow(9, "Transit", "Neighborhood", 3);
+    addUseFlow(9, "Transit", "Retail", 4);
+    addUseFlow(9, "Transit", "Light Industry", 1);
 
     //neighborhood out
-    addUseFlow(12, "Neighborhood", "Art and Culture", 10);
-    addUseFlow(12, "Neighborhood", "Park and Public", 10);
-    addUseFlow(12, "Neighborhood", "Transit", 30);
-    addUseFlow(12, "Neighborhood", "Retail", 30);
+    addUseFlow(9, "Neighborhood", "Business", 3);
+    addUseFlow(9, "Neighborhood", "Art and Culture", 5);
+    addUseFlow(9, "Neighborhood", "Education", 3);
+    addUseFlow(9, "Neighborhood", "Park and Public", 4);
+    addUseFlow(9, "Neighborhood", "Transit", 2);
+    addUseFlow(9, "Neighborhood", "Retail", 4);
+    addUseFlow(9, "Neighborhood", "Light Industry", 3);
+    
+    //retail out
+    addUseFlow(9, "Retail", "Transit", 5);
+    addUseFlow(9, "Retail", "Light Industry", 4);
+   
+    //light industry out
+    addUseFlow(9, "Light Industry", "Art and Culture", 4);
+    addUseFlow(9, "Light Industry", "Park and Public", 3);
+    addUseFlow(9, "Light Industry", "Transit", 2);
+    addUseFlow(9, "Light Industry", "Neighborhood", 3);
+    addUseFlow(9, "Light Industry", "Retail", 1);
+    
+    /*NOON
+    ********/
+    //business out
+    addUseFlow(12, "Business", "Art and Culture", 3);
+    addUseFlow(12, "Business", "Park and Public", 3);
+    addUseFlow(12, "Business", "Transit", 2);
+    addUseFlow(12, "Business", "Neighborhood", 3);
+    addUseFlow(12, "Business", "Retail", 1);
 
-    //light induestry out
-    addUseFlow(12, "Light Industry", "Art and Culture", 10);
-    addUseFlow(12, "Light Industry", "Park and Public", 20);
-    addUseFlow(12, "Light Industry", "Transit", 30);
-    addUseFlow(12, "Light Industry", "Neighborhood", 20);
-    addUseFlow(12, "Light Industry", "Retail", 50);
+    //education out
+    addUseFlow(12, "Education", "Art and Culture", 2);
+    addUseFlow(12, "Education", "Park and Public", 3);
+    addUseFlow(12, "Education", "Transit", 2);
+    addUseFlow(12, "Education", "Neighborhood", 3);
+    addUseFlow(12, "Education", "Retail", 1);
 
+    //resident out
+    addUseFlow(12, "Resident", "Art and Culture", 4);
+    addUseFlow(12, "Resident", "Park and Public", 4);
+    addUseFlow(12, "Resident", "Transit", 4);
+    addUseFlow(12, "Resident", "Neighborhood", 4);
+    addUseFlow(12, "Resident", "Retail", 3);
+
+    //transit out
+    addUseFlow(12, "Transit", "Art and Culture", 3);
+    addUseFlow(12, "Transit", "Park and Public", 4);
+    addUseFlow(12, "Transit", "Neighborhood", 3);
+    addUseFlow(12, "Transit", "Retail", 2);
+
+    //neighborhood out
+    addUseFlow(12, "Neighborhood", "Art and Culture", 4);
+    addUseFlow(12, "Neighborhood", "Park and Public", 4);
+    addUseFlow(12, "Neighborhood", "Transit", 3);
+    addUseFlow(12, "Neighborhood", "Retail", 2);
+
+    //light industry out
+    addUseFlow(12, "Light Industry", "Art and Culture", 4);
+    addUseFlow(12, "Light Industry", "Park and Public", 3);
+    addUseFlow(12, "Light Industry", "Transit", 2);
+    addUseFlow(12, "Light Industry", "Neighborhood", 3);
+    addUseFlow(12, "Light Industry", "Retail", 1);
+    
+    /*AFTERNOON
+    *********/
+    
+    //business out
+    addUseFlow(15, "Business", "Transit", 6);
+    addUseFlow(15, "Business", "Retail", 5);
+
+    //education out
+    addUseFlow(15, "Education", "Art and Culture", 4);
+    addUseFlow(15, "Education", "Park and Public", 5);
+    addUseFlow(15, "Education", "Transit", 2);
+    addUseFlow(15, "Education", "Neighborhood", 4);
+    addUseFlow(15, "Education", "Resident", 3);
+    addUseFlow(15, "Education", "Retail", 3);
+
+    //resident out
+    addUseFlow(15, "Resident", "Art and Culture", 4);
+    addUseFlow(15, "Resident", "Park and Public", 5);
+    addUseFlow(15, "Resident", "Transit", 5);
+    addUseFlow(15, "Resident", "Retail", 4);
+    
+    //transit out
+    addUseFlow(15, "Transit", "Art and Culture", 4);
+    addUseFlow(15, "Transit", "Park and Public", 5);
+    addUseFlow(15, "Transit", "Retail", 4);
+
+    //neighborhood out
+    addUseFlow(15, "Neighborhood", "Art and Culture", 4);
+    addUseFlow(15, "Neighborhood", "Park and Public", 5);
+    addUseFlow(15, "Neighborhood", "Transit", 5);
+    addUseFlow(15, "Neighborhood", "Retail", 4);
+   
+    //light industry out
+    addUseFlow(15, "Light Industry", "Art and Culture", 5);
+    addUseFlow(15, "Light Industry", "Park and Public", 6);
+    addUseFlow(15, "Light Industry", "Transit", 4);
+    addUseFlow(15, "Light Industry", "Neighborhood", 5);
+    addUseFlow(15, "Light Industry", "Resident", 5);
+    addUseFlow(15, "Light Industry", "Retail", 5);
+    
+    
+    /*EVENING
+    ********/
+    //business out
+    addUseFlow(19, "Business", "Art and Culture", 5);
+    addUseFlow(19, "Business", "Park and Public", 5);
+    addUseFlow(19, "Business", "Transit", 3);
+    addUseFlow(19, "Business", "Neighborhood", 4);
+    addUseFlow(19, "Business", "Resident", 4);
+    addUseFlow(19, "Business", "Retail", 3);
+
+    //resident out
+    addUseFlow(19, "Resident", "Art and Culture", 5);
+    addUseFlow(19, "Resident", "Park and Public", 4);
+    addUseFlow(19, "Resident", "Transit", 5);
+    addUseFlow(19, "Resident", "Neighborhood", 5);
+    addUseFlow(19, "Resident", "Retail", 4);
+
+    //transit out
+    addUseFlow(19, "Transit", "Art and Culture", 4);
+    addUseFlow(19, "Transit", "Park and Public", 5);
+    addUseFlow(19, "Transit", "Neighborhood", 3);
+    addUseFlow(19, "Transit", "Resident", 3);
+    addUseFlow(19, "Transit", "Retail", 2);
+
+    //neighborhood out
+    addUseFlow(19, "Neighborhood", "Art and Culture", 5);
+    addUseFlow(19, "Neighborhood", "Park and Public", 4);
+    addUseFlow(19, "Neighborhood", "Transit", 4);
+    addUseFlow(19, "Neighborhood", "Resident", 5);
+    addUseFlow(19, "Neighborhood", "Retail", 3);
+    
+    //retail out
+    addUseFlow(19, "Retail", "Transit", 4);
+    addUseFlow(19, "Retail", "Neighborhood", 5);
+    addUseFlow(19, "Retail", "Resident", 5);
+
+    //light industry out
+    addUseFlow(19, "Light Industry", "Art and Culture", 6);
+    addUseFlow(19, "Light Industry", "Park and Public", 6);
+    addUseFlow(19, "Light Industry", "Transit", 6);
+    addUseFlow(19, "Light Industry", "Neighborhood", 6);
+    addUseFlow(19, "Light Industry", "Resident", 6);
+    addUseFlow(19, "Light Industry", "Retail", 6);
+    
+
+     /*LATE NIGHT
+    ********/
     //Park and public realms out
-    addUseFlow(23, "Park and Public", "Transit", 5);
-    addUseFlow(23, "Park and Public", "Neighborhood", 5);
-    addUseFlow(23, "Park and Public", "Resident", 5);
+    addUseFlow(23, "Park and Public", "Neighborhood", 6);
+    addUseFlow(23, "Park and Public", "Resident", 6);
 
     //Transit out
-    addUseFlow(23, "Transit", "Neighborhood", 10);
-    addUseFlow(23, "Transit", "Resident", 10);
-    addUseFlow(23, "Transit", "Retail", 5);
+    addUseFlow(23, "Transit", "Neighborhood", 5);
+    addUseFlow(23, "Transit", "Resident", 5);
+    addUseFlow(23, "Transit", "Retail", 6);
 
     //Neighbourhood out
-    addUseFlow(23, "Neighborhood", "Park and Public", 5);
-    addUseFlow(23, "Neighborhood", "Retail", 5);
+    addUseFlow(23, "Neighborhood", "Park and Public", 6);
+    addUseFlow(23, "Neighborhood", "Retail", 6);
 
     //Resident out
-    addUseFlow(23, "Resident", "Park and Public", 5);
-    addUseFlow(23, "Resident", "Retail", 5);
+    addUseFlow(23, "Resident", "Park and Public", 6);
+    addUseFlow(23, "Resident", "Retail", 6);
 
     //retail out
-    addUseFlow(23, "Retail", "Transit", 20);
-    addUseFlow(23, "Retail", "Neighborhood", 10);
-    addUseFlow(23, "Retail", "Resident", 10);
+    addUseFlow(23, "Retail", "Transit", 4);
+    addUseFlow(23, "Retail", "Neighborhood", 5);
+    addUseFlow(23, "Retail", "Resident", 5);
   }
 
   //initialize the time key and the matrix respond for the use_flows hashmap 
   void use_flows()
   {
+    use_flows.put(9, morningFlow);
     use_flows.put(12, noonFlow);
+    use_flows.put(15, afternoonFlow);
+    use_flows.put(19, eveningFlow);
     use_flows.put(23, midNightFlow);
   }
 }
