@@ -3,6 +3,8 @@
  */
 class Building 
 {    
+  int FLOW_DELAY_MULTIPLIER = 50;
+  
   ArrayList<BuildingUse> buildingUses;
   BuildingCoords buildingCoords;
   PVector[] bUDotCoords;
@@ -11,6 +13,7 @@ class Building
   int doorNodeId;
   float node_x;
   float node_y;
+  float particleGenRate;
 
   BuildingTooltip tooltip;
   boolean showTooltip;
@@ -34,6 +37,7 @@ class Building
     maxBuildingUses = bUDotCoords.length;
     buildingUses = new ArrayList<BuildingUse>();
     tooltip = new BuildingTooltip(buildingCoords, maxBuildingUses);
+    particleGenRate = 0;
   }
 
   //rendering the block
@@ -123,18 +127,18 @@ class Building
   {
     tooltip.drawTooltip(buildingUses);
   }
-
-  //write and read from the ArrayList paths to update the edges and their density
-  ArrayList<Path> buildPaths(ArrayList<Path> paths)
+  
+  //find the particle generation rate of each FlowRoute and add the FlowRoutes into an array
+   ArrayList<FlowRoute> findParticleGenRate(ArrayList<FlowRoute> flowRoutes)
   {
-    float density = 0;
+    int delay = 0;
     HashMap<String, Building> destBuildings = new  HashMap<String, Building>();
     ArrayList<UseFlow> time_flows = new ArrayList<UseFlow>();
     if (!buildingUses.isEmpty())
     {
       for (int i = 0; i < buildingUses.size(); i++) {
         BuildingUse FromUse = buildingUses.get(i);
-        if (cur_time == 12 || cur_time == 23)
+        if (cur_time == 9 || cur_time == 12 || cur_time == 15 || cur_time == 19 ||  cur_time == 23)
         {
           time_flows = findFlows(cur_time);
           for (UseFlow flow : time_flows)
@@ -142,7 +146,7 @@ class Building
             if (flow.from_use == FromUse.name)
             {
               destBuildings = findBuildings(flow.to_use);
-              density = flow.density / 1000;
+              delay = flow.delay * FLOW_DELAY_MULTIPLIER;
               if (destBuildings != null && !destBuildings.isEmpty()) {
                 for (Map.Entry buildingEntry : destBuildings.entrySet()) {
                   Building destBuilding = (Building) buildingEntry.getValue();
@@ -150,8 +154,8 @@ class Building
                   int destDoorNodeId = destBuilding.doorNodeId;
                   if (destDoorNodeId != this.doorNodeId)
                   {
-                    FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, density);
-                    paths = fA.buildPathDensities(density, paths);
+                    FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, delay, flow.from_use, flow.to_use);
+                    flowRoutes.add(fA);
                   }
                 }
               }
@@ -160,7 +164,7 @@ class Building
         }
       }
     }
-    return paths;
+    return flowRoutes;
   }
 
   /**
@@ -183,17 +187,14 @@ class Building
    * Adds building use to the building
    * @param buildingUse is the building use object to be added
    */
-  void addBuildingUse(BuildingUse buildingUse) throws Exception
-  {
+  void addBuildingUse(BuildingUse buildingUse) {
     if (buildingUses.size() < maxBuildingUses) {
       buildingUses.add(buildingUse);      
       use_buildings.get(buildingUse.name).put(buildingName, this);
-    } else {
-      throw new Exception ("too many building uses");
     }
   }
 
-  void deleteBuildingUse() throws Exception
+  ArrayList<Particle> deleteBuildingUse(ArrayList<Particle> particles) throws Exception
   {
     String bUtoDelete = tooltip.selectBuildingUse(buildingUses);
 
@@ -201,9 +202,20 @@ class Building
       String bUName = buildingUses.get(i).name;      
       if (bUtoDelete == bUName) {
         buildingUses.remove(i);
+        
+        //remove the particles associated with the removed building use
+        for (int j = particles.size() - 1; j >= 0; j--)
+        {
+          Particle curParticle = particles.get(j);
+          if(curParticle.initial_nodeID == doorNodeId &&  curParticle.from_buildingUse == bUName || curParticle.dest_nodeID == doorNodeId && curParticle.to_buildingUse == bUName)
+          {
+            particles.remove(j);
+          }
+        }
       }
     }
     use_buildings.get(bUtoDelete).remove(buildingName);
+    return particles;
   }
 
   /**

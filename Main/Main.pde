@@ -73,8 +73,11 @@ void setup()
     .setColorLabel(color(0))
     .setItemsPerRow(5)
     .setSpacingColumn(70)
-    .addItem("12PM", 12)
-    .addItem("11PM", 23)
+    .addItem("Morning", 9)
+    .addItem("Noon", 12)
+    .addItem("Afternoon", 15)
+    .addItem("Evening", 19)
+    .addItem("Late Night", 23)
     ;
 }
 
@@ -90,11 +93,11 @@ void draw() {
   GNWMap.render();
   //GNWPathFinder.drawGraph();
   update_time();
-  if (GNWMap.isBuildingUseChanged || timeChanged == true )           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
+    GNWMap.flowInit(timeChanged);
     GNWMap.isBuildingUseChanged = false;
     timeChanged = false;
-    GNWMap.flowInit();
   }
   GNWInterface.dropFeedback(isOnMap());
   GNWMap.drawFlow();
