@@ -1,4 +1,4 @@
-class GNWInterface //<>// //<>// //<>//
+class GNWInterface //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
@@ -10,7 +10,6 @@ class GNWInterface //<>// //<>// //<>//
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
-    interfaceImage.resize(2048, 1536);
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
 
     selectedBUIcon = null;
