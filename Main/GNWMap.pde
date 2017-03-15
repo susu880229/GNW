@@ -10,7 +10,7 @@ class GNWMap
   ArrayList<UseFlow> afternoonFlow;
   ArrayList<UseFlow> eveningFlow;
   ArrayList<UseFlow> midNightFlow;
- 
+
   ArrayList<FlowRoute> flowRoutes;
   ArrayList<Particle> particles;
 
@@ -28,7 +28,7 @@ class GNWMap
     selectedBuilding = null;
 
     createGNWMap();
-    
+
     //initialize the five time flows
     morningFlow = new ArrayList<UseFlow>();
     noonFlow = new ArrayList<UseFlow>();
@@ -110,9 +110,9 @@ class GNWMap
   }
 
   /*Check if new particles should be generated. 
-  *Draw each particle on the map and calculate its next position.
-  *If the particle has reached the end of the route, remove the particle.
-  */
+   *Draw each particle on the map and calculate its next position.
+   *If the particle has reached the end of the route, remove the particle.
+   */
   void drawFlow()
   {
     for (int i = 0; i < flowRoutes.size(); i++) 
@@ -121,19 +121,17 @@ class GNWMap
       {
         flowRoutes.get(i).addNewParticle(particles);
         flowRoutes.get(i).timeToNextParticleGen = flowRoutes.get(i).delay;
-      }
-      
-      else
+      } else
       {
         flowRoutes.get(i).timeToNextParticleGen -= 1;
       }
     }
-    
+
     for (int j = particles.size() - 1; j >= 0; j--)      //loop backwards as we may remove some particles
     {
       particles.get(j).run();
-      
-      if(particles.get(j).isEndOfRoute == true)
+
+      if (particles.get(j).isEndOfRoute == true)
       {
         particles.remove(j);
       }
@@ -187,6 +185,8 @@ class GNWMap
     PVector[] dotCoords_NaturesPath = {new PVector(4102, 302), new PVector(4338, 250)};
     PVector[] dotCoords_null = null;
 
+
+
     addBuilding("Lot5", true, 64, 285, 155, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
     addBuilding("Park", false, 5, 274, 333, 383, 330, 376, 525, 279, 520, dotCoords_null);
     addBuilding("Lot7", true, 7, 272, 571, 379, 580, 392, 698, 280, 720, dotCoords_lot7);
@@ -211,6 +211,11 @@ class GNWMap
 
     addBuilding("Shaw", false, 55, 3569, 251, 3935, 247, 3965, 385, 3627, 457, dotCoords_Shaw);
     addBuilding("NaturesPath", false, 59, 4043, 241, 4392, 214, 4407, 284, 4081, 354, dotCoords_NaturesPath);
+    addBuilding("Transit", false, 57, 4030, 241, 4050, 214, 4030, 220, 4050, 220, dotCoords_null);
+
+    addBuilding("Neighbourhood1", false, 1, 5, 820, 10, 820, 10, 830, 5, 830, dotCoords_null);
+    addBuilding("Neighbourhood2", false, 62, 260, 170, 270, 170, 270, 180, 260, 180, dotCoords_null);
+    addBuilding("Neighbourhood3", false, 60, 4485, 295, 4495, 295, 4495, 305, 4485, 305, dotCoords_null);
   }
 
   /**
@@ -228,7 +233,7 @@ class GNWMap
     BuildingUse park = buildingUses.get("Park and Public");
     BuildingUse school = buildingUses.get("Education");
     BuildingUse transit = buildingUses.get("Transit");
-    BuildingUse neighbour = buildingUses.get("Neighbourhood");
+    BuildingUse neighbour = buildingUses.get("Neighborhood");
     BuildingUse retail = buildingUses.get("Retail");
     BuildingUse art = buildingUses.get("Art and Culture");
     BuildingUse office = buildingUses.get("Business");
@@ -246,8 +251,11 @@ class GNWMap
     buildings.get("CDM2").addPermanentUse(resident);
     buildings.get("887").addPermanentUse(office);
     buildings.get("Mec").addPermanentUse(office);
-   // buildings.get("NaturesPath").addPermanentUse(transit);
-    
+    buildings.get("Transit").addPermanentUse(transit);
+    buildings.get("Neighbourhood1").addPermanentUse(neighbour);
+    buildings.get("Neighbourhood2").addPermanentUse(neighbour);
+    buildings.get("Neighbourhood3").addPermanentUse(neighbour);
+
     try {
       buildings.get("901").addBuildingUse(office);
       buildings.get("Shaw").addBuildingUse(office);
@@ -264,20 +272,16 @@ class GNWMap
     if (time == 9)
     {
       morningFlow.add(use_flow);
-    }
-    else if (time == 12)
+    } else if (time == 12)
     {
       noonFlow.add(use_flow);
-    } 
-    else if (time == 15)
+    } else if (time == 15)
     {
       afternoonFlow.add(use_flow);
-    } 
-    else if (time == 19)
+    } else if (time == 19)
     {
       eveningFlow.add(use_flow);
-    } 
-    else if (time == 23)
+    } else if (time == 23)
     {
       midNightFlow.add(use_flow);
     }
@@ -286,8 +290,8 @@ class GNWMap
   void createUseFlow()
   { 
     /*MORNING
-    *********/
-    
+     *********/
+
     //business out
     addUseFlow(9, "Business", "Park and Public", 5);
     addUseFlow(9, "Business", "Retail", 4);
@@ -323,20 +327,20 @@ class GNWMap
     addUseFlow(9, "Neighborhood", "Transit", 2);
     addUseFlow(9, "Neighborhood", "Retail", 4);
     addUseFlow(9, "Neighborhood", "Light Industry", 3);
-    
+
     //retail out
     addUseFlow(9, "Retail", "Transit", 5);
     addUseFlow(9, "Retail", "Light Industry", 4);
-   
+
     //light industry out
     addUseFlow(9, "Light Industry", "Art and Culture", 4);
     addUseFlow(9, "Light Industry", "Park and Public", 3);
     addUseFlow(9, "Light Industry", "Transit", 2);
     addUseFlow(9, "Light Industry", "Neighborhood", 3);
     addUseFlow(9, "Light Industry", "Retail", 1);
-    
+
     /*NOON
-    ********/
+     ********/
     //business out
     addUseFlow(12, "Business", "Art and Culture", 3);
     addUseFlow(12, "Business", "Park and Public", 3);
@@ -376,10 +380,10 @@ class GNWMap
     addUseFlow(12, "Light Industry", "Transit", 2);
     addUseFlow(12, "Light Industry", "Neighborhood", 3);
     addUseFlow(12, "Light Industry", "Retail", 1);
-    
+
     /*AFTERNOON
-    *********/
-    
+     *********/
+
     //business out
     addUseFlow(15, "Business", "Transit", 6);
     addUseFlow(15, "Business", "Retail", 5);
@@ -397,7 +401,7 @@ class GNWMap
     addUseFlow(15, "Resident", "Park and Public", 5);
     addUseFlow(15, "Resident", "Transit", 5);
     addUseFlow(15, "Resident", "Retail", 4);
-    
+
     //transit out
     addUseFlow(15, "Transit", "Art and Culture", 4);
     addUseFlow(15, "Transit", "Park and Public", 5);
@@ -408,7 +412,7 @@ class GNWMap
     addUseFlow(15, "Neighborhood", "Park and Public", 5);
     addUseFlow(15, "Neighborhood", "Transit", 5);
     addUseFlow(15, "Neighborhood", "Retail", 4);
-   
+
     //light industry out
     addUseFlow(15, "Light Industry", "Art and Culture", 5);
     addUseFlow(15, "Light Industry", "Park and Public", 6);
@@ -416,10 +420,10 @@ class GNWMap
     addUseFlow(15, "Light Industry", "Neighborhood", 5);
     addUseFlow(15, "Light Industry", "Resident", 5);
     addUseFlow(15, "Light Industry", "Retail", 5);
-    
-    
+
+
     /*EVENING
-    ********/
+     ********/
     //business out
     addUseFlow(19, "Business", "Art and Culture", 5);
     addUseFlow(19, "Business", "Park and Public", 5);
@@ -448,7 +452,7 @@ class GNWMap
     addUseFlow(19, "Neighborhood", "Transit", 4);
     addUseFlow(19, "Neighborhood", "Resident", 5);
     addUseFlow(19, "Neighborhood", "Retail", 3);
-    
+
     //retail out
     addUseFlow(19, "Retail", "Transit", 4);
     addUseFlow(19, "Retail", "Neighborhood", 5);
@@ -461,10 +465,10 @@ class GNWMap
     addUseFlow(19, "Light Industry", "Neighborhood", 6);
     addUseFlow(19, "Light Industry", "Resident", 6);
     addUseFlow(19, "Light Industry", "Retail", 6);
-    
 
-     /*LATE NIGHT
-    ********/
+
+    /*LATE NIGHT
+     ********/
     //Park and public realms out
     addUseFlow(23, "Park and Public", "Neighborhood", 6);
     addUseFlow(23, "Park and Public", "Resident", 6);

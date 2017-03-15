@@ -1,4 +1,4 @@
-import pathfinder.*; //<>// //<>//
+import pathfinder.*; //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -246,9 +246,9 @@ void loadDropFeedbackImages()
 
 
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
-//void mouseClicked() {
-//  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
-//}
+void mouseClicked() {
+  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
+}
 
 ////FOR OUTPUT OF GRAPH NODE COORDINATES
 //void mouseClicked() {
