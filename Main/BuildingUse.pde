@@ -9,7 +9,11 @@ class BuildingUse
   {
     this.name = name;
     this.colorId = colorId;
-    img = loadImage(imgSrc);
-    img.resize(90, 0);
+    if (imgSrc != "") {
+      img = loadImage(imgSrc);
+      img.resize(90, 0);
+    } else {
+      img = null;
+    }
   }
 }

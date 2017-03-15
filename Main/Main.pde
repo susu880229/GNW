@@ -1,4 +1,4 @@
-import pathfinder.*;  //<>//
+import pathfinder.*; //<>// //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -10,10 +10,8 @@ GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
 GNWInterface GNWInterface;
 
-ArrayList<BuildingUse> buildingUses;
-
-//use_building representts: <buildingUseName, <buildingName, building>>
-HashMap<String, HashMap<String, Building>> use_buildings;
+HashMap<String, BuildingUse> buildingUses;
+HashMap<String, ArrayList<Building>> use_buildings;
 HashMap<Integer, ArrayList<UseFlow>> use_flows;
 
 //transformations
@@ -52,14 +50,14 @@ void setup()
 
   shiftX = 0;
   shiftY = 0;
+
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
-  use_buildings = new HashMap<String, HashMap<String, Building>>();
+  use_buildings = new HashMap<String, ArrayList<Building>>();
+  buildingUses = new HashMap<String, BuildingUse>();
+
   GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
-  buildingUses = new ArrayList<BuildingUse>();
-  loadDropFeedbackImages();
-  setBuildingUses();
 
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
@@ -79,6 +77,9 @@ void setup()
     .addItem("Evening", 19)
     .addItem("Late Night", 23)
     ;
+    
+  loadDropFeedbackImages();
+  setBuildingUses();
 }
 
 /** 
@@ -202,19 +203,29 @@ boolean isOnMap()
 void setBuildingUses()
 {
 
-  buildingUses.add(new BuildingUse("Retail", "retail.png", #EA6C90));
-  buildingUses.add(new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
-  buildingUses.add(new BuildingUse("Light Industry", "lightIndustrial.png", #8ACE8A));
-  buildingUses.add(new BuildingUse("Business", "offices.png", #66D9E2));
-  buildingUses.add(new BuildingUse("Resident", "residential.png", #F9D463));
+  buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
+  buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
+  buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #F9D463));
+  buildingUses.put("Business", new BuildingUse("Business", "offices.png", #66D9E2));
+  buildingUses.put("Resident", new BuildingUse("Resident", "residential.png", #8ACE8A));
 
-  use_buildings.put("Retail", new HashMap<String, Building>());
-  use_buildings.put("Art and Culture", new HashMap<String, Building>());
-  use_buildings.put("Light Industry", new HashMap<String, Building>());
-  use_buildings.put("Business", new HashMap<String, Building>());
-  use_buildings.put("Resident", new HashMap<String, Building>());
+  buildingUses.put("Transit", new BuildingUse("Transit", "", 0));
+  buildingUses.put("Neighborhood", new BuildingUse("Neighborhood", "", 0));
+  buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
+  buildingUses.put("Education", new BuildingUse("Education", "", 0));
 
-  GNWInterface.createBuildingUseBoxes();
+  use_buildings.put("Retail", new ArrayList<Building>());
+  use_buildings.put("Art and Culture", new ArrayList<Building>());
+  use_buildings.put("Light Industry", new ArrayList<Building>());
+  use_buildings.put("Business", new ArrayList<Building>());
+  use_buildings.put("Resident", new ArrayList<Building>());
+  
+  use_buildings.put("Transit", new ArrayList<Building>());
+  use_buildings.put("Neighborhood", new ArrayList<Building>());
+  use_buildings.put("Park and Public", new ArrayList<Building>());
+  use_buildings.put("Education", new ArrayList<Building>());
+
+  GNWMap.addDefaultBuildingUses();
 }
 
 void loadDropFeedbackImages()

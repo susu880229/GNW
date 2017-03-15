@@ -4,18 +4,13 @@ class GNWMap
   PImage mapImage;
   PImage mapDoorsImage;
 
-  //define the five use categories ArrayList
-  ArrayList<Building> artCultureBuildings;
-  ArrayList<Building> lightIndustrialBuildings;
-  ArrayList<Building> officesBuildings;
-  ArrayList<Building> residentalBuildings;
-  ArrayList<Building> retailBuildings;
   //define the five time use_flow matrix
   ArrayList<UseFlow> morningFlow;
   ArrayList<UseFlow> noonFlow;
   ArrayList<UseFlow> afternoonFlow;
   ArrayList<UseFlow> eveningFlow;
   ArrayList<UseFlow> midNightFlow;
+
   ArrayList<FlowRoute> flowRoutes;
   ArrayList<Particle> particles;
 
@@ -33,19 +28,14 @@ class GNWMap
     selectedBuilding = null;
 
     createGNWMap();
-    //initialize the five use ArrayList
-    artCultureBuildings = new ArrayList<Building>();
-    lightIndustrialBuildings = new ArrayList<Building>();
-    officesBuildings = new ArrayList<Building>();
-    residentalBuildings = new ArrayList<Building>();
-    retailBuildings = new ArrayList<Building>();
+
     //initialize the five time flows
     morningFlow = new ArrayList<UseFlow>();
     noonFlow = new ArrayList<UseFlow>();
     afternoonFlow = new ArrayList<UseFlow>();
     eveningFlow = new ArrayList<UseFlow>();
     midNightFlow = new ArrayList<UseFlow>();
-    
+
     //initialize the hashmap use_flows
     use_flows();
     createUseFlow();
@@ -120,9 +110,9 @@ class GNWMap
   }
 
   /*Check if new particles should be generated. 
-  *Draw each particle on the map and calculate its next position.
-  *If the particle has reached the end of the route, remove the particle.
-  */
+   *Draw each particle on the map and calculate its next position.
+   *If the particle has reached the end of the route, remove the particle.
+   */
   void drawFlow()
   {
     for (int i = 0; i < flowRoutes.size(); i++) 
@@ -131,19 +121,17 @@ class GNWMap
       {
         flowRoutes.get(i).addNewParticle(particles);
         flowRoutes.get(i).timeToNextParticleGen = flowRoutes.get(i).delay;
-      }
-      
-      else
+      } else
       {
         flowRoutes.get(i).timeToNextParticleGen -= 1;
       }
     }
-    
+
     for (int j = particles.size() - 1; j >= 0; j--)      //loop backwards as we may remove some particles
     {
       particles.get(j).run();
-      
-      if(particles.get(j).isEndOfRoute == true)
+
+      if (particles.get(j).isEndOfRoute == true)
       {
         particles.remove(j);
       }
@@ -155,7 +143,6 @@ class GNWMap
     try {
       Building building = findBuilding();
       building.addBuildingUse(selectedBuildingUse);
-      add_useBuildings(selectedBuildingUse, building);
       isBuildingUseChanged = true;
       selectedBuilding = building;
     } 
@@ -185,46 +172,96 @@ class GNWMap
   void createGNWMap() 
   {  
     PVector[] dotCoords_lot5 = {new PVector(367, 190), new PVector(306, 230), new PVector(351, 281)};
-    PVector[] dotCoords_lot7 = {new PVector(363, 619), new PVector(305, 642), new PVector(319, 690)};
-    PVector[] dotCoords_lot4 = {new PVector(461, 217), new PVector(609, 215)};
-    PVector[] dotCoords_521 = {new PVector(483, 428), new PVector(425, 476), new PVector(464, 508)};
+    PVector[] dotCoords_lot7 = {new PVector(356, 594), new PVector(305, 640), new PVector(315, 682)};
+    PVector[] dotCoords_lot4 = {new PVector(476, 208), new PVector(594, 202)};
+    PVector[] dotCoords_521 = {new PVector(464, 410), new PVector(428, 466), new PVector(464, 508)};
     PVector[] dotCoords_515 = {new PVector(428, 637), new PVector(486, 644), new PVector(534, 606)};
-    PVector[] dotCoords_1933 = {new PVector(1438, 284), new PVector(1526, 266)};
-    PVector[] dotCoords_701 = {new PVector(1746, 350), new PVector(1963, 373), new PVector(2154, 352)};
+    PVector[] dotCoords_1933 = {new PVector(1433, 260), new PVector(1519, 242)};
+    PVector[] dotCoords_701 = {new PVector(1757, 306), new PVector(1950, 336), new PVector(2129, 312)};
     PVector[] dotCoords_1980 = {new PVector(2424, 220), new PVector(2456, 373)};
     PVector[] dotCoords_887 = {new PVector(2826, 385)};
     PVector[] dotCoords_901 = {new PVector(2967, 402), new PVector(3047, 408), new PVector(3142, 416)};
     PVector[] dotCoords_Shaw = {new PVector(3653, 384), new PVector(3773, 376), new PVector(3901, 336)};
     PVector[] dotCoords_NaturesPath = {new PVector(4102, 302), new PVector(4338, 250)};
+    PVector[] dotCoords_null = null;
 
     addBuilding("Lot5", true, 64, 285, 155, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
+    addBuilding("Park", false, 5, 274, 333, 383, 330, 376, 525, 279, 520, dotCoords_null);
     addBuilding("Lot7", true, 7, 272, 571, 379, 580, 392, 698, 280, 720, dotCoords_lot7);
-    addBuilding("Lot4", true, 17, 417, 167, 645, 175, 648, 260, 417, 260, dotCoords_lot4);
 
+    addBuilding("Lot4", true, 17, 417, 167, 645, 175, 648, 260, 417, 260, dotCoords_lot4);
     addBuilding("521", true, 14, 401, 390, 524, 398, 521, 532, 402, 532, dotCoords_521);
     addBuilding("515", true, 12, 401, 579, 543, 571, 564, 660, 410, 695, dotCoords_515);
 
+    addBuilding("EmilyCarr", false, 28, 570, 378, 1128, 251, 1155, 378, 604, 507, dotCoords_null);
+    addBuilding("Plaza", false, 22, 568, 567, 702, 538, 721, 616, 593, 650, dotCoords_null);
+    addBuilding("569", false, 26, 728, 528, 1182, 420, 1201, 500, 750, 612, dotCoords_null);
+
+    addBuilding("CDM1", false, 34, 1207, 188, 1353, 156, 1400, 394, 1260, 425, dotCoords_null);
     addBuilding("1933", true, 38, 1376, 152, 1539, 153, 1566, 283, 1408, 309, dotCoords_1933);
+    addBuilding("CDM2", false, 41, 1415, 344, 1577, 313, 1600, 411, 1425, 422, dotCoords_null);
 
     addBuilding("701", false, 44, 1662, 217, 2185, 224, 2221, 418, 1690, 401, dotCoords_701);
     addBuilding("1980", false, 46, 2296, 166, 2528, 164, 2699, 432, 2353, 424, dotCoords_1980);
     addBuilding("887", false, 48, 2578, 173, 2904, 198, 2899, 448, 2765, 444, dotCoords_887);
     addBuilding("901", false, 50, 2932, 203, 3211, 231, 3197, 459, 2923, 444, dotCoords_901);
+    addBuilding("Mec", false, 52, 3241, 240, 3460, 248, 3518, 473, 3221, 457, dotCoords_null);
 
     addBuilding("Shaw", false, 55, 3569, 251, 3935, 247, 3965, 385, 3627, 457, dotCoords_Shaw);
     addBuilding("NaturesPath", false, 59, 4043, 241, 4392, 214, 4407, 284, 4081, 354, dotCoords_NaturesPath);
+    addBuilding("Transit", false, 57, 4030, 241, 4050, 214, 4030, 220, 4050, 220, dotCoords_null);
+
+    addBuilding("Neighbourhood1", false, 1, 5, 820, 10, 820, 10, 830, 5, 830, dotCoords_null);
+    addBuilding("Neighbourhood2", false, 62, 260, 170, 270, 170, 270, 180, 260, 180, dotCoords_null);
+    addBuilding("Neighbourhood3", false, 60, 4485, 295, 4495, 295, 4495, 305, 4485, 305, dotCoords_null);
   }
 
   /**
    * Helper funtion to add building and name to hashmap buildings
    */
-  void addBuilding(String name, Boolean c, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, PVector[] bUDotCoords) 
+  void addBuilding(String name, Boolean isSmallDot, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, PVector[] bUDotCoords) 
   {
     BuildingCoords buildingCoords = new BuildingCoords(x1, y1, x2, y2, x3, y3, x4, y4);
-    Building newBuilding = new Building(name, c, doorNodeId, buildingCoords, bUDotCoords);
+    Building newBuilding = new Building(name, isSmallDot, doorNodeId, buildingCoords, bUDotCoords);
     buildings.put(name, newBuilding);
   }
 
+  void addDefaultBuildingUses() 
+  {
+    BuildingUse park = buildingUses.get("Park and Public");
+    BuildingUse school = buildingUses.get("Education");
+    BuildingUse transit = buildingUses.get("Transit");
+    BuildingUse neighbour = buildingUses.get("Neighborhood");
+    BuildingUse retail = buildingUses.get("Retail");
+    BuildingUse art = buildingUses.get("Art and Culture");
+    BuildingUse office = buildingUses.get("Business");
+    BuildingUse resident = buildingUses.get("Resident");
+
+    buildings.get("Park").addPermanentUse(park);
+    buildings.get("Plaza").addPermanentUse(park);
+    buildings.get("Lot7").addPermanentUse(transit);
+    buildings.get("EmilyCarr").addPermanentUse(school);
+    buildings.get("EmilyCarr").addPermanentUse(art);
+    buildings.get("569").addPermanentUse(retail);
+    buildings.get("569").addPermanentUse(office);
+    buildings.get("CDM1").addPermanentUse(school);
+    buildings.get("CDM2").addPermanentUse(school);
+    buildings.get("CDM2").addPermanentUse(resident);
+    buildings.get("887").addPermanentUse(office);
+    buildings.get("Mec").addPermanentUse(office);
+    buildings.get("Transit").addPermanentUse(transit);
+    buildings.get("Neighbourhood1").addPermanentUse(neighbour);
+    buildings.get("Neighbourhood2").addPermanentUse(neighbour);
+    buildings.get("Neighbourhood3").addPermanentUse(neighbour);
+
+    try {
+      buildings.get("901").addBuildingUse(office);
+      buildings.get("Shaw").addBuildingUse(office);
+    } 
+    catch (Exception e) {
+      println("Initial setup error: " + e);
+    }
+  }
 
   void addUseFlow(int time, String from, String to, int number)
   {
@@ -233,20 +270,16 @@ class GNWMap
     if (time == 9)
     {
       morningFlow.add(use_flow);
-    }
-    else if (time == 12)
+    } else if (time == 12)
     {
       noonFlow.add(use_flow);
-    } 
-    else if (time == 15)
+    } else if (time == 15)
     {
       afternoonFlow.add(use_flow);
-    } 
-    else if (time == 19)
+    } else if (time == 19)
     {
       eveningFlow.add(use_flow);
-    } 
-    else if (time == 23)
+    } else if (time == 23)
     {
       midNightFlow.add(use_flow);
     }
@@ -255,8 +288,8 @@ class GNWMap
   void createUseFlow()
   { 
     /*MORNING
-    *********/
-    
+     *********/
+
     //business out
     addUseFlow(9, "Business", "Park and Public", 5);
     addUseFlow(9, "Business", "Retail", 4);
@@ -292,20 +325,20 @@ class GNWMap
     addUseFlow(9, "Neighborhood", "Transit", 2);
     addUseFlow(9, "Neighborhood", "Retail", 4);
     addUseFlow(9, "Neighborhood", "Light Industry", 3);
-    
+
     //retail out
     addUseFlow(9, "Retail", "Transit", 5);
     addUseFlow(9, "Retail", "Light Industry", 4);
-   
+
     //light industry out
     addUseFlow(9, "Light Industry", "Art and Culture", 4);
     addUseFlow(9, "Light Industry", "Park and Public", 3);
     addUseFlow(9, "Light Industry", "Transit", 2);
     addUseFlow(9, "Light Industry", "Neighborhood", 3);
     addUseFlow(9, "Light Industry", "Retail", 1);
-    
+
     /*NOON
-    ********/
+     ********/
     //business out
     addUseFlow(12, "Business", "Art and Culture", 3);
     addUseFlow(12, "Business", "Park and Public", 3);
@@ -345,10 +378,10 @@ class GNWMap
     addUseFlow(12, "Light Industry", "Transit", 2);
     addUseFlow(12, "Light Industry", "Neighborhood", 3);
     addUseFlow(12, "Light Industry", "Retail", 1);
-    
+
     /*AFTERNOON
-    *********/
-    
+     *********/
+
     //business out
     addUseFlow(15, "Business", "Transit", 6);
     addUseFlow(15, "Business", "Retail", 5);
@@ -366,7 +399,7 @@ class GNWMap
     addUseFlow(15, "Resident", "Park and Public", 5);
     addUseFlow(15, "Resident", "Transit", 5);
     addUseFlow(15, "Resident", "Retail", 4);
-    
+
     //transit out
     addUseFlow(15, "Transit", "Art and Culture", 4);
     addUseFlow(15, "Transit", "Park and Public", 5);
@@ -377,7 +410,7 @@ class GNWMap
     addUseFlow(15, "Neighborhood", "Park and Public", 5);
     addUseFlow(15, "Neighborhood", "Transit", 5);
     addUseFlow(15, "Neighborhood", "Retail", 4);
-   
+
     //light industry out
     addUseFlow(15, "Light Industry", "Art and Culture", 5);
     addUseFlow(15, "Light Industry", "Park and Public", 6);
@@ -385,10 +418,10 @@ class GNWMap
     addUseFlow(15, "Light Industry", "Neighborhood", 5);
     addUseFlow(15, "Light Industry", "Resident", 5);
     addUseFlow(15, "Light Industry", "Retail", 5);
-    
-    
+
+
     /*EVENING
-    ********/
+     ********/
     //business out
     addUseFlow(19, "Business", "Art and Culture", 5);
     addUseFlow(19, "Business", "Park and Public", 5);
@@ -417,7 +450,7 @@ class GNWMap
     addUseFlow(19, "Neighborhood", "Transit", 4);
     addUseFlow(19, "Neighborhood", "Resident", 5);
     addUseFlow(19, "Neighborhood", "Retail", 3);
-    
+
     //retail out
     addUseFlow(19, "Retail", "Transit", 4);
     addUseFlow(19, "Retail", "Neighborhood", 5);
@@ -430,10 +463,10 @@ class GNWMap
     addUseFlow(19, "Light Industry", "Neighborhood", 6);
     addUseFlow(19, "Light Industry", "Resident", 6);
     addUseFlow(19, "Light Industry", "Retail", 6);
-    
 
-     /*LATE NIGHT
-    ********/
+
+    /*LATE NIGHT
+     ********/
     //Park and public realms out
     addUseFlow(23, "Park and Public", "Neighborhood", 6);
     addUseFlow(23, "Park and Public", "Resident", 6);
@@ -457,16 +490,6 @@ class GNWMap
     addUseFlow(23, "Retail", "Resident", 5);
   }
 
-  ////initialize the five key and value paires for the use_buldings hashmap
-  //void use_buildings()
-  //{
-  //  use_buildings.put("Resident", residentalBuildings);
-  //  use_buildings.put("Business", officesBuildings);
-  //  use_buildings.put("Art and Culture", artCultureBuildings);
-  //  use_buildings.put("Light Industry", lightIndustrialBuildings);
-  //  use_buildings.put("Retail", retailBuildings);
-  //}
-
   //initialize the time key and the matrix respond for the use_flows hashmap 
   void use_flows()
   {
@@ -475,21 +498,5 @@ class GNWMap
     use_flows.put(15, afternoonFlow);
     use_flows.put(19, eveningFlow);
     use_flows.put(23, midNightFlow);
-  }
-
-  //add building to the use_buildings specific arraylist 
-  void add_useBuildings(BuildingUse selectedBuildingUse, Building building)
-  {
-    if (selectedBuildingUse.name == "Resident") {
-      residentalBuildings.add(building);
-    } else if (selectedBuildingUse.name == "Business") {
-      officesBuildings.add(building);
-    } else if (selectedBuildingUse.name == "Art and Culture") {
-      artCultureBuildings.add(building);
-    } else if (selectedBuildingUse.name =="Light Industry") {
-      lightIndustrialBuildings.add(building);
-    } else if (selectedBuildingUse.name =="Retail") {
-      retailBuildings.add(building);
-    }
   }
 }

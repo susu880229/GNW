@@ -1,4 +1,4 @@
-class GNWInterface //<>// //<>// //<>// //<>// //<>// //<>//
+class GNWInterface //<>// //<>// //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
@@ -23,18 +23,30 @@ class GNWInterface //<>// //<>// //<>// //<>// //<>// //<>//
   {
     int space = 400;
 
-    for (int i = 0; i < buildingUses.size(); i++) {
-      BuildingUse buildingUse = buildingUses.get(i);
-      BuildingUseBox buildingUseBox = new BuildingUseBox(buildingUse, xBuildingBox, yBuildingBox);
-      buildingUseBoxes.add(buildingUseBox);
+    BuildingUseBox buildingUseBox =  new BuildingUseBox(buildingUses.get("Retail"), xBuildingBox, yBuildingBox);
+    buildingUseBoxes.add(buildingUseBox);
+    xBuildingBox += space;
 
-      xBuildingBox += space;
-    }
-    
+    buildingUseBox =  new BuildingUseBox(buildingUses.get("Art and Culture"), xBuildingBox, yBuildingBox);
+    buildingUseBoxes.add(buildingUseBox);
+    xBuildingBox += space;
+
+    buildingUseBox =  new BuildingUseBox(buildingUses.get("Light Industry"), xBuildingBox, yBuildingBox);
+    buildingUseBoxes.add(buildingUseBox);
+    xBuildingBox += space;
+
+    buildingUseBox =  new BuildingUseBox(buildingUses.get("Business"), xBuildingBox, yBuildingBox);
+    buildingUseBoxes.add(buildingUseBox);
+    xBuildingBox += space;
+
+    buildingUseBox =  new BuildingUseBox(buildingUses.get("Resident"), xBuildingBox, yBuildingBox);
+    buildingUseBoxes.add(buildingUseBox);
   }
 
   void render() 
   {
+    createBuildingUseBoxes();
+
     for (int i = 0; i < buildingUseBoxes.size(); i++) {
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
       buildingUseBox.render();
@@ -70,27 +82,26 @@ class GNWInterface //<>// //<>// //<>// //<>// //<>// //<>//
       selectedBUIcon.mouseDragged();
     }
   }
-  
+
   void dropFeedback(boolean isOnMap)
   {
     if (selectedBUIcon != null && mousePressed == true && isOnMap)
     {
       try {
-         Building building = GNWMap.findBuilding();
-  
-        if (building.bUDotCoords.length > 0) {
+        Building building = GNWMap.findBuilding();
+        if (building.isCustomizable) {
           building.highlight();
         }
       } 
       catch (Exception e) {
-        //if no building found, don't do anything
+        //println(e);
       }
     }
   }
 
+
   void clearSelected ()
   {
     selectedBUIcon = null;
-    
   }
 }
