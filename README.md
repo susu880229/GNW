@@ -99,6 +99,7 @@ The flow can be adjusted in the `Particle` class in `|-Main/Particle.pde`.
 The size of the particles is defined in `int particleSize`.
 
 2. Particle colour
+
 // To Do
 
 ## Troubleshooting
@@ -107,3 +108,4 @@ The size of the particles is defined in `int particleSize`.
 // To do
 
 ### basic steps to troubleshoot
+// To do
