@@ -77,6 +77,8 @@ void setup()
     .addItem("Evening", 19)
     .addItem("Late Night", 23)
     ;
+  
+  r1.activate(0);
     
   loadDropFeedbackImages();
   setBuildingUses();
