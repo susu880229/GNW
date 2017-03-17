@@ -1,4 +1,4 @@
-import pathfinder.*; //<>//
+import pathfinder.*; //<>// //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -141,7 +141,7 @@ void mousePressed()
 {
   scaleMouse();
   if (!isOnMap()) {
-    GNWInterface.selectBuildingUse();
+    GNWInterface.selectInterface();
     GNWMap.clearSelectedBuilding();
   } else {
     try {

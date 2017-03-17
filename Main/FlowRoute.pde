@@ -4,7 +4,6 @@
 
 class FlowRoute 
 {
-
   int initial_nodeID;
   int dest_nodeID;
   int delay;

@@ -82,7 +82,7 @@ class GNWMap
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
       //Handle any horizontal scroll before checking contains
-      if (building.buildingCoords.contains(mouseX - shiftX, mouseY)) {
+      if (building.buildingCoords.contains()) {
         selectedBuilding = building; 
         return;
       }
@@ -151,13 +151,12 @@ class GNWMap
     }
   }
 
-  //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
   Building findBuilding() throws Exception 
   {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();
-      if (building.buildingCoords.contains(mouseX - shiftX, mouseY))
+      if (building.buildingCoords.contains())
       {
         return building;
       }

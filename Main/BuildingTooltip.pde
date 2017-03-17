@@ -20,9 +20,9 @@ class BuildingTooltip
     this.buildingCoords = buildingCoords;
   }
 
-  void drawTooltip(ArrayList<BuildingUse> buildingUses) //<>// //<>//
+  void drawTooltip(ArrayList<BuildingUse> buildingUses) //<>// //<>// //<>//
   {
-    isOnRight = (buildingCoords.bottomRight.x < (GNWInterface.interfaceImage.width - shiftX) * 8/10); //<>// //<>//
+    isOnRight = (buildingCoords.bottomRight.x < (GNWInterface.interfaceImage.width - shiftX) * 8/10); //<>// //<>// //<>//
 
     String imageName = (isOnRight) ? "tooltip_right" : "tooltip_left";
     imageName += "_" + maxSlots + ".png";
