@@ -18,6 +18,7 @@ The platform was built on Mac OS and Windows. The following programs were used:
 ## Getting started
 
 1. download processing
+
 Go to: https://processing.org/download/
 
 2. install processing packages
@@ -25,8 +26,8 @@ Go to: https://processing.org/download/
 - `ControlP5` from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
 - `Path Finder` from Peter Lager: http://www.lagers.org.uk/pfind/index.html
 
-Packages can be installed in Processing's menu bar.
-- Mac & Windows: Sketch > Import Library... > Add library... > Search > Install package
+**Mac & Windows**: packages can be installed in Processing's menu bar.
+`Sketch > Import Library... > Add library... > Search > Install package`
 
 3. open the project folder
 
@@ -95,17 +96,13 @@ Processing will automatically adjust it according to SDK used for development.
 
 The flow can be adjusted in the `Particle` class in `|-Main/Particle.pde`.
 
-1. Particle size
+- Particle size
 The size of the particles is defined in `int particleSize`.
 
-2. Particle colour
-
-// To Do
+- Particle colour **[To Do]**
 
 ## Troubleshooting
 
-### known issues
-// To do
+### known issues **[To Do]**
 
-### basic steps to troubleshoot
-// To do
+### basic steps to troubleshoot **[To Do]**
