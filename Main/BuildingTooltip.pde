@@ -9,29 +9,31 @@ class BuildingTooltip
   float tooltipY;
   float dividerSpace = 60;
   int maxSlots;
+  BuildingCoords buildingCoords;
 
   BuildingTooltip(BuildingCoords buildingCoords, int maxSlots)
   {
-    isOnRight = buildingCoords.bottomRight.x < loadImage("map.png").width * 9/10;
+    crossImage = loadImage("cross_sign.png");
+    crossImage.resize(50, 0);
+
+    this.maxSlots = maxSlots;
+    this.buildingCoords = buildingCoords;
+  }
+
+  void drawTooltip(ArrayList<BuildingUse> buildingUses) //<>//
+  {
+    isOnRight = (buildingCoords.bottomRight.x < (GNWInterface.interfaceImage.width - shiftX) * 8/10); //<>//
 
     String imageName = (isOnRight) ? "tooltip_right" : "tooltip_left";
     imageName += "_" + maxSlots + ".png";
     tooltipImage = loadImage(imageName);
-
-    crossImage = loadImage("cross_sign.png");
-    crossImage.resize(50, 0);
 
     initialIconX = (isOnRight) ? 50 : 25;
     initialIconY = 40;
 
     tooltipX = (isOnRight) ? buildingCoords.topRight.x :  buildingCoords.bottomLeft.x - tooltipImage.width;
     tooltipY = (isOnRight) ? buildingCoords.topRight.y - 30 : buildingCoords.topLeft.y;
-    
-    this.maxSlots = maxSlots;
-  }
 
-  void drawTooltip(ArrayList<BuildingUse> buildingUses)
-  {
     image(tooltipImage, tooltipX, tooltipY);
 
     if (buildingUses.isEmpty()) {
