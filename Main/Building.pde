@@ -9,7 +9,7 @@ class Building
 
   int FLOW_DELAY_MULTIPLIER = 50;
 
-  BuildingCoords buildingCoords;
+  HotspotCoords buildingCoords;
   PVector[] bUDotCoords;
   String buildingName;
   int dotSize;
@@ -31,7 +31,7 @@ class Building
    * @param buildingCoords This is the 4 coordinates of the building block
    * @param bUDotCoords This is a list of possible dot locations
    */
-  Building (String name, Boolean smallDot, int doorNodeId, BuildingCoords buildingCoords, PVector[] bUDotCoords) 
+  Building (String name, Boolean smallDot, int doorNodeId, HotspotCoords buildingCoords, PVector[] bUDotCoords) 
   {
     buildingName = name;
     dotSize = (smallDot) ? 35 : 70;
@@ -245,52 +245,5 @@ class Building
       }
     }
     throw new Exception("Can't delete building use");
-  }
-
-
-  /**
-   * to detect one point(the mouse) if within this building's hot pot or not
-   */
-  boolean contains(int x, int y) {    
-    PVector[] verts = {  buildingCoords.topLeft, buildingCoords.topRight, buildingCoords.bottomRight, buildingCoords.bottomLeft }; 
-    PVector pos = new PVector(x, y);
-    int i, j;
-    boolean c=false;
-    int sides = verts.length;
-    for (i=0, j=sides-1; i<sides; j=i++) {
-      if (( ((verts[i].y <= pos.y) && (pos.y < verts[j].y)) || ((verts[j].y <= pos.y) && (pos.y < verts[i].y))) &&
-        (pos.x < (verts[j].x - verts[i].x) * (pos.y - verts[i].y) / (verts[j].y - verts[i].y) + verts[i].x)) {
-        c = !c;
-      }
-    }
-    return c;
-  }
-}
-
-
-// ====================================
-class BuildingCoords
-{
-  PVector topLeft;
-  PVector topRight;
-  PVector bottomRight;
-  PVector bottomLeft;
-
-  /**
-   * @param x1 This is the x-coordinate of the top-left corner of the building
-   * @param y1 This is the y-coordinate of the top-left corner of the building
-   * @param x2 This is the x-coordinate of the top-right corner of the building
-   * @param y2 This is the y-coordinate of the top-righteft corner of the building
-   * @param x3 This is the x-coordinate of the bottom-right corner of the building
-   * @param y3 This is the y-coordinate of the bottom-right corner of the building
-   * @param x4 This is the x-coordinate of the bottom-left corner of the building
-   * @param y4 This is the y-coordinate of the bottom-left corner of the building
-   */
-  BuildingCoords(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4)
-  {
-    topLeft = new PVector(x1, y1);
-    topRight = new PVector(x2, y2);
-    bottomRight = new PVector(x3, y3);
-    bottomLeft = new PVector(x4, y4);
   }
 }

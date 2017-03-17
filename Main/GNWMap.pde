@@ -82,7 +82,7 @@ class GNWMap
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
       //Handle any horizontal scroll before checking contains
-      if (building.contains(mouseX - shiftX, mouseY)) {
+      if (building.buildingCoords.contains(mouseX - shiftX, mouseY)) {
         selectedBuilding = building; 
         return;
       }
@@ -157,7 +157,7 @@ class GNWMap
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();
-      if (building.contains(mouseX - shiftX, mouseY))
+      if (building.buildingCoords.contains(mouseX - shiftX, mouseY))
       {
         return building;
       }
@@ -221,7 +221,7 @@ class GNWMap
    */
   void addBuilding(String name, Boolean isSmallDot, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, PVector[] bUDotCoords) 
   {
-    BuildingCoords buildingCoords = new BuildingCoords(x1, y1, x2, y2, x3, y3, x4, y4);
+    HotspotCoords buildingCoords = new HotspotCoords(x1, y1, x2, y2, x3, y3, x4, y4);
     Building newBuilding = new Building(name, isSmallDot, doorNodeId, buildingCoords, bUDotCoords);
     buildings.put(name, newBuilding);
   }
