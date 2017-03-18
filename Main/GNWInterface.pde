@@ -2,7 +2,7 @@ class GNWInterface //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
-  ArrayList<HotspotCoords> buttonPanel;
+  HashMap<String, HotspotCoords> buttonPanel;
   int yBuildingBox;
   int xBuildingBox;
 
@@ -12,7 +12,7 @@ class GNWInterface //<>//
   {
     interfaceImage = loadImage("interface.png");
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
-    buttonPanel = new ArrayList<HotspotCoords>();
+    buttonPanel = new HashMap<String, HotspotCoords>();
 
     selectedBUIcon = null;
 
@@ -46,7 +46,7 @@ class GNWInterface //<>//
     int bottomY = 1530;
 
     HotspotCoords resetButton = new HotspotCoords(1206, topY, 1546, topY, 1540, bottomY, 1206, bottomY);
-    buttonPanel.add(resetButton);
+    buttonPanel.put("reset", resetButton);
   }
 
   void createBuildingUseBoxes() 
@@ -88,12 +88,9 @@ class GNWInterface //<>//
 
   void selectButtonPanel()
   {
-    for (int i = 0; i < buttonPanel.size(); i++) {
-      HotspotCoords button = buttonPanel.get(i);
-      if (button.contains()) {
-        //reset building use map to default
-        break;
-      }
+    if (buttonPanel.get("reset").contains()) {
+      setup();
+      GNWMap.isBuildingUseChanged = true;
     }
   }
 
