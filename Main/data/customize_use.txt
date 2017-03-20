@@ -1,0 +1,22 @@
+# List of possible uses to add: 
+# Park and Public
+# Retail
+# Art and Culture
+# Business
+# Resident
+# --------------------
+# List of all customizable buildings/lots: 
+# Lot5
+# Lot7
+# 1933
+# 701
+# 1980
+# 887
+# 901 
+# Shaw
+# NaturesPath
+# --------------------
+<default>
+901 = Business
+Shaw = Business
+</default>

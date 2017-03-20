@@ -254,18 +254,60 @@ class GNWMap
     buildings.get("Neighbourhood2").addPermanentUse(neighbour);
     buildings.get("Neighbourhood3").addPermanentUse(neighbour);
 
-    try {
-      if (!PCIMode) {
-        buildings.get("901").addBuildingUse(office);
-        buildings.get("Shaw").addBuildingUse(office);
-      } else {
-        //TODO for PCI Vision
+    makeDefaultUseFromFile();
+  }
+
+  /**
+   * Creates graph from text file 
+   * @param g Initial graph
+   * @param fname Filenamet
+   */
+  void makeDefaultUseFromFile() 
+  {
+    String tagString = (PCIMode) ? "PCIMode" : "default";
+    String lines[];
+
+    lines = loadStrings("customize_use.txt");
+    int mode = 0;
+    int count = 0;
+    while (count < lines.length) {
+      lines[count].trim();
+      if (!lines[count].startsWith("#") && lines[count].length() > 1) {
+        switch(mode) {
+        case 0:
+          if (lines[count].equalsIgnoreCase("<" + tagString +">")) {
+            mode = 1;
+          }
+          break;
+        case 1:
+          if (lines[count].equalsIgnoreCase("</" + tagString +">")) {
+            mode = 0;
+          } else {
+            makeDefaultBuildingUse(lines[count]);
+          }
+          break;
+        } // end switch
+      } // end if
+      count++;
+    } // end while
+  }
+
+  void makeDefaultBuildingUse(String s) 
+  {
+    String part[] = split(s, " = ");
+    if (part.length == 2) {
+      String buildingName = part[0];
+      BuildingUse buildingUse = buildingUses.get(part[1]);
+
+      try {
+        buildings.get(buildingName).addBuildingUse(buildingUse);
+      } 
+      catch (Exception e) {
+        println("Issue with making building uses from file: " + e);
       }
-    } 
-    catch (Exception e) {
-      println("Initial setup error: " + e);
     }
   }
+
 
   void addUseFlow(int time, String from, String to, int number)
   {
