@@ -84,7 +84,7 @@ class GNWMap
       Building building = (Building) buildingEntry.getValue();
       //Handle any horizontal scroll before checking contains
       if (building.buildingCoords.contains()) {
-        selectedBuilding = building; 
+        selectedBuilding = (selectedBuilding == building) ? null : building; 
         return;
       }
     }
