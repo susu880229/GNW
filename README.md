@@ -26,8 +26,8 @@ The platform was built on Mac OS and Windows. The following programs were used:
 
 2. install the following packages
 
-- `ControlP5` from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
-- `Path Finder` from Peter Lager: http://www.lagers.org.uk/pfind/index.html
+- [ControlP5](http://www.sojamo.de/libraries/controlP5/) from Andreas Schlegel
+- [Path Finder](http://www.lagers.org.uk/pfind/index.html) from Peter Lager
 
 **Mac & Windows**: packages can be installed in Processing's menu bar.
 `Sketch > Import Library... > Add library... > Search > Install package`
@@ -99,6 +99,11 @@ The size of the particles is defined in `int particleSize`.
 
 ## Troubleshooting
 
-### known issues & troubleshooting **[To Do]**
-- Steps: 1) open the app, 2) go back to the home screen by pressing the device's home button, 3) go back to the app.
-The application might crash on step 3. The user should in that case close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app.
+**[To Do]**
+
+#### The app crashes
+- 1) open the app
+- 2) go back to the home screen by pressing the device's home button
+- 3) go back to the app
+
+The application might crash on step 3. The user should in that case close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
