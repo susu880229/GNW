@@ -108,3 +108,9 @@ The size of the particles is defined in `int particleSize`.
 4. the app crashes fails to open
 
 The application might crash on step 3. The user should in that case close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
+
+#### Issue #2 **[To Do]**
+Increasing the number of particles displayed on the map might have an impact of performance.
+
+#### Issue #3
+The app was designed for tablet. Running it on a computer might have a negative impact on performance and might affect the way the layout scales.
