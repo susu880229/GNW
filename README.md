@@ -101,9 +101,10 @@ The size of the particles is defined in `int particleSize`.
 
 **[To Do]**
 
-#### The app crashes
+#### Issue #1
 1. open the app
 2. go back to the home screen by pressing the device's home button
 3. go back to the app
+4. the app crashes fails to open
 
 The application might crash on step 3. The user should in that case close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
