@@ -89,6 +89,7 @@ class GNWInterface //<>//
   void selectButtonPanel()
   {
     if (buttonPanel.get("reset").contains()) {
+      GNWMap.PCIMode = false;
       setup();
       GNWMap.isBuildingUseChanged = true;
     }

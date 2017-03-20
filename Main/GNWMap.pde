@@ -16,6 +16,7 @@ class GNWMap
 
   boolean isBuildingUseChanged;
   Building selectedBuilding;
+  Boolean PCIMode = false;
 
   GNWMap() 
   {
@@ -254,8 +255,12 @@ class GNWMap
     buildings.get("Neighbourhood3").addPermanentUse(neighbour);
 
     try {
-      buildings.get("901").addBuildingUse(office);
-      buildings.get("Shaw").addBuildingUse(office);
+      if (!PCIMode) {
+        buildings.get("901").addBuildingUse(office);
+        buildings.get("Shaw").addBuildingUse(office);
+      } else {
+        //TODO for PCI Vision
+      }
     } 
     catch (Exception e) {
       println("Initial setup error: " + e);
