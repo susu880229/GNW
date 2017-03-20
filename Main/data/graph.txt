@@ -1,5 +1,4 @@
 <nodes>
-#building door nodes
 1 9 825
 2 253 767
 3 255 570

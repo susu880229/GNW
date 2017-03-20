@@ -1,7 +1,8 @@
-class GNWInterface //<>//
+class GNWInterface //<>// //<>//
 {
   PImage interfaceImage; 
   ArrayList<BuildingUseBox> buildingUseBoxes;
+  HashMap<String, HotspotCoords> buttonPanel;
   int yBuildingBox;
   int xBuildingBox;
 
@@ -11,11 +12,41 @@ class GNWInterface //<>//
   {
     interfaceImage = loadImage("interface.png");
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
+    buttonPanel = new HashMap<String, HotspotCoords>();
 
     selectedBUIcon = null;
 
     yBuildingBox = 950;
     xBuildingBox = 42;
+  }
+
+  void render() 
+  {
+    createButtonsPanel();
+    createBuildingUseBoxes();
+
+    for (int i = 0; i < buildingUseBoxes.size(); i++) {
+      BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
+      buildingUseBox.render();
+    }
+
+    image(interfaceImage, 0, 0);
+
+    if (selectedBUIcon != null) {
+      selectedBUIcon.render();
+    }
+
+    fill(0);        
+    rect(interfaceImage.width, 0, width, interfaceImage.height);
+  }
+
+  void createButtonsPanel()
+  {
+    int topY = 1450;
+    int bottomY = 1530;
+
+    HotspotCoords resetButton = new HotspotCoords(1206, topY, 1546, topY, 1540, bottomY, 1206, bottomY);
+    buttonPanel.put("reset", resetButton);
   }
 
   void createBuildingUseBoxes() 
@@ -42,24 +73,28 @@ class GNWInterface //<>//
     buildingUseBoxes.add(buildingUseBox);
   }
 
-  void render() 
+  void selectInterface()
   {
-    createBuildingUseBoxes();
-
-    for (int i = 0; i < buildingUseBoxes.size(); i++) {
-      BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
-      buildingUseBox.render();
+    float buttonsY = 1450;
+    float timeY = 1280;
+    if (mouseY > buttonsY) {
+      selectButtonPanel();
+    } else if (mouseY > timeY) {
+      //TODO?
+    } else {
+      selectBuildingUse();
     }
-
-    image(interfaceImage, 0, 0);
-
-    if (selectedBUIcon != null) {
-      selectedBUIcon.render();
-    }
-
-    fill(0);        
-    rect(interfaceImage.width, 0, width, interfaceImage.height);
   }
+
+  void selectButtonPanel()
+  {
+    if (buttonPanel.get("reset").contains()) {
+      GNWMap.PCIMode = false;
+      setup();
+      GNWMap.isBuildingUseChanged = true;
+    }
+  }
+
 
   void selectBuildingUse()
   {

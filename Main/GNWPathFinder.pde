@@ -25,7 +25,7 @@ class GNWPathFinder
     gEdges = new ArrayList<GraphEdge>();
     Edge_arrayToList();
   }
-  
+
 
   /**
    * Finds route
@@ -41,10 +41,10 @@ class GNWPathFinder
     }
     return path_nodes;
   }
- 
+
   /**
-    *change gNodes from Array to ArrayList
-    */
+   *change gNodes from Array to ArrayList
+   */
   void Node_arrayTolist()
   {
 
@@ -52,13 +52,12 @@ class GNWPathFinder
     {
       gNodes.add(node);
     }
-    
-   }
-   
-  
+  }
+
+
   /**
-     *change gEdges from Array to ArrayList
-     */
+   *change gEdges from Array to ArrayList
+   */
   void Edge_arrayToList()
   {
     for (GraphEdge edge : GNWGraph.getAllEdgeArray())

@@ -16,6 +16,7 @@ class GNWMap
 
   boolean isBuildingUseChanged;
   Building selectedBuilding;
+  Boolean PCIMode = false;
 
   GNWMap() 
   {
@@ -82,7 +83,7 @@ class GNWMap
     for (Map.Entry buildingEntry : buildings.entrySet()) {
       Building building = (Building) buildingEntry.getValue();
       //Handle any horizontal scroll before checking contains
-      if (building.contains(mouseX - shiftX, mouseY)) {
+      if (building.buildingCoords.contains()) {
         selectedBuilding = building; 
         return;
       }
@@ -151,13 +152,12 @@ class GNWMap
     }
   }
 
-  //Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
   Building findBuilding() throws Exception 
   {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
     {
       Building building = (Building) buildingEntry.getValue();
-      if (building.contains(mouseX - shiftX, mouseY))
+      if (building.buildingCoords.contains())
       {
         return building;
       }
@@ -221,7 +221,7 @@ class GNWMap
    */
   void addBuilding(String name, Boolean isSmallDot, int doorNodeId, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, PVector[] bUDotCoords) 
   {
-    BuildingCoords buildingCoords = new BuildingCoords(x1, y1, x2, y2, x3, y3, x4, y4);
+    HotspotCoords buildingCoords = new HotspotCoords(x1, y1, x2, y2, x3, y3, x4, y4);
     Building newBuilding = new Building(name, isSmallDot, doorNodeId, buildingCoords, bUDotCoords);
     buildings.put(name, newBuilding);
   }
@@ -254,14 +254,60 @@ class GNWMap
     buildings.get("Neighbourhood2").addPermanentUse(neighbour);
     buildings.get("Neighbourhood3").addPermanentUse(neighbour);
 
-    try {
-      buildings.get("901").addBuildingUse(office);
-      buildings.get("Shaw").addBuildingUse(office);
-    } 
-    catch (Exception e) {
-      println("Initial setup error: " + e);
+    makeDefaultUseFromFile();
+  }
+
+  /**
+   * Creates graph from text file 
+   * @param g Initial graph
+   * @param fname Filenamet
+   */
+  void makeDefaultUseFromFile() 
+  {
+    String tagString = (PCIMode) ? "PCIMode" : "default";
+    String lines[];
+
+    lines = loadStrings("customize_use.txt");
+    int mode = 0;
+    int count = 0;
+    while (count < lines.length) {
+      lines[count].trim();
+      if (!lines[count].startsWith("#") && lines[count].length() > 1) {
+        switch(mode) {
+        case 0:
+          if (lines[count].equalsIgnoreCase("<" + tagString +">")) {
+            mode = 1;
+          }
+          break;
+        case 1:
+          if (lines[count].equalsIgnoreCase("</" + tagString +">")) {
+            mode = 0;
+          } else {
+            makeDefaultBuildingUse(lines[count]);
+          }
+          break;
+        } // end switch
+      } // end if
+      count++;
+    } // end while
+  }
+
+  void makeDefaultBuildingUse(String s) 
+  {
+    String part[] = split(s, " = ");
+    if (part.length == 2) {
+      String buildingName = part[0];
+      BuildingUse buildingUse = buildingUses.get(part[1]);
+
+      try {
+        buildings.get(buildingName).addBuildingUse(buildingUse);
+      } 
+      catch (Exception e) {
+        println("Issue with making building uses from file: " + e);
+      }
     }
   }
+
 
   void addUseFlow(int time, String from, String to, int number)
   {

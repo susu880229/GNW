@@ -1,4 +1,4 @@
-import pathfinder.*; //<>//
+import pathfinder.*;  //<>// //<>// //<>// //<>// //<>//
 import controlP5.*;
 import java.util.Map;
 
@@ -141,7 +141,7 @@ void mousePressed()
 {
   scaleMouse();
   if (!isOnMap()) {
-    GNWInterface.selectBuildingUse();
+    GNWInterface.selectInterface();
     GNWMap.clearSelectedBuilding();
   } else {
     try {
@@ -204,7 +204,6 @@ boolean isOnMap()
 
 void setBuildingUses()
 {
-
   buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
   buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
   buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #F9D463));
