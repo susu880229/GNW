@@ -97,6 +97,7 @@ Processing will automatically adjust it according to SDK used for development.
 The flow can be adjusted in the `Particle` class in `|-Main/Particle.pde`.
 
 - Particle size
+
 The size of the particles is defined in `int particleSize`.
 
 - Particle colour **[To Do]**
