@@ -212,7 +212,7 @@ class Particle
     } 
     else if (from_buildingUse == "Education" || to_buildingUse == "Education")
     {
-      flowColor = color(255, 157, 47, 200);
+      flowColor = color(255, 137, 49, 200);
     }
     else if (from_buildingUse == "Light Industry" || to_buildingUse == "Light Industry")
     {
@@ -231,22 +231,19 @@ class Particle
     else if ((from_buildingUse == "Art and Culture" && to_buildingUse == "Retail") 
             || (from_buildingUse == "Retail" && to_buildingUse == "Art and Culture"))
     {
-      int colorChoice = (int)random(1,5);
+      int colorChoice = (int)random(1,4);             //for Retail to Art and Culture and vice versa, randomise colours
       switch (colorChoice)
       {
         case 1:
           flowColor = color(102, 217, 226, 200);
           break;
          case 2:
-           flowColor = color(255, 157, 47, 200);
+           flowColor = color(255, 137, 49, 200);
            break;
          case 3:
-           flowColor = color(249, 212, 99, 200);
-           break;
-         case 4:
          flowColor = color(138, 206, 138, 200);
            break;
-         case 5:
+         case 4:
            flowColor = color(20, 93, 158, 200);
            break;  
       }
