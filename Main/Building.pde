@@ -7,7 +7,7 @@ class Building
   ArrayList<BuildingUse> customizableUses;
   ArrayList<BuildingUse> permanentUses;
 
-  int FLOW_DELAY_MULTIPLIER = 50;
+  int FLOW_DELAY_MULTIPLIER = 100;
 
   HotspotCoords buildingCoords;
   PVector[] bUDotCoords;
@@ -94,11 +94,11 @@ class Building
       case 50:    //901
         image(glowImage_901, 2308, 0);
         break;
-      case 55:    //Shaw
-        image(glowImage_shaw, 2308, 0);
-        break;
 
         //images starting from 3/4 of the width to save memory
+      case 55:    //Shaw
+        image(glowImage_shaw, 3462, 0);
+        break;
       case 59:    //Nature's Path
         image(glowImage_naturesPath, 3462, 0);
         break;
@@ -167,7 +167,7 @@ class Building
           if (flow.from_use == FromUse.name)
           {
             destBuildings = findBuildings(flow.to_use);
-            delay = flow.delay * FLOW_DELAY_MULTIPLIER;
+            delay = (int)(pow(2, flow.delay - 1)) * FLOW_DELAY_MULTIPLIER;
             if (destBuildings != null && !destBuildings.isEmpty()) {
               for (int j = 0; j < destBuildings.size(); j++) {
                 int destDoorNodeId = destBuildings.get(j).doorNodeId;
