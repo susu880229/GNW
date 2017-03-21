@@ -159,7 +159,7 @@ class Building
   {
     for (int i = 0; i < buildingUses.size(); i++) {
       BuildingUse FromUse = buildingUses.get(i);
-      if (cur_time == 9 || cur_time == 12 || cur_time == 15 || cur_time == 19 ||  cur_time == 23)
+      if (cur_time == "Morning" || cur_time == "Noon" || cur_time == "Afternoon" || cur_time == "Evening" ||  cur_time == "Late_Evening")
       {
         time_flows = findFlows(cur_time);
         for (UseFlow flow : time_flows)
@@ -194,7 +194,7 @@ class Building
     return buildings;
   }
 
-  ArrayList<UseFlow> findFlows(int time)
+  ArrayList<UseFlow> findFlows(String time)
   {    
     ArrayList<UseFlow> flows = (ArrayList<UseFlow>) use_flows.get(time);
     return flows;

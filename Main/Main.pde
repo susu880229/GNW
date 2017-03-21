@@ -12,7 +12,7 @@ GNWInterface GNWInterface;
 
 HashMap<String, BuildingUse> buildingUses;
 HashMap<String, ArrayList<Building>> use_buildings;
-HashMap<Integer, ArrayList<UseFlow>> use_flows;
+HashMap<String, ArrayList<UseFlow>> use_flows;
 
 //transformations
 int shiftX;
@@ -20,12 +20,9 @@ int shiftY;
 float scaleFactor;
 
 //define the time selection parameter
-int cur_time = 12;
-int pre_time = -1;
+String cur_time = "Morning";
+String pre_time = " ";
 boolean timeChanged = false;
-//define the UI for radio button
-ControlP5 cp5;
-RadioButton r1;
 
 //images for the drop feedback
 PImage glowImage_515;
@@ -51,37 +48,16 @@ void setup()
   shiftX = 0;
   shiftY = 0;
 
-  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
+  use_flows = new HashMap<String, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
 
   GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
-  GNWInterface = new GNWInterface();
-  GNWPathFinder = new GNWPathFinder(); // put all the edge data to paths ArrayList
-
-  scaleFactor = height/(float)GNWInterface.interfaceImage.height;
-
-  //create the radio button interface to change the time
-  cp5 = new ControlP5(this);
-  r1 = cp5.addRadioButton("radioButton")
-    .setPosition(100 * scaleFactor, 1300 * scaleFactor)
-    .setSize(int(scaleFactor* 200), int(scaleFactor * 100))
-    .setColorForeground(color(120))
-    .setColorActive(color(200))
-    .setColorLabel(color(0))
-    .setItemsPerRow(5)
-    .setSpacingColumn(70)
-    .addItem("Morning", 9)
-    .addItem("Noon", 12)
-    .addItem("Afternoon", 15)
-    .addItem("Evening", 19)
-    .addItem("Late Night", 23)
-    ;
-  
-  r1.activate(0);
-    
-  loadDropFeedbackImages();
   setBuildingUses();
+  GNWInterface = new GNWInterface();
+  GNWPathFinder = new GNWPathFinder(); 
+  scaleFactor = height/(float)GNWInterface.interfaceImage.height;
+  loadDropFeedbackImages();
 }
 
 /** 
@@ -109,17 +85,20 @@ void draw() {
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
   popMatrix();
+  
 }
 
 //update time and time change does not work
 void update_time()
 {
-  cur_time = (int)r1.getValue();
+  
   if (cur_time != pre_time)
   {
     timeChanged = true;
     pre_time = cur_time;
   }
+ 
+  
 }
 
 /**
@@ -134,22 +113,37 @@ void scaleMouse() {
 
 /**
  * Handles how to interpret mouse presses; both cases below checks raw values, so need to scale mouse values back to real size before checking
- * First case: select building use if mouse pressed onto interface
- * Second case: select building if mouse pressed onto map 
+ * First case: select building use or pull out the detailed information of each use if mouse pressed onto interface
+ * Second case: select building to show the uses or select use to delete if mouse pressed onto map 
  **/
 void mousePressed()
 {
   scaleMouse();
-  if (!isOnMap()) {
-    GNWInterface.selectBuildingUse();
+  if (!isOnMap()) 
+  {
+    if (isOnDragDrop()) 
+    {
+    //GNWInterface.selectBuildingUse();
+      GNWInterface.update_buildingBox();
+      GNWInterface.function_buildingBox();
+    }
+    else 
+    {
+       GNWInterface.clearSelectedBox();
+    }
     GNWMap.clearSelectedBuilding();
-  } else {
-    try {
+  } 
+  else 
+  {
+    try 
+    {
       GNWMap.selectTooltip();
     } 
-    catch(Exception e) {
+    catch(Exception e) 
+    {
       GNWMap.selectBuilding();
     }
+    GNWInterface.clearSelectedBox();
   }
 }
 
@@ -157,25 +151,35 @@ void mousePressed()
 /**
  * Handles how to interpret different mouse drags
  * First case: moving building use icon - it updates raw interface values, so need to scaleMouse() first
- * Second case: moving map - scaled map is being updated, so don't need to scaleMouse(); however, isOnMap() checks raw y values, so need to revert mouseY
+ * Second case: moving the time slider dot - it updates raw interface values, so need to scaleMouse() first
+ * Third case: moving map - scaled map is being updated, so don't need to scaleMouse(); however, isOnMap() checks raw y values, so need to revert mouseY
  **/
 void mouseDragged()
 {
-  if (GNWInterface.selectedBUIcon != null) {
+  
+  if (GNWInterface.selectedBUIcon != null)
+  {
     scaleMouse();
     GNWInterface.update();
-  } else {
+  } 
+  else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider())
+  {
+    scaleMouse();
+    GNWInterface.time_bar.mouseDragged();
+  }
+  
+  else if (isOnMap()) 
+  {
     mouseY = int(mouseY / scaleFactor);
-    if (isOnMap()) {
-      shiftX = shiftX - (pmouseX - mouseX);
-      shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
-    }
+    shiftX = shiftX - (pmouseX - mouseX);
+    shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width , 0);
+    
   }
 } 
 
 /**
  * Handles what happens when user releases icon; 
- * If dropped onto a building, handle any horizontal stroll and add building use to building
+ * If dropped onto a building, handle any horizontal stroll and add building use to building and building to use
  * Icon is always removed from sketch wherever icon is released
  */
 void mouseReleased()
@@ -184,7 +188,7 @@ void mouseReleased()
     try {
       //add use to building as well as add building to use arraylist 
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
-      //UpdateFlow();
+      
     } 
     catch(Exception e) {
       GNWInterface.clearSelected();
@@ -194,12 +198,33 @@ void mouseReleased()
 }
 
 /**
- * Checks if mouse position is on map; this checks raw coordinates (i.e. when scaleFactor is 1)
+ * Checks if mouse position is on map / drag and drop / time bar/ setting ; this checks raw coordinates (i.e. when scaleFactor is 1)
  */
 boolean isOnMap()
 {
   int midY = 913;
   return mouseY < midY;
+}
+
+boolean isOnDragDrop()
+{
+  int DragDrop_top = 913;
+  int DragDrop_bottom = 1280;
+  return mouseY > DragDrop_top && mouseY < DragDrop_bottom;
+  
+}
+
+boolean isOnTimeSlider()
+{
+  int time_top = 1280;
+  int time_bottom = 1450;
+  return mouseY > time_top && mouseY < time_bottom;
+}
+
+boolean isOnSetting()
+{
+  int setting_top = 1450;
+  return mouseY > setting_top;
 }
 
 void setBuildingUses()

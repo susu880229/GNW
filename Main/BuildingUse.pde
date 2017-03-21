@@ -15,5 +15,6 @@ class BuildingUse
     } else {
       img = null;
     }
+    
   }
 }
