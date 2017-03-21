@@ -244,6 +244,7 @@ class GNWMap
     BuildingUse art = buildingUses.get("Art and Culture");
     BuildingUse office = buildingUses.get("Business");
     BuildingUse resident = buildingUses.get("Resident");
+    BuildingUse student_resident = buildingUses.get("Student Resident");
 
     buildings.get("Park").addPermanentUse(park);
     buildings.get("Plaza").addPermanentUse(park);
@@ -254,7 +255,7 @@ class GNWMap
     buildings.get("569").addPermanentUse(office);
     buildings.get("CDM1").addPermanentUse(school);
     buildings.get("CDM2").addPermanentUse(school);
-    //buildings.get("CDM2").addPermanentUse(resident);      //for the colorful version, do not assign this as workers will then come out of CDM
+    buildings.get("CDM2").addPermanentUse(student_resident);
     buildings.get("887").addPermanentUse(office);
     buildings.get("Mec").addPermanentUse(office);
     buildings.get("Transit").addPermanentUse(transit);
@@ -348,6 +349,9 @@ class GNWMap
 
     //education out
     addUseFlow(9, "Education", "Retail", 2);
+    
+    //student resident out
+    addUseFlow(9, "Student Resident", "Retail", 3);
 
     //transit out
     addUseFlow(9, "Transit", "Business", 4);
@@ -368,6 +372,12 @@ class GNWMap
     addUseFlow(9, "Resident", "Retail", 1);
     addUseFlow(9, "Resident", "Light Industry", 2);
     
+    //retail out
+    addUseFlow(9, "Retail", "Business", 2);
+    addUseFlow(9, "Retail", "Education", 2);
+    addUseFlow(9, "Retail", "Transit", 4);
+    addUseFlow(9, "Retail", "Light Industry", 2);
+    
     //light industry out
     addUseFlow(9, "Light Industry", "Retail", 4);
     
@@ -380,6 +390,9 @@ class GNWMap
     //education out
     addUseFlow(12, "Education", "Art and Culture", 6);
     addUseFlow(12, "Education", "Retail", 1);
+    
+    //student resident out
+    addUseFlow(12, "Student Resident", "Retail", 2);
 
     //transit out
     addUseFlow(12, "Transit", "Art and Culture", 6);
@@ -415,6 +428,9 @@ class GNWMap
     addUseFlow(15, "Education", "Transit", 4);
     addUseFlow(15, "Education", "Resident", 3);
     addUseFlow(15, "Education", "Retail", 2);
+    
+    //student resident out
+    addUseFlow(15, "Student Resident", "Retail", 4);
 
     //transit out
     addUseFlow(15, "Transit", "Art and Culture", 4);
@@ -443,13 +459,22 @@ class GNWMap
     //business out
     addUseFlow(19, "Business", "Art and Culture", 6);
     addUseFlow(19, "Business", "Transit", 4);
-    addUseFlow(19, "Business", "Neighborhood", 4);
+    addUseFlow(19, "Business", "Neighborhood", 6);
     addUseFlow(19, "Business", "Resident", 1);
     addUseFlow(19, "Business", "Retail", 1);
     
     //art and culture out
     addUseFlow(19, "Art and Culture", "Transit", 4);
     addUseFlow(19, "Art and Culture", "Retail", 4);
+    
+    //education out
+    addUseFlow(19, "Education", "Art and Culture", 6);
+    addUseFlow(19, "Education", "Transit", 4);
+    addUseFlow(19, "Education", "Resident", 1);
+    addUseFlow(19, "Education", "Retail", 1);
+    
+    //student resident out
+    addUseFlow(19, "Student Resident", "Retail", 2);
 
     //transit out
     addUseFlow(19, "Transit", "Art and Culture", 6);
@@ -457,21 +482,15 @@ class GNWMap
     addUseFlow(19, "Transit", "Neighborhood", 4);
     addUseFlow(19, "Transit", "Resident", 1);
     addUseFlow(19, "Transit", "Retail", 1);
-
-    //neighborhood out
-    addUseFlow(19, "Neighborhood", "Art and Culture", 5);
-    addUseFlow(19, "Neighborhood", "Park and Public", 4);
-    addUseFlow(19, "Neighborhood", "Transit", 4);
-    addUseFlow(19, "Neighborhood", "Resident", 5);
-    addUseFlow(19, "Neighborhood", "Retail", 3);
     
     //resident out
-    addUseFlow(19, "Resident", "Art and Culture", 1);
+    addUseFlow(19, "Resident", "Art and Culture", 3);
     addUseFlow(19, "Resident", "Retail", 2);
     
     //retail out
     addUseFlow(19, "Retail", "Business", 3);
     addUseFlow(19, "Retail", "Art and Culture", 2);
+    addUseFlow(19, "Retail", "Student Resident", 2);
     addUseFlow(19, "Retail", "Transit", 2);
     addUseFlow(19, "Retail", "Resident", 1);
     addUseFlow(19, "Retail", "Light Industry", 3);
@@ -483,24 +502,27 @@ class GNWMap
     addUseFlow(19, "Light Industry", "Retail", 1);
 
 
-    /*LATE NIGHT
+    /*LATE EVENING
      ********/
     //Business out
     addUseFlow(23, "Business", "Transit", 6);
     addUseFlow(23, "Business", "Neighborhood", 6);
-    addUseFlow(23, "Business", "Residential", 2);
+    addUseFlow(23, "Business", "Resident", 2);
     addUseFlow(23, "Business", "Retail", 2);
     
     //Art and Culture out
     addUseFlow(23, "Art and Culture", "Transit", 6);
-    addUseFlow(23, "Art and Culture", "Residential", 2);
+    addUseFlow(23, "Art and Culture", "Resident", 2);
     addUseFlow(23, "Art and Culture", "Retail", 3);
     
     //Education out
     addUseFlow(23, "Education", "Transit", 6);
     addUseFlow(23, "Education", "Neighborhood", 6);
-    addUseFlow(23, "Education", "Residential", 4);
+    addUseFlow(23, "Education", "Resident", 4);
     addUseFlow(23, "Education", "Retail", 4);
+    
+    //student resident out
+    addUseFlow(23, "Student Resident", "Retail", 4);
     
     //Transit out
     addUseFlow(23, "Transit", "Neighborhood", 6);
@@ -513,12 +535,13 @@ class GNWMap
     
     //Retail out
     addUseFlow(23, "Retail", "Business", 4);
+    addUseFlow(23, "Retail", "Student Resident", 4);
     addUseFlow(23, "Retail", "Transit", 2);
-    addUseFlow(23, "Retail", "Residential", 3);
+    addUseFlow(23, "Retail", "Resident", 3);
     
     //Light Industry out
     addUseFlow(23, "Light Industry", "Transit", 6);
-    addUseFlow(23, "Light Industry", "Residential", 4);
+    addUseFlow(23, "Light Industry", "Resident", 4);
     addUseFlow(23, "Light Industry", "Retail", 4);
   }
   

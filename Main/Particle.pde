@@ -218,7 +218,8 @@ class Particle
     {
       flowColor = color(249, 212, 99, 200);
     }
-    else if (from_buildingUse == "Resident" || to_buildingUse == "Resident")
+    else if (from_buildingUse == "Resident" || to_buildingUse == "Resident" || 
+              from_buildingUse == "Student Resident" || to_buildingUse == "Student Resident")
     {
       flowColor = color(138, 206, 138, 200);
     }
