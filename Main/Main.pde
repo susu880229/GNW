@@ -119,7 +119,6 @@ void mousePressed()
 
   if (!isOnMap()) {
     GNWMap.clearSelectedBuilding();
-    GNWInterface.clearSelectedBox();
     GNWInterface.selectInterface();
   } else {
     try 
@@ -128,7 +127,7 @@ void mousePressed()
     } 
     catch(Exception e) 
     {
-      GNWMap.selectBuilding();
+      GNWMap.selectBuilding();   
       GNWInterface.clearSelectedBox();
     }
   }
@@ -157,6 +156,7 @@ void mouseDragged()
   {
     mouseX = int(mouseX * scaleFactor);
     pmouseX = int(pmouseX * scaleFactor);
+    pmouseY = int(pmouseY * scaleFactor); 
     shiftX = shiftX - (pmouseX - mouseX);
     shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
   }

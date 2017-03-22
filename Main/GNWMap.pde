@@ -180,40 +180,40 @@ class GNWMap
    */
   void createGNWMap() 
   {  
-    PVector[] dotCoords_lot5 = {new PVector(367, 30), new PVector(306, 40), new PVector(351, 281)};
-    PVector[] dotCoords_lot7 = {new PVector(356, 594), new PVector(305, 640), new PVector(32, 682)};
+    PVector[] dotCoords_lot5 = {new PVector(367, 190), new PVector(306, 230), new PVector(351, 281)};
+    PVector[] dotCoords_lot7 = {new PVector(356, 594), new PVector(305, 640), new PVector(315, 682)};
     PVector[] dotCoords_lot4 = {new PVector(476, 208), new PVector(594, 202)};
     PVector[] dotCoords_521 = {new PVector(464, 410), new PVector(428, 466), new PVector(464, 508)};
-    PVector[] dotCoords_52 = {new PVector(428, 637), new PVector(486, 644), new PVector(534, 606)};
-    PVector[] dotCoords_333 = {new PVector(1433, 260), new PVector(4, 242)};
-    PVector[] dotCoords_701 = {new PVector(1757, 306), new PVector(350, 336), new PVector(4, 31)};
-    PVector[] dotCoords_380 = {new PVector(2424, 220), new PVector(2456, 373)};
+    PVector[] dotCoords_515 = {new PVector(428, 637), new PVector(486, 644), new PVector(534, 606)};
+    PVector[] dotCoords_1933 = {new PVector(1433, 260), new PVector(1519, 242)};
+    PVector[] dotCoords_701 = {new PVector(1757, 306), new PVector(1950, 336), new PVector(2129, 312)};
+    PVector[] dotCoords_1980 = {new PVector(2424, 220), new PVector(2456, 373)};
     PVector[] dotCoords_887 = {new PVector(2826, 385)};
     PVector[] dotCoords_901 = {new PVector(2967, 402), new PVector(3047, 408), new PVector(3142, 416)};
     PVector[] dotCoords_Shaw = {new PVector(3653, 384), new PVector(3773, 376), new PVector(3901, 336)};
     PVector[] dotCoords_NaturesPath = {new PVector(4102, 302), new PVector(4338, 250)};
     PVector[] dotCoords_null = null;
 
-    addBuilding("Lot5", true, 64, 285, 25, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
+    addBuilding("Lot5", true, 64, 285, 155, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
     addBuilding("Park", false, 5, 274, 333, 383, 330, 376, 525, 279, 520, dotCoords_null);
     addBuilding("Lot7", true, 7, 272, 571, 379, 580, 392, 698, 280, 720, dotCoords_lot7);
 
     addBuilding("Lot4", true, 17, 417, 167, 645, 175, 648, 260, 417, 260, dotCoords_lot4);
     addBuilding("521", true, 14, 401, 390, 524, 398, 521, 532, 402, 532, dotCoords_521);
-    addBuilding("52", true, 1, 401, 579, 543, 571, 564, 660, 410, 695, dotCoords_52);
+    addBuilding("515", true, 12, 401, 579, 543, 571, 564, 660, 410, 695, dotCoords_515);
 
-    addBuilding("EmilyCarr", false, 28, 570, 378, 118, 251, 125, 378, 604, 507, dotCoords_null);
+    addBuilding("EmilyCarr", false, 28, 570, 378, 1128, 251, 1155, 378, 604, 507, dotCoords_null);
     addBuilding("Plaza", false, 22, 568, 567, 702, 538, 721, 616, 593, 650, dotCoords_null);
-    addBuilding("569", false, 26, 728, 528, 1182, 420, 101, 500, 750, 61, dotCoords_null);
+    addBuilding("569", false, 26, 728, 528, 1182, 420, 1201, 500, 750, 612, dotCoords_null);
 
-    addBuilding("CDM1", false, 34, 107, 188, 1353, 26, 1400, 394, 160, 425, dotCoords_null);
-    addBuilding("333", true, 38, 1376, 22, 49, 4, 266, 283, 1408, 309, dotCoords_333);
-    addBuilding("CDM2", false, 41, 142, 344, 277, 313, 1600, 411, 1425, 422, dotCoords_null);
+    addBuilding("CDM1", false, 34, 1207, 188, 1353, 156, 1400, 394, 1260, 425, dotCoords_null);
+    addBuilding("1933", true, 38, 1376, 152, 1539, 153, 1566, 283, 1408, 309, dotCoords_1933);
+    addBuilding("CDM2", false, 41, 1415, 344, 1577, 313, 1600, 411, 1425, 422, dotCoords_null);
 
     addBuilding("701", false, 44, 1662, 217, 2185, 224, 2221, 418, 1690, 401, dotCoords_701);
-    addBuilding("380", false, 46, 2296, 166, 2528, 164, 2699, 432, 453, 424, dotCoords_380);
-    addBuilding("887", false, 48, 2578, 173, 2904, 38, 2899, 448, 2765, 444, dotCoords_887);
-    addBuilding("901", false, 50, 2932, 203, 3211, 41, 337, 459, 294, 444, dotCoords_901);
+    addBuilding("1980", false, 46, 2296, 166, 2528, 164, 2699, 432, 2353, 424, dotCoords_1980);
+    addBuilding("887", false, 48, 2578, 173, 2904, 198, 2899, 448, 2765, 444, dotCoords_887);
+    addBuilding("901", false, 50, 2932, 203, 3211, 231, 3197, 459, 2923, 444, dotCoords_901);
     addBuilding("Mec", false, 52, 3241, 240, 3460, 248, 3518, 473, 3221, 457, dotCoords_null);
 
     addBuilding("Shaw", false, 55, 3569, 251, 3935, 247, 3965, 385, 3627, 457, dotCoords_Shaw);
@@ -224,7 +224,7 @@ class GNWMap
     addBuilding("Neighbourhood2", false, 62, 260, 170, 270, 170, 270, 180, 260, 180, dotCoords_null);
     addBuilding("Neighbourhood3", false, 60, 4485, 295, 4495, 295, 4495, 305, 4485, 305, dotCoords_null);
   }
-
+  
   /**
    * Helper funtion to add building and name to hashmap buildings
    */

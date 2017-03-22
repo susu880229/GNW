@@ -24,14 +24,13 @@ class GNWInterface  //<>// //<>//
     xBuildingBox = 42;
     selectedBUBox = null;
     time_bar = new TimeBar(155, 1370, 40, 40);
+    
     createBuildingUseBoxes();
+    createButtonsPanel();
   }
 
   void render() 
   {
-    createButtonsPanel();
-    //createBuildingUseBoxes();
-
     if (buildingUseBoxes.size() > 0) {
       for (int i = 0; i < buildingUseBoxes.size(); i++) {
         BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
@@ -92,16 +91,16 @@ class GNWInterface  //<>// //<>//
     buildingUseBoxes.add(buildingUseBox);
   }
 
-  void selectInterface() //<>//
-  {
+  void selectInterface()
+  { //<>//
     float buttonsY = 1450;
-    float bUBoxYBottom = 1280; //<>//
-    
-    if (mouseY < bUBoxYBottom) { //<>//
+    float bUBoxYBottom = 1280;
+ //<>//
+    if (mouseY < bUBoxYBottom) {
       update_buildingBox(); //<>//
-      function_buildingBox();
-    } else if (mouseY > buttonsY) { //<>//
-      selectButtonPanel();
+      function_buildingBox(); //<>//
+    } else if (mouseY > buttonsY) {
+      selectButtonPanel(); //<>//
     }
   }
 
@@ -134,7 +133,7 @@ class GNWInterface  //<>// //<>//
         break;
       }
     }
-    
+
     if (!found)
     {
       clearSelectedBox();
