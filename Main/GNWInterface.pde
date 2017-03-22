@@ -24,7 +24,7 @@ class GNWInterface  //<>// //<>//
     xBuildingBox = 42;
     selectedBUBox = null;
     time_bar = new TimeBar(155, 1370, 40, 40);
-    
+
     createBuildingUseBoxes();
     createButtonsPanel();
   }
@@ -101,6 +101,10 @@ class GNWInterface  //<>// //<>//
       function_buildingBox(); //<>//
     } else if (mouseY > buttonsY) {
       selectButtonPanel(); //<>//
+    }
+
+    if (mouseY > bUBoxYBottom) {
+      clearSelectedBox();
     }
   }
 
