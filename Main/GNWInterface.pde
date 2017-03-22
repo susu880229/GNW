@@ -14,8 +14,6 @@ class GNWInterface //<>//
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
-    hand = loadImage("hand.png");
-    mapLegendImage = loadImage("mapLegend.png");
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
     buttonPanel = new HashMap<String, HotspotCoords>();
 
@@ -39,8 +37,6 @@ class GNWInterface //<>//
     }
 
     image(interfaceImage, 0, 0);
-    image(mapLegendImage, 0, 0);
-    image(hand, width/2, GNWMap.mapImage.height - 80);
 
     if (selectedBUIcon != null) {
       selectedBUIcon.render();
