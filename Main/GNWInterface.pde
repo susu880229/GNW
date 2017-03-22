@@ -1,4 +1,4 @@
-class GNWInterface //<>// //<>//
+class GNWInterface //<>//
 {
   PImage interfaceImage; 
   PImage hand;
@@ -23,7 +23,7 @@ class GNWInterface //<>// //<>//
     xBuildingBox = 50;
     yBuildingBox = 950;
     selectedBUBox = null;
-    time_bar = new TimeBar(155, 1370, 40, 40);
+    time_bar = new TimeBar(157, 1370, 42, 42);
 
     createBuildingUseBoxes();
     createButtonsPanel();
@@ -92,15 +92,15 @@ class GNWInterface //<>// //<>//
   }
 
   void selectInterface()
-  { //<>// //<>//
+  {  //<>//
     float buttonsY = 1450;
     float bUBoxYBottom = 1280;
-    //<>// //<>//
+ //<>//
     if (mouseY < bUBoxYBottom) {
-      update_buildingBox(); //<>// //<>//
-      function_buildingBox(); //<>// //<>//
+      update_buildingBox();  //<>//
+      function_buildingBox(); //<>//
     } else if (mouseY > buttonsY) {
-      selectButtonPanel(); //<>// //<>//
+      selectButtonPanel(); //<>//
     }
 
     if (mouseY > bUBoxYBottom) {

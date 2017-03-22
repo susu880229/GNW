@@ -36,7 +36,7 @@ class TimeBar
     y = dot_y;
     wi = dot_wi;
     hi = dot_hi;
-    back_wi = 1728; //define the bar length
+    back_wi = 1727; //define the bar length
     back_hi = 12;
     back_x = x;
     back_y = y - 6;
