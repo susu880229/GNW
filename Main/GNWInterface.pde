@@ -1,4 +1,4 @@
-class GNWInterface  //<>// //<>//
+class GNWInterface //<>// //<>//
 {
   PImage interfaceImage; 
   PImage hand;
@@ -20,8 +20,8 @@ class GNWInterface  //<>// //<>//
     buttonPanel = new HashMap<String, HotspotCoords>();
 
     selectedBUIcon = null;
+    xBuildingBox = 50;
     yBuildingBox = 950;
-    xBuildingBox = 42;
     selectedBUBox = null;
     time_bar = new TimeBar(155, 1370, 40, 40);
 
@@ -69,10 +69,10 @@ class GNWInterface  //<>// //<>//
 
   void createBuildingUseBoxes() 
   {
-    int space = 400;
-
     BuildingUseBox buildingUseBox =  new BuildingUseBox(buildingUses.get("Retail"), xBuildingBox, yBuildingBox, "sub_retail.png");
     buildingUseBoxes.add(buildingUseBox);
+
+    int space = buildingUseBox.box_width + 37;
     xBuildingBox += space;
 
     buildingUseBox =  new BuildingUseBox(buildingUses.get("Art and Culture"), xBuildingBox, yBuildingBox, "sub_artCulture.png");
@@ -92,15 +92,15 @@ class GNWInterface  //<>// //<>//
   }
 
   void selectInterface()
-  { //<>//
+  { //<>// //<>//
     float buttonsY = 1450;
     float bUBoxYBottom = 1280;
- //<>//
+    //<>// //<>//
     if (mouseY < bUBoxYBottom) {
-      update_buildingBox(); //<>//
-      function_buildingBox(); //<>//
+      update_buildingBox(); //<>// //<>//
+      function_buildingBox(); //<>// //<>//
     } else if (mouseY > buttonsY) {
-      selectButtonPanel(); //<>//
+      selectButtonPanel(); //<>// //<>//
     }
 
     if (mouseY > bUBoxYBottom) {

@@ -43,7 +43,7 @@ class BuildingUseBox
     this.buildingUse = buildingUse;
     box_x = x;
     box_y = y;
-    box_width = 365;
+    box_width = 360;
     box_height = 290;
     pull_img = loadImage(pull_imgSrc);
     lock = false;
