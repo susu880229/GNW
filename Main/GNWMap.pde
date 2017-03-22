@@ -151,6 +151,7 @@ class GNWMap
 
     try {
       Building building = findBuilding();
+      //add the use to the building as well as add building to the use 
       building.addBuildingUse(selectedBuildingUse);
       isBuildingUseChanged = true;
       selectedBuilding = building;
@@ -223,7 +224,7 @@ class GNWMap
     addBuilding("Neighbourhood2", false, 62, 260, 170, 270, 170, 270, 180, 260, 180, dotCoords_null);
     addBuilding("Neighbourhood3", false, 60, 4485, 295, 4495, 295, 4495, 305, 4485, 305, dotCoords_null);
   }
-
+  
   /**
    * Helper funtion to add building and name to hashmap buildings
    */
@@ -317,24 +318,23 @@ class GNWMap
     }
   }
 
-
-  void addUseFlow(int time, String from, String to, int number)
+  void addUseFlow(int timeID, String from, String to, int number)
   {
 
-    UseFlow use_flow = new UseFlow(time, from, to, number);
-    if (time == 9)
+    UseFlow use_flow = new UseFlow(timeID, from, to, number);
+    if (timeID == 0)
     {
       morningFlow.add(use_flow);
-    } else if (time == 12)
+    } else if (timeID == 1)
     {
       noonFlow.add(use_flow);
-    } else if (time == 15)
+    } else if (timeID == 2)
     {
       afternoonFlow.add(use_flow);
-    } else if (time == 19)
+    } else if (timeID == 3)
     {
       eveningFlow.add(use_flow);
-    } else if (time == 23)
+    } else if (timeID == 4)
     {
       midNightFlow.add(use_flow);
     }
@@ -342,216 +342,214 @@ class GNWMap
 
   void createUseFlow()
   { 
-    /*MORNING
+    /*MORNING (id 0)
      *********/
     //business out
-    addUseFlow(9, "Business", "Retail", 2);
+    addUseFlow(0, "Business", "Retail", 2);
 
     //education out
-    addUseFlow(9, "Education", "Retail", 2);
+    addUseFlow(0, "Education", "Retail", 2);
     
     //student resident out
-    addUseFlow(9, "Student Resident", "Retail", 3);
+    addUseFlow(0, "Student Resident", "Retail", 3);
 
     //transit out
-    addUseFlow(9, "Transit", "Business", 4);
-    addUseFlow(9, "Transit", "Education", 2);
-    addUseFlow(9, "Transit", "Neighborhood", 6);
-    addUseFlow(9, "Transit", "Retail", 2);
-    addUseFlow(9, "Transit", "Light Industry", 2);
+    addUseFlow(0, "Transit", "Business", 4);
+    addUseFlow(0, "Transit", "Education", 2);
+    addUseFlow(0, "Transit", "Neighborhood", 6);
+    addUseFlow(0, "Transit", "Retail", 2);
+    addUseFlow(0, "Transit", "Light Industry", 2);
 
     //neighborhood out
-    addUseFlow(9, "Neighborhood", "Business", 4);
-    addUseFlow(9, "Neighborhood", "Transit", 4);
-    addUseFlow(9, "Neighborhood", "Retail", 4);
+    addUseFlow(0, "Neighborhood", "Business", 4);
+    addUseFlow(0, "Neighborhood", "Transit", 4);
+    addUseFlow(0, "Neighborhood", "Retail", 4);
     
     //resident out
-    addUseFlow(9, "Resident", "Business", 2);
-    addUseFlow(9, "Resident", "Education", 1);
-    addUseFlow(9, "Resident", "Transit", 4);
-    addUseFlow(9, "Resident", "Retail", 1);
-    addUseFlow(9, "Resident", "Light Industry", 2);
+    addUseFlow(0, "Resident", "Business", 2);
+    addUseFlow(0, "Resident", "Education", 1);
+    addUseFlow(0, "Resident", "Transit", 4);
+    addUseFlow(0, "Resident", "Retail", 1);
+    addUseFlow(0, "Resident", "Light Industry", 2);
     
     //retail out
-    addUseFlow(9, "Retail", "Business", 2);
-    addUseFlow(9, "Retail", "Education", 2);
-    addUseFlow(9, "Retail", "Transit", 4);
-    addUseFlow(9, "Retail", "Light Industry", 2);
+    addUseFlow(0, "Retail", "Business", 2);
+    addUseFlow(0, "Retail", "Education", 2);
+    addUseFlow(0, "Retail", "Transit", 4);
+    addUseFlow(0, "Retail", "Light Industry", 2);
     
     //light industry out
-    addUseFlow(9, "Light Industry", "Retail", 4);
-    
+    addUseFlow(0, "Light Industry", "Retail", 4);
 
-    /*NOON
+    /*NOON (id 1)
      ********/
     //business out
-    addUseFlow(12, "Business", "Retail", 1);
+    addUseFlow(1, "Business", "Retail", 1);
 
     //education out
-    addUseFlow(12, "Education", "Art and Culture", 6);
-    addUseFlow(12, "Education", "Retail", 1);
+    addUseFlow(1, "Education", "Art and Culture", 6);
+    addUseFlow(1, "Education", "Retail", 1);
     
     //student resident out
-    addUseFlow(12, "Student Resident", "Retail", 2);
+    addUseFlow(1, "Student Resident", "Retail", 2);
 
     //transit out
-    addUseFlow(12, "Transit", "Art and Culture", 6);
-    addUseFlow(12, "Transit", "Education", 4);
-    addUseFlow(12, "Transit", "Neighborhood", 6);
+    addUseFlow(1, "Transit", "Art and Culture", 6);
+    addUseFlow(1, "Transit", "Education", 4);
+    addUseFlow(1, "Transit", "Neighborhood", 6);
     
     //neighborhood out
-    addUseFlow(12, "Neighborhood", "Retail", 4);
+    addUseFlow(1, "Neighborhood", "Retail", 4);
     
     //resident out
-    addUseFlow(12, "Resident", "Art and Culture", 6);
-    addUseFlow(12, "Resident", "Transit", 6);
-    addUseFlow(12, "Resident", "Retail", 2);
+    addUseFlow(1, "Resident", "Art and Culture", 6);
+    addUseFlow(1, "Resident", "Transit", 6);
+    addUseFlow(1, "Resident", "Retail", 2);
     
     //retail out
-    addUseFlow(12, "Retail", "Business", 1);
-    addUseFlow(12, "Retail", "Art and Culture", 4);
-    addUseFlow(12, "Retail", "Education", 1);
-    addUseFlow(12, "Retail", "Light Industry", 1);
+    addUseFlow(1, "Retail", "Business", 1);
+    addUseFlow(1, "Retail", "Art and Culture", 4);
+    addUseFlow(1, "Retail", "Education", 1);
+    addUseFlow(1, "Retail", "Light Industry", 1);
     
     //light industry out
-    addUseFlow(12, "Light Industry", "Retail", 1);
+    addUseFlow(1, "Light Industry", "Retail", 1);
 
-    /*AFTERNOON
+    /*AFTERNOON (id 2)
      *********/
     //business out
-    addUseFlow(15, "Business", "Art and Culture", 6);
-    addUseFlow(15, "Business", "Transit", 4);
-    addUseFlow(15, "Business", "Retail", 2);
+    addUseFlow(2, "Business", "Art and Culture", 6);
+    addUseFlow(2, "Business", "Transit", 4);
+    addUseFlow(2, "Business", "Retail", 2);
 
     //education out
-    addUseFlow(15, "Education", "Art and Culture", 6);
-    addUseFlow(15, "Education", "Transit", 4);
-    addUseFlow(15, "Education", "Resident", 3);
-    addUseFlow(15, "Education", "Retail", 2);
+    addUseFlow(2, "Education", "Art and Culture", 6);
+    addUseFlow(2, "Education", "Transit", 4);
+    addUseFlow(2, "Education", "Resident", 3);
+    addUseFlow(2, "Education", "Retail", 2);
     
     //student resident out
-    addUseFlow(15, "Student Resident", "Retail", 4);
+    addUseFlow(2, "Student Resident", "Retail", 4);
 
     //transit out
-    addUseFlow(15, "Transit", "Art and Culture", 4);
-    addUseFlow(15, "Transit", "Education", 4);
-    addUseFlow(15, "Transit", "Neighbourhood", 6);
-    addUseFlow(15, "Transit", "Retail", 4);
+    addUseFlow(2, "Transit", "Art and Culture", 4);
+    addUseFlow(2, "Transit", "Education", 4);
+    addUseFlow(2, "Transit", "Neighbourhood", 6);
+    addUseFlow(2, "Transit", "Retail", 4);
     
     //resident out
-    addUseFlow(15, "Resident", "Transit", 3);
-    addUseFlow(15, "Resident", "Retail", 2);
+    addUseFlow(2, "Resident", "Transit", 3);
+    addUseFlow(2, "Resident", "Retail", 2);
     
     //retail out
-    addUseFlow(15, "Retail", "Business", 3);
-    addUseFlow(15, "Retail", "Art and Culture", 3);
-    addUseFlow(15, "Retail", "Education", 3);
-    addUseFlow(15, "Retail", "Transit", 3);
-    addUseFlow(15, "Retail", "Resident", 4);
-    addUseFlow(15, "Retail", "Light Industry", 6);
+    addUseFlow(2, "Retail", "Business", 3);
+    addUseFlow(2, "Retail", "Art and Culture", 3);
+    addUseFlow(2, "Retail", "Education", 3);
+    addUseFlow(2, "Retail", "Transit", 3);
+    addUseFlow(2, "Retail", "Resident", 4);
+    addUseFlow(2, "Retail", "Light Industry", 6);
 
     //light industry out
-    addUseFlow(15, "Light Industry", "Retail", 3);
+    addUseFlow(2, "Light Industry", "Retail", 3);
 
 
-    /*EVENING
+    /*EVENING (id 3)
      ********/
     //business out
-    addUseFlow(19, "Business", "Art and Culture", 6);
-    addUseFlow(19, "Business", "Transit", 4);
-    addUseFlow(19, "Business", "Neighborhood", 6);
-    addUseFlow(19, "Business", "Resident", 1);
-    addUseFlow(19, "Business", "Retail", 1);
+    addUseFlow(3, "Business", "Art and Culture", 6);
+    addUseFlow(3, "Business", "Transit", 4);
+    addUseFlow(3, "Business", "Neighborhood", 6);
+    addUseFlow(3, "Business", "Resident", 1);
+    addUseFlow(3, "Business", "Retail", 1);
     
     //art and culture out
-    addUseFlow(19, "Art and Culture", "Transit", 4);
-    addUseFlow(19, "Art and Culture", "Retail", 4);
+    addUseFlow(3, "Art and Culture", "Transit", 4);
+    addUseFlow(3, "Art and Culture", "Retail", 4);
     
     //education out
-    addUseFlow(19, "Education", "Art and Culture", 6);
-    addUseFlow(19, "Education", "Transit", 4);
-    addUseFlow(19, "Education", "Resident", 1);
-    addUseFlow(19, "Education", "Retail", 1);
+    addUseFlow(3, "Education", "Art and Culture", 6);
+    addUseFlow(3, "Education", "Transit", 4);
+    addUseFlow(3, "Education", "Resident", 1);
+    addUseFlow(3, "Education", "Retail", 1);
     
     //student resident out
-    addUseFlow(19, "Student Resident", "Retail", 2);
+    addUseFlow(3, "Student Resident", "Retail", 2);
 
     //transit out
-    addUseFlow(19, "Transit", "Art and Culture", 6);
-    addUseFlow(19, "Transit", "Education", 4);
-    addUseFlow(19, "Transit", "Neighborhood", 4);
-    addUseFlow(19, "Transit", "Resident", 1);
-    addUseFlow(19, "Transit", "Retail", 1);
+    addUseFlow(3, "Transit", "Art and Culture", 6);
+    addUseFlow(3, "Transit", "Education", 4);
+    addUseFlow(3, "Transit", "Neighborhood", 4);
+    addUseFlow(3, "Transit", "Resident", 1);
+    addUseFlow(3, "Transit", "Retail", 1);
     
     //resident out
-    addUseFlow(19, "Resident", "Art and Culture", 3);
-    addUseFlow(19, "Resident", "Retail", 2);
+    addUseFlow(3, "Resident", "Art and Culture", 3);
+    addUseFlow(3, "Resident", "Retail", 2);
     
     //retail out
-    addUseFlow(19, "Retail", "Business", 3);
-    addUseFlow(19, "Retail", "Art and Culture", 2);
-    addUseFlow(19, "Retail", "Student Resident", 2);
-    addUseFlow(19, "Retail", "Transit", 2);
-    addUseFlow(19, "Retail", "Resident", 1);
-    addUseFlow(19, "Retail", "Light Industry", 3);
+    addUseFlow(3, "Retail", "Business", 3);
+    addUseFlow(3, "Retail", "Art and Culture", 2);
+    addUseFlow(3, "Retail", "Student Resident", 2);
+    addUseFlow(3, "Retail", "Transit", 2);
+    addUseFlow(3, "Retail", "Resident", 1);
+    addUseFlow(3, "Retail", "Light Industry", 3);
 
     //light industry out
-    addUseFlow(19, "Light Industry", "Art and Culture", 6);
-    addUseFlow(19, "Light Industry", "Transit", 3);
-    addUseFlow(19, "Light Industry", "Resident", 3);
-    addUseFlow(19, "Light Industry", "Retail", 1);
-
+    addUseFlow(3, "Light Industry", "Art and Culture", 6);
+    addUseFlow(3, "Light Industry", "Transit", 3);
+    addUseFlow(3, "Light Industry", "Resident", 3);
+    addUseFlow(3, "Light Industry", "Retail", 1);
 
     /*LATE EVENING
      ********/
     //Business out
-    addUseFlow(23, "Business", "Transit", 6);
-    addUseFlow(23, "Business", "Neighborhood", 6);
-    addUseFlow(23, "Business", "Resident", 2);
-    addUseFlow(23, "Business", "Retail", 2);
+    addUseFlow(4, "Business", "Transit", 6);
+    addUseFlow(4, "Business", "Neighborhood", 6);
+    addUseFlow(4, "Business", "Resident", 2);
+    addUseFlow(4, "Business", "Retail", 2);
     
     //Art and Culture out
-    addUseFlow(23, "Art and Culture", "Transit", 6);
-    addUseFlow(23, "Art and Culture", "Resident", 2);
-    addUseFlow(23, "Art and Culture", "Retail", 3);
+    addUseFlow(4, "Art and Culture", "Transit", 6);
+    addUseFlow(4, "Art and Culture", "Resident", 2);
+    addUseFlow(4, "Art and Culture", "Retail", 3);
     
     //Education out
-    addUseFlow(23, "Education", "Transit", 6);
-    addUseFlow(23, "Education", "Neighborhood", 6);
-    addUseFlow(23, "Education", "Resident", 4);
-    addUseFlow(23, "Education", "Retail", 4);
+    addUseFlow(4, "Education", "Transit", 6);
+    addUseFlow(4, "Education", "Neighborhood", 6);
+    addUseFlow(4, "Education", "Resident", 4);
+    addUseFlow(4, "Education", "Retail", 4);
     
     //student resident out
-    addUseFlow(23, "Student Resident", "Retail", 4);
+    addUseFlow(4, "Student Resident", "Retail", 4);
     
     //Transit out
-    addUseFlow(23, "Transit", "Neighborhood", 6);
-    addUseFlow(23, "Transit", "Resident", 2);
-    addUseFlow(23, "Transit", "Retail", 3);
+    addUseFlow(4, "Transit", "Neighborhood", 6);
+    addUseFlow(4, "Transit", "Resident", 2);
+    addUseFlow(4, "Transit", "Retail", 3);
 
     //Resident out
-    addUseFlow(23, "Resident", "Business", 4);
-    addUseFlow(23, "Resident", "Retail", 3);
+    addUseFlow(4, "Resident", "Business", 4);
+    addUseFlow(4, "Resident", "Retail", 3);
     
     //Retail out
-    addUseFlow(23, "Retail", "Business", 4);
-    addUseFlow(23, "Retail", "Student Resident", 4);
-    addUseFlow(23, "Retail", "Transit", 2);
-    addUseFlow(23, "Retail", "Resident", 3);
+    addUseFlow(4, "Retail", "Business", 4);
+    addUseFlow(4, "Retail", "Student Resident", 4);
+    addUseFlow(4, "Retail", "Transit", 2);
+    addUseFlow(4, "Retail", "Resident", 3);
     
     //Light Industry out
-    addUseFlow(23, "Light Industry", "Transit", 6);
-    addUseFlow(23, "Light Industry", "Resident", 4);
-    addUseFlow(23, "Light Industry", "Retail", 4);
+    addUseFlow(4, "Light Industry", "Transit", 6);
+    addUseFlow(4, "Light Industry", "Resident", 4);
+    addUseFlow(4, "Light Industry", "Retail", 4);
   }
   
   //initialize the time key and the matrix respond for the use_flows hashmap 
   void use_flows()
   {
-    use_flows.put(9, morningFlow);
-    use_flows.put(12, noonFlow);
-    use_flows.put(15, afternoonFlow);
-    use_flows.put(19, eveningFlow);
-    use_flows.put(23, midNightFlow);
+    use_flows.put(0, morningFlow);
+    use_flows.put(1, noonFlow);
+    use_flows.put(2, afternoonFlow);
+    use_flows.put(3, eveningFlow);
+    use_flows.put(4, midNightFlow);
   }
 }
