@@ -13,18 +13,21 @@ The platform was built on Mac OS and Windows. The following programs were used:
 ## Requirements
 
 - Tablet: [Samsung Tab S2 9.7"](http://www.samsung.com/ca/tablets/galaxy-tab-s2-9-7-t810/) Android 6.0 Marshmallow Tablet with Exynos 5433 8-Core Processor
-- Desktop computer: Mac or Windows with [Samsung SideSync](http://www.samsung.com/us/sidesync/) installed for projection
+- Tablet Operating System: Android 6.0.1
+
+**NB: the app was designed and programmed specifically for the device and operating system mentioned above, it was not tested on any other device. Devices with lower specifications or a different OS might not be able to run the app or might have a lower frame rate.**
+
+## Projection
+- Mac or Windows PC with [Samsung SideSync](http://www.samsung.com/us/sidesync/) installed
 
 ## Getting started
 
-1. download processing
+1. download processing here: https://processing.org/download/
 
-Go to: https://processing.org/download/
+2. install the following packages
 
-2. install processing packages
-
-- `ControlP5` from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
-- `Path Finder` from Peter Lager: http://www.lagers.org.uk/pfind/index.html
+- [ControlP5](http://www.sojamo.de/libraries/controlP5/) from Andreas Schlegel
+- [Path Finder](http://www.lagers.org.uk/pfind/index.html) from Peter Lager
 
 **Mac & Windows**: packages can be installed in Processing's menu bar.
 `Sketch > Import Library... > Add library... > Search > Install package`
@@ -84,26 +87,30 @@ Processing will automatically adjust it according to SDK used for development.
 
 ### edit text
 
-1. Find corresponding image in
-```
-|-Main/data/
-```
-
+1. Find corresponding image in `|-Main/data/`
 2. Edit text in the image without changing its size or proportion
 3. Re-compile the application
 
 ### adjust the flow
 
-The flow can be adjusted in the `Particle` class in `|-Main/Particle.pde`.
-
-- Particle size
-
+- To adjust the **particle size**, go to the `Particle` class in `|-Main/Particle.pde`.
 The size of the particles is defined in `int particleSize`.
-
-- Particle colour **[To Do]**
+- To adjust the **particle colour**, go to **[To Do]**
 
 ## Troubleshooting
 
-### known issues **[To Do]**
+**[To Do]**
 
-### basic steps to troubleshoot **[To Do]**
+#### Issue #1
+1. open the app
+2. go back to the home screen by pressing the device's home button
+3. go back to the app
+4. the app crashes fails to open
+
+The application might crash on step 3. The user should in that case close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
+
+#### Issue #2 **[To Do]**
+Increasing the number of particles displayed on the map might have an impact of performance.
+
+#### Issue #3
+The app was designed for tablet. Running it on a computer might have a negative impact on performance and might affect the way the layout scales.
