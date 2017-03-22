@@ -11,6 +11,7 @@ class FlowRoute
   String from_buildingUse;
   String to_buildingUse;
   ArrayList<GraphNode> nodes;
+  boolean isStartOfFlow;
 
   /**
    * The FlowRoute constructor
@@ -24,11 +25,12 @@ class FlowRoute
     initial_nodeID = initial_id;
     dest_nodeID = dest_id;
     delay = d;
-    timeToNextParticleGen = (int)random(0,d);
+    timeToNextParticleGen = (int)random(0,50);
     from_buildingUse = from_use;
     to_buildingUse = to_use;
     nodes = new ArrayList<GraphNode>();
     nodes = GNWPathFinder.findPath(initial_nodeID, dest_nodeID);
+    isStartOfFlow = true;
   }
 
   ArrayList<Particle> addNewParticle(ArrayList<Particle> particles)

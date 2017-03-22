@@ -8,7 +8,7 @@ class Particle
   int devChance = 10;          //chance of particle deviating: a higher value means a lower chance
   int devScale = 3;            //how large each deviating step is
   int particleSize = 15;       //size of particle drawn on the map
-  float randomVelocity = 5.0;  //the lower value of how fast the particles move
+  float randomVelocity = 8.0;  //the lower value of how fast the particles move
   
   int initial_nodeID;
   int dest_nodeID;
@@ -21,6 +21,7 @@ class Particle
   String to_buildingUse;
   int currentPathIndex;
   boolean isEndOfRoute;
+  color flowColor;
   ArrayList<GraphNode> nodes;
   ArrayList<Path> paths;
   
@@ -45,10 +46,14 @@ class Particle
     positionY = nodes.get(0).yf();
     velocityX = 0;
     velocityY = 0;
-    vectorVelocity = random(randomVelocity, randomVelocity + 1);
+    vectorVelocity = random(randomVelocity, randomVelocity + 3);
     currentPathIndex = 0;
     isEndOfRoute = false;
     paths = new ArrayList<Path>();
+    flowColor = color(130, 0, 204, 100);
+    
+    //decide the color of the particle
+    selectFill();
     
     //build the Paths that the particle will travel through
     for (int i = 0; i < nodes.size() - 1; i++)
@@ -70,8 +75,7 @@ class Particle
   void run()
   {
     noStroke();
-    //selectFill();          //colours of dots by from_use
-    fill(130, 0, 204, 100);
+    fill(flowColor);
     
     ellipse(positionX, positionY, particleSize, particleSize);
     
@@ -200,32 +204,49 @@ class Particle
     }
   }
   
-  //set the colour of the partcles based on the buildingUse they come from
   void selectFill()
   {
-     if (from_buildingUse == "Retail")
+     if (from_buildingUse == "Business" || to_buildingUse == "Business")
     {
-      fill(#EA6C90, 200);
+      flowColor = color(102, 217, 226, 200);
+    } 
+    else if (from_buildingUse == "Education" || to_buildingUse == "Education")
+    {
+      flowColor = color(255, 137, 49, 200);
     }
-    else if (from_buildingUse == "Art and Culture")
+    else if (from_buildingUse == "Light Industry" || to_buildingUse == "Light Industry")
     {
-      fill(#AA96CC, 200);
+      flowColor = color(249, 212, 99, 200);
     }
-    else if (from_buildingUse == "Light Industry")
+    else if (from_buildingUse == "Resident" || to_buildingUse == "Resident" || 
+              from_buildingUse == "Student Resident" || to_buildingUse == "Student Resident")
     {
-      fill(#8ACE8A, 200);
+      flowColor = color(138, 206, 138, 200);
     }
-    else if (from_buildingUse == "Business")
+    else if (from_buildingUse == "Neighborhood" || to_buildingUse == "Neighborhood" 
+            || from_buildingUse == "Transit" || to_buildingUse == "Transit")
     {
-      fill(#66D9E2, 200);
+      flowColor = color(20, 93, 158, 200);
     }
-    else if (from_buildingUse == "Resident")
+    else if ((from_buildingUse == "Art and Culture" && to_buildingUse == "Retail") 
+            || (from_buildingUse == "Retail" && to_buildingUse == "Art and Culture"))
     {
-      fill(#F9D463, 200);
-    }
-    else
-    {
-      fill(130, 0, 204, 200);
+      int colorChoice = (int)random(1,4);             //for Retail to Art and Culture and vice versa, randomise colours
+      switch (colorChoice)
+      {
+        case 1:
+          flowColor = color(102, 217, 226, 200);
+          break;
+         case 2:
+           flowColor = color(255, 137, 49, 200);
+           break;
+         case 3:
+         flowColor = color(138, 206, 138, 200);
+           break;
+         case 4:
+           flowColor = color(20, 93, 158, 200);
+           break;  
+      }
     }
   }
 }

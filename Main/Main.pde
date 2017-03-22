@@ -75,7 +75,7 @@ void setup()
     .addItem("Noon", 12)
     .addItem("Afternoon", 15)
     .addItem("Evening", 19)
-    .addItem("Late Night", 23)
+    .addItem("Late Evening", 23)
     ;
   
   r1.activate(0);
@@ -214,6 +214,7 @@ void setBuildingUses()
   buildingUses.put("Neighborhood", new BuildingUse("Neighborhood", "", 0));
   buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
   buildingUses.put("Education", new BuildingUse("Education", "", 0));
+  buildingUses.put("Student Resident", new BuildingUse("Student Resident", "", 0));
 
   use_buildings.put("Retail", new ArrayList<Building>());
   use_buildings.put("Art and Culture", new ArrayList<Building>());
@@ -225,6 +226,7 @@ void setBuildingUses()
   use_buildings.put("Neighborhood", new ArrayList<Building>());
   use_buildings.put("Park and Public", new ArrayList<Building>());
   use_buildings.put("Education", new ArrayList<Building>());
+  use_buildings.put("Student Resident", new ArrayList<Building>());
 
   GNWMap.addDefaultBuildingUses();
 }

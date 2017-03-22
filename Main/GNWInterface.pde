@@ -1,6 +1,7 @@
 class GNWInterface //<>//
 {
   PImage interfaceImage; 
+  PImage mapLegendImage;
   ArrayList<BuildingUseBox> buildingUseBoxes;
   HashMap<String, HotspotCoords> buttonPanel;
   int yBuildingBox;
@@ -11,6 +12,7 @@ class GNWInterface //<>//
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
+    mapLegendImage = loadImage("mapLegend.png");
     buildingUseBoxes = new ArrayList<BuildingUseBox>();
     buttonPanel = new HashMap<String, HotspotCoords>();
 
@@ -31,6 +33,7 @@ class GNWInterface //<>//
     }
 
     image(interfaceImage, 0, 0);
+    image(mapLegendImage, 0, 0);
 
     if (selectedBUIcon != null) {
       selectedBUIcon.render();
