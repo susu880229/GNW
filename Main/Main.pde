@@ -1,5 +1,4 @@
-import pathfinder.*; //<>//
-import controlP5.*;
+import pathfinder.*; //<>// //<>// //<>// //<>// //<>// //<>//
 import java.util.Map;
 
 //FOR OUTPUT OF GRAPH NODE COORDINATES
@@ -12,7 +11,7 @@ GNWInterface GNWInterface;
 
 HashMap<String, BuildingUse> buildingUses;
 HashMap<String, ArrayList<Building>> use_buildings;
-HashMap<String, ArrayList<UseFlow>> use_flows;
+HashMap<Integer, ArrayList<UseFlow>> use_flows;
 
 //transformations
 int shiftX;
@@ -20,8 +19,8 @@ int shiftY;
 float scaleFactor;
 
 //define the time selection parameter
-String cur_time = "Morning";
-String pre_time = " ";
+int cur_time = 0;
+int pre_time = -1;
 boolean timeChanged = false;
 
 //images for the drop feedback
@@ -48,7 +47,7 @@ void setup()
   shiftX = 0;
   shiftY = 0;
 
-  use_flows = new HashMap<String, ArrayList<UseFlow>>();
+  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
 
@@ -57,6 +56,7 @@ void setup()
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); 
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
+
   loadDropFeedbackImages();
 }
 
@@ -85,20 +85,17 @@ void draw() {
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
   popMatrix();
-  
 }
 
 //update time and time change does not work
 void update_time()
 {
-  
+
   if (cur_time != pre_time)
   {
     timeChanged = true;
     pre_time = cur_time;
   }
- 
-  
 }
 
 /**
@@ -119,22 +116,12 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-  if (!isOnMap()) 
-  {
-    if (isOnDragDrop()) 
-    {
-    //GNWInterface.selectBuildingUse();
-      GNWInterface.update_buildingBox();
-      GNWInterface.function_buildingBox();
-    }
-    else 
-    {
-       GNWInterface.clearSelectedBox();
-    }
+
+  if (!isOnMap()) {
     GNWMap.clearSelectedBuilding();
-  } 
-  else 
-  {
+    GNWInterface.clearSelectedBox();
+    GNWInterface.selectInterface();
+  } else {
     try 
     {
       GNWMap.selectTooltip();
@@ -142,8 +129,8 @@ void mousePressed()
     catch(Exception e) 
     {
       GNWMap.selectBuilding();
+      GNWInterface.clearSelectedBox();
     }
-    GNWInterface.clearSelectedBox();
   }
 }
 
@@ -156,26 +143,24 @@ void mousePressed()
  **/
 void mouseDragged()
 {
-  
+  scaleMouse();
+
   if (GNWInterface.selectedBUIcon != null)
   {
-    scaleMouse();
     GNWInterface.update();
   } 
-  else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider())
+  else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
   {
-    scaleMouse();
     GNWInterface.time_bar.mouseDragged();
   }
-  
   else if (isOnMap()) 
   {
-    mouseY = int(mouseY / scaleFactor);
+    mouseX = int(mouseX * scaleFactor);
+    pmouseX = int(pmouseX * scaleFactor);
     shiftX = shiftX - (pmouseX - mouseX);
-    shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width , 0);
-    
+    shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
   }
-} 
+}
 
 /**
  * Handles what happens when user releases icon; 
@@ -188,7 +173,6 @@ void mouseReleased()
     try {
       //add use to building as well as add building to use arraylist 
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
-      
     } 
     catch(Exception e) {
       GNWInterface.clearSelected();
@@ -206,14 +190,6 @@ boolean isOnMap()
   return mouseY < midY;
 }
 
-boolean isOnDragDrop()
-{
-  int DragDrop_top = 913;
-  int DragDrop_bottom = 1280;
-  return mouseY > DragDrop_top && mouseY < DragDrop_bottom;
-  
-}
-
 boolean isOnTimeSlider()
 {
   int time_top = 1280;
@@ -221,15 +197,8 @@ boolean isOnTimeSlider()
   return mouseY > time_top && mouseY < time_bottom;
 }
 
-boolean isOnSetting()
-{
-  int setting_top = 1450;
-  return mouseY > setting_top;
-}
-
 void setBuildingUses()
 {
-
   buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
   buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
   buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #F9D463));
@@ -240,35 +209,37 @@ void setBuildingUses()
   buildingUses.put("Neighborhood", new BuildingUse("Neighborhood", "", 0));
   buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
   buildingUses.put("Education", new BuildingUse("Education", "", 0));
+  buildingUses.put("Student Resident", new BuildingUse("Student Resident", "", 0));
 
   use_buildings.put("Retail", new ArrayList<Building>());
   use_buildings.put("Art and Culture", new ArrayList<Building>());
   use_buildings.put("Light Industry", new ArrayList<Building>());
   use_buildings.put("Business", new ArrayList<Building>());
   use_buildings.put("Resident", new ArrayList<Building>());
-  
+
   use_buildings.put("Transit", new ArrayList<Building>());
   use_buildings.put("Neighborhood", new ArrayList<Building>());
   use_buildings.put("Park and Public", new ArrayList<Building>());
   use_buildings.put("Education", new ArrayList<Building>());
+  use_buildings.put("Student Resident", new ArrayList<Building>());
 
   GNWMap.addDefaultBuildingUses();
 }
 
 void loadDropFeedbackImages()
 {
-    glowImage_515 = loadImage("highlight_515.png");
-    glowImage_521 = loadImage("highlight_521.png");
-    glowImage_701 = loadImage("highlight_701.png");
-    glowImage_887 = loadImage("highlight_887.png");
-    glowImage_901 = loadImage("highlight_901.png");
-    glowImage_1933 = loadImage("highlight_1933.png");
-    glowImage_1980 = loadImage("highlight_1980.png");
-    glowImage_lot4 = loadImage("highlight_lot4.png");
-    glowImage_lot5 = loadImage("highlight_lot5.png");
-    glowImage_lot7 = loadImage("highlight_lot7.png");
-    glowImage_naturesPath = loadImage("highlight_naturesPath.png");
-    glowImage_shaw = loadImage("highlight_shaw.png");
+  glowImage_515 = loadImage("highlight_515.png");
+  glowImage_521 = loadImage("highlight_521.png");
+  glowImage_701 = loadImage("highlight_701.png");
+  glowImage_887 = loadImage("highlight_887.png");
+  glowImage_901 = loadImage("highlight_901.png");
+  glowImage_1933 = loadImage("highlight_1933.png");
+  glowImage_1980 = loadImage("highlight_1980.png");
+  glowImage_lot4 = loadImage("highlight_lot4.png");
+  glowImage_lot5 = loadImage("highlight_lot5.png");
+  glowImage_lot7 = loadImage("highlight_lot7.png");
+  glowImage_naturesPath = loadImage("highlight_naturesPath.png");
+  glowImage_shaw = loadImage("highlight_shaw.png");
 }
 
 

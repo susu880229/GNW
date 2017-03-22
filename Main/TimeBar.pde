@@ -117,27 +117,7 @@ class TimeBar
    
   void time_decide(int i)
   {
-    if(i == 0)
-    {
-      cur_time = "Morning";
-    }
-    else if (i == 2)
-    {
-      cur_time = "Noon";
-      
-    }
-    else if (i == 4)
-    {
-      cur_time = "Afternoon";
-    }
-    else if (i == 6)
-    {
-      cur_time = "Evening";
-    }
-    else if (i == 8)
-    {
-      cur_time = "Late_Evening";
-    }
+    cur_time = floor(i/2);
   }
   
 }

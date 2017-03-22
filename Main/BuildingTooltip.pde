@@ -9,9 +9,9 @@ class BuildingTooltip
   float tooltipY;
   float dividerSpace = 60;
   int maxSlots;
-  BuildingCoords buildingCoords;
+  HotspotCoords buildingCoords;
 
-  BuildingTooltip(BuildingCoords buildingCoords, int maxSlots)
+  BuildingTooltip(HotspotCoords buildingCoords, int maxSlots)
   {
     crossImage = loadImage("cross_sign.png");
     crossImage.resize(50, 0);
