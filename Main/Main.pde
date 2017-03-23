@@ -37,6 +37,9 @@ PImage glowImage_lot7;
 PImage glowImage_naturesPath;
 PImage glowImage_shaw;
 
+boolean start;
+PImage instruction;
+
 void setup()
 {
   //FOR OUTPUT OF GRAPH NODE COORDINATES
@@ -58,33 +61,43 @@ void setup()
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   loadDropFeedbackImages();
+  start = true;
+  instruction = loadImage("instruction.png");
 }
 
 /** 
  * 
  */
 void draw() {
+  
   background(255);
   pushMatrix();
   scale(scaleFactor);
-  pushMatrix();
-  translate(shiftX, shiftY);
-  GNWMap.render();
-  //GNWPathFinder.drawGraph();
-  update_time();
-  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  if(start)
   {
-    GNWMap.flowInit(timeChanged);
-    GNWMap.isBuildingUseChanged = false;
-    timeChanged = false;
+    pushMatrix();
+    translate(shiftX, shiftY);
+    GNWMap.render();
+    //GNWPathFinder.drawGraph();
+    update_time();
+    if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+    {
+      GNWMap.flowInit(timeChanged);
+      GNWMap.isBuildingUseChanged = false;
+      timeChanged = false;
+    }
+    GNWInterface.dropFeedback(isOnMap());
+    GNWMap.drawFlow();
+    GNWMap.showSelectedBuilding();
+    popMatrix();
+    //render buildingUseBoxes and SelectedBUIcon
+    GNWInterface.render();
   }
-  GNWInterface.dropFeedback(isOnMap());
-  GNWMap.drawFlow();
-  GNWMap.showSelectedBuilding();
-  popMatrix();
-  //render buildingUseBoxes and SelectedBUIcon
-  GNWInterface.render();
-  popMatrix();
+  else 
+  {
+    image(instruction, 0, 0);
+  }
+  popMatrix();  
 }
 
 //update time and time change does not work
@@ -116,20 +129,26 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-
-  if (!isOnMap()) {
-    GNWMap.clearSelectedBuilding();
-    GNWInterface.selectInterface();
-  } else {
-    try 
-    {
-      GNWMap.selectTooltip();
-    } 
-    catch(Exception e) 
-    {
-      GNWMap.selectBuilding();   
-      GNWInterface.clearSelectedBox();
+  if(start)
+  {
+    if (!isOnMap()) {
+      GNWMap.clearSelectedBuilding();
+      GNWInterface.selectInterface();
+    } else {
+      try 
+      {
+        GNWMap.selectTooltip();
+      } 
+      catch(Exception e) 
+      {
+        GNWMap.selectBuilding();   
+        GNWInterface.clearSelectedBox();
+      }
     }
+  }
+  else
+  {
+    GNWInterface.close_instruction();
   }
 }
 
@@ -143,22 +162,25 @@ void mousePressed()
 void mouseDragged()
 {
   scaleMouse();
-
-  if (GNWInterface.selectedBUIcon != null)
+  //avoid the user move the map to impact the close instruction button to work
+  if(start)
   {
-    GNWInterface.update();
-  } 
-  else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
-  {
-    GNWInterface.time_bar.mouseDragged();
-  }
-  else if (isOnMap()) 
-  {
-    mouseX = int(mouseX * scaleFactor);
-    pmouseX = int(pmouseX * scaleFactor);
-    pmouseY = int(pmouseY * scaleFactor); 
-    shiftX = shiftX - (pmouseX - mouseX);
-    shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
+    if (GNWInterface.selectedBUIcon != null)
+    {
+      GNWInterface.update();
+    } 
+    else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
+    {
+      GNWInterface.time_bar.mouseDragged();
+    }
+    else if (isOnMap()) 
+    {
+      mouseX = int(mouseX * scaleFactor);
+      pmouseX = int(pmouseX * scaleFactor);
+      pmouseY = int(pmouseY * scaleFactor); 
+      shiftX = shiftX - (pmouseX - mouseX);
+      shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
+    }
   }
 }
 
@@ -186,10 +208,10 @@ void mouseReleased()
  */
 boolean isOnMap()
 {
-  int midY = 913;
-  return mouseY < midY;
+ int midY = 913;
+ return mouseY < midY;
+   
 }
-
 boolean isOnTimeSlider()
 {
   int time_top = 1280;
