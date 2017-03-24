@@ -206,30 +206,30 @@ class Particle
   
   void selectFill()
   {
-     if (from_buildingUse == "Business" || to_buildingUse == "Business")
+     if (from_buildingUse.equals("Business") || to_buildingUse.equals("Business"))
     {
       flowColor = color(102, 217, 226, 200);
     } 
-    else if (from_buildingUse == "Education" || to_buildingUse == "Education")
+    else if (from_buildingUse.equals("Education") || to_buildingUse.equals("Education"))
     {
       flowColor = color(255, 137, 49, 200);
     }
-    else if (from_buildingUse == "Light Industry" || to_buildingUse == "Light Industry")
+    else if (from_buildingUse.equals("Light Industry") || to_buildingUse.equals("Light Industry"))
     {
       flowColor = color(249, 212, 99, 200);
     }
-    else if (from_buildingUse == "Resident" || to_buildingUse == "Resident" || 
-              from_buildingUse == "Student Resident" || to_buildingUse == "Student Resident")
+    else if (from_buildingUse.equals("Resident") || to_buildingUse.equals("Resident") || 
+              from_buildingUse.equals("Student Resident") || to_buildingUse.equals("Student Resident"))
     {
       flowColor = color(138, 206, 138, 200);
     }
-    else if (from_buildingUse == "Neighborhood" || to_buildingUse == "Neighborhood" 
-            || from_buildingUse == "Transit" || to_buildingUse == "Transit")
+    else if (from_buildingUse.equals("Neighborhood") || to_buildingUse.equals("Neighborhood") 
+            || from_buildingUse.equals("Transit") || to_buildingUse.equals("Transit"))
     {
       flowColor = color(20, 93, 158, 200);
     }
-    else if ((from_buildingUse == "Art and Culture" && to_buildingUse == "Retail") 
-            || (from_buildingUse == "Retail" && to_buildingUse == "Art and Culture"))
+    else if ((from_buildingUse.equals("Art and Culture") && to_buildingUse.equals("Retail")) 
+            || (from_buildingUse.equals("Retail") && to_buildingUse.equals("Art and Culture")))
     {
       int colorChoice = (int)random(1,4);             //for Retail to Art and Culture and vice versa, randomise colours
       switch (colorChoice)
