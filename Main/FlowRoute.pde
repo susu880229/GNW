@@ -29,7 +29,7 @@ class FlowRoute
     dest_nodeID = dest_id;
     numDelayUnit = dUnit;
     delay = d;
-    timeToNextParticleGen = (int)random(0,d);
+    timeToNextParticleGen = 0;
     from_buildingUse = from_use;
     to_buildingUse = to_use;
     nodes = new ArrayList<GraphNode>();
