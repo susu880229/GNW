@@ -6,8 +6,11 @@ class FlowRoute
 {
   int initial_nodeID;
   int dest_nodeID;
+  int numDelayUnit;
   int delay;
   int timeToNextParticleGen;
+  int from_repeatUseIndex;      //1 = 1 use of that type in the building, 2 = 2 use of that type, 3 = 3 use of that type
+  int to_repeatUseIndex;        //1 = 1 use of that type in the building, 2 = 2 use of that type, 3 = 3 use of that type
   String from_buildingUse;
   String to_buildingUse;
   ArrayList<GraphNode> nodes;
@@ -20,17 +23,20 @@ class FlowRoute
    * @param d the delay between each particle appearing at the start node 
    */
 
-  FlowRoute(int initial_id, int dest_id, int d, String from_use, String to_use) 
+  FlowRoute(int initial_id, int dest_id, int dUnit, int d, String from_use, String to_use, int from_numRepeatedUse, int to_numRepeatedUse) 
   {
     initial_nodeID = initial_id;
     dest_nodeID = dest_id;
+    numDelayUnit = dUnit;
     delay = d;
-    timeToNextParticleGen = (int)random(0,50);
+    timeToNextParticleGen = 0;
     from_buildingUse = from_use;
     to_buildingUse = to_use;
     nodes = new ArrayList<GraphNode>();
     nodes = GNWPathFinder.findPath(initial_nodeID, dest_nodeID);
     isStartOfFlow = true;
+    from_repeatUseIndex = from_numRepeatedUse;
+    to_repeatUseIndex = to_numRepeatedUse;
   }
 
   ArrayList<Particle> addNewParticle(ArrayList<Particle> particles)

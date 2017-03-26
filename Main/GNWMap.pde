@@ -38,7 +38,7 @@ class GNWMap
 
     //initialize the hashmap use_flows
     use_flows();
-    createUseFlow();
+    createUseFlowFromFile();
   }
 
   void render()
@@ -64,9 +64,25 @@ class GNWMap
    */
   void selectTooltip() throws Exception
   {
-    if (selectedBuilding != null) {   
-      particles = selectedBuilding.deleteBuildingUse(particles);
-      isBuildingUseChanged = true;
+    if (selectedBuilding != null) 
+    {   
+      particles = selectedBuilding.deleteBuildingUse(particles, flowRoutes);
+      
+      for (int i = 0; i < flowRoutes.size(); i++)
+      {
+        flowRoutes.get(i).delay = flowRoutes.get(i).numDelayUnit * 100; 
+      }
+      
+      checkFlowDelayLimit(); 
+      
+      
+      //for debugging
+      //for (int i = 0; i < flowRoutes.size(); i++)
+      //{
+      //  FlowRoute a = flowRoutes.get(i);
+      //  println(i, a.delay, a.initial_nodeID, a.from_buildingUse, a.dest_nodeID, a.to_buildingUse);
+      //}
+      
       return;
     } else {
       throw new Exception ("No tooltip selected");
@@ -97,15 +113,25 @@ class GNWMap
   //build all the FlowRoutes on the map and set their particle generation rate
   void flowInit(boolean timeIsChanged)
   {
-    flowRoutes = new ArrayList<FlowRoute>();
     if (timeIsChanged)
     {
+      flowRoutes = new ArrayList<FlowRoute>();
       particles = new ArrayList<Particle>();
     }
-    for (Map.Entry buildingEntry : buildings.entrySet()) {
+    for (Map.Entry buildingEntry : buildings.entrySet()) 
+    {
       Building building = (Building) buildingEntry.getValue();
       flowRoutes = building.findParticleGenRate(flowRoutes);
     }
+    
+    checkFlowDelayLimit();
+    
+    //for debugging
+    //for (int i = 0; i < flowRoutes.size(); i++)
+    //{
+    //  FlowRoute a = flowRoutes.get(i);
+    //  println(i, a.delay, a.initial_nodeID, a.from_buildingUse, a.dest_nodeID, a.to_buildingUse);
+    //}
   }
 
   /*Check if new particles should be generated. 
@@ -123,11 +149,13 @@ class GNWMap
         {
           flowRoutes.get(i).timeToNextParticleGen = (int)random(0, flowRoutes.get(i).delay);
           flowRoutes.get(i).isStartOfFlow = false;
-        } else
+        } 
+        else
         {
           flowRoutes.get(i).timeToNextParticleGen = flowRoutes.get(i).delay;
         }
-      } else
+      } 
+      else
       {
         flowRoutes.get(i).timeToNextParticleGen -= 1;
       }
@@ -143,15 +171,28 @@ class GNWMap
       }
     }
   }
-
+  
+  void checkFlowDelayLimit()
+  {
+    for (Map.Entry buildingEntry : buildings.entrySet()) 
+      {
+        Building building = (Building) buildingEntry.getValue();
+        flowRoutes = building.checkDelayLimit(flowRoutes, false, true); //boolean arguments: isIn, isOut
+        flowRoutes = building.checkDelayLimit(flowRoutes, true, false); //boolean arguments: isIn, isOut
+      }
+  }
 
   void assignBuildingUse(BuildingUse selectedBuildingUse) {
 
-    try {
+    try 
+    {
       Building building = findBuilding();
       //add the use to the building as well as add building to the use 
       building.addBuildingUse(selectedBuildingUse);
       isBuildingUseChanged = true;
+      
+      ArrayList<BuildingUse> buildingUses = new ArrayList<BuildingUse>();
+      buildingUses.add(selectedBuildingUse);     
       selectedBuilding = building;
     } 
     catch (Exception e) {
@@ -249,7 +290,6 @@ class GNWMap
     buildings.get("Plaza").addPermanentUse(park);
     buildings.get("Lot7").addPermanentUse(transit);
     buildings.get("EmilyCarr").addPermanentUse(school);
-    buildings.get("EmilyCarr").addPermanentUse(art);
     buildings.get("569").addPermanentUse(retail);
     buildings.get("569").addPermanentUse(office);
     buildings.get("CDM1").addPermanentUse(school);
@@ -338,209 +378,42 @@ class GNWMap
     }
   }
 
-  void createUseFlow()
+  void createUseFlowFromFile()
   { 
-    /*MORNING (id 0)
-     *********/
-    //business out
-    addUseFlow(0, "Business", "Retail", 2);
-
-    //education out
-    addUseFlow(0, "Education", "Retail", 2);
-    
-    //student resident out
-    addUseFlow(0, "Student Resident", "Retail", 3);
-
-    //transit out
-    addUseFlow(0, "Transit", "Business", 4);
-    addUseFlow(0, "Transit", "Education", 2);
-    addUseFlow(0, "Transit", "Neighborhood", 6);
-    addUseFlow(0, "Transit", "Retail", 2);
-    addUseFlow(0, "Transit", "Light Industry", 2);
-
-    //neighborhood out
-    addUseFlow(0, "Neighborhood", "Business", 4);
-    addUseFlow(0, "Neighborhood", "Transit", 4);
-    addUseFlow(0, "Neighborhood", "Retail", 4);
-    
-    //resident out
-    addUseFlow(0, "Resident", "Business", 2);
-    addUseFlow(0, "Resident", "Education", 1);
-    addUseFlow(0, "Resident", "Transit", 4);
-    addUseFlow(0, "Resident", "Retail", 1);
-    addUseFlow(0, "Resident", "Light Industry", 2);
-    
-    //retail out
-    addUseFlow(0, "Retail", "Business", 2);
-    addUseFlow(0, "Retail", "Education", 2);
-    addUseFlow(0, "Retail", "Transit", 4);
-    addUseFlow(0, "Retail", "Light Industry", 2);
-    
-    //light industry out
-    addUseFlow(0, "Light Industry", "Retail", 4);
-
-    /*NOON (id 1)
-     ********/
-    //business out
-    addUseFlow(1, "Business", "Retail", 1);
-
-    //education out
-    addUseFlow(1, "Education", "Art and Culture", 6);
-    addUseFlow(1, "Education", "Retail", 1);
-    
-    //student resident out
-    addUseFlow(1, "Student Resident", "Retail", 2);
-
-    //transit out
-    addUseFlow(1, "Transit", "Art and Culture", 6);
-    addUseFlow(1, "Transit", "Education", 4);
-    addUseFlow(1, "Transit", "Neighborhood", 6);
-    
-    //neighborhood out
-    addUseFlow(1, "Neighborhood", "Retail", 4);
-    
-    //resident out
-    addUseFlow(1, "Resident", "Art and Culture", 6);
-    addUseFlow(1, "Resident", "Transit", 6);
-    addUseFlow(1, "Resident", "Retail", 2);
-    
-    //retail out
-    addUseFlow(1, "Retail", "Business", 1);
-    addUseFlow(1, "Retail", "Art and Culture", 4);
-    addUseFlow(1, "Retail", "Education", 1);
-    addUseFlow(1, "Retail", "Light Industry", 1);
-    
-    //light industry out
-    addUseFlow(1, "Light Industry", "Retail", 1);
-
-    /*AFTERNOON (id 2)
-     *********/
-    //business out
-    addUseFlow(2, "Business", "Art and Culture", 6);
-    addUseFlow(2, "Business", "Transit", 4);
-    addUseFlow(2, "Business", "Retail", 2);
-
-    //education out
-    addUseFlow(2, "Education", "Art and Culture", 6);
-    addUseFlow(2, "Education", "Transit", 4);
-    addUseFlow(2, "Education", "Resident", 3);
-    addUseFlow(2, "Education", "Retail", 2);
-    
-    //student resident out
-    addUseFlow(2, "Student Resident", "Retail", 4);
-
-    //transit out
-    addUseFlow(2, "Transit", "Art and Culture", 4);
-    addUseFlow(2, "Transit", "Education", 4);
-    addUseFlow(2, "Transit", "Neighbourhood", 6);
-    addUseFlow(2, "Transit", "Retail", 4);
-    
-    //resident out
-    addUseFlow(2, "Resident", "Transit", 3);
-    addUseFlow(2, "Resident", "Retail", 2);
-    
-    //retail out
-    addUseFlow(2, "Retail", "Business", 3);
-    addUseFlow(2, "Retail", "Art and Culture", 3);
-    addUseFlow(2, "Retail", "Education", 3);
-    addUseFlow(2, "Retail", "Transit", 3);
-    addUseFlow(2, "Retail", "Resident", 4);
-    addUseFlow(2, "Retail", "Light Industry", 6);
-
-    //light industry out
-    addUseFlow(2, "Light Industry", "Retail", 3);
-
-
-    /*EVENING (id 3)
-     ********/
-    //business out
-    addUseFlow(3, "Business", "Art and Culture", 6);
-    addUseFlow(3, "Business", "Transit", 4);
-    addUseFlow(3, "Business", "Neighborhood", 6);
-    addUseFlow(3, "Business", "Resident", 1);
-    addUseFlow(3, "Business", "Retail", 1);
-    
-    //art and culture out
-    addUseFlow(3, "Art and Culture", "Transit", 4);
-    addUseFlow(3, "Art and Culture", "Retail", 4);
-    
-    //education out
-    addUseFlow(3, "Education", "Art and Culture", 6);
-    addUseFlow(3, "Education", "Transit", 4);
-    addUseFlow(3, "Education", "Resident", 1);
-    addUseFlow(3, "Education", "Retail", 1);
-    
-    //student resident out
-    addUseFlow(3, "Student Resident", "Retail", 2);
-
-    //transit out
-    addUseFlow(3, "Transit", "Art and Culture", 6);
-    addUseFlow(3, "Transit", "Education", 4);
-    addUseFlow(3, "Transit", "Neighborhood", 4);
-    addUseFlow(3, "Transit", "Resident", 1);
-    addUseFlow(3, "Transit", "Retail", 1);
-    
-    //resident out
-    addUseFlow(3, "Resident", "Art and Culture", 3);
-    addUseFlow(3, "Resident", "Retail", 2);
-    
-    //retail out
-    addUseFlow(3, "Retail", "Business", 3);
-    addUseFlow(3, "Retail", "Art and Culture", 2);
-    addUseFlow(3, "Retail", "Student Resident", 2);
-    addUseFlow(3, "Retail", "Transit", 2);
-    addUseFlow(3, "Retail", "Resident", 1);
-    addUseFlow(3, "Retail", "Light Industry", 3);
-
-    //light industry out
-    addUseFlow(3, "Light Industry", "Art and Culture", 6);
-    addUseFlow(3, "Light Industry", "Transit", 3);
-    addUseFlow(3, "Light Industry", "Resident", 3);
-    addUseFlow(3, "Light Industry", "Retail", 1);
-
-    /*LATE EVENING
-     ********/
-    //Business out
-    addUseFlow(4, "Business", "Transit", 6);
-    addUseFlow(4, "Business", "Neighborhood", 6);
-    addUseFlow(4, "Business", "Resident", 2);
-    addUseFlow(4, "Business", "Retail", 2);
-    
-    //Art and Culture out
-    addUseFlow(4, "Art and Culture", "Transit", 6);
-    addUseFlow(4, "Art and Culture", "Resident", 2);
-    addUseFlow(4, "Art and Culture", "Retail", 3);
-    
-    //Education out
-    addUseFlow(4, "Education", "Transit", 6);
-    addUseFlow(4, "Education", "Neighborhood", 6);
-    addUseFlow(4, "Education", "Resident", 4);
-    addUseFlow(4, "Education", "Retail", 4);
-    
-    //student resident out
-    addUseFlow(4, "Student Resident", "Retail", 4);
-    
-    //Transit out
-    addUseFlow(4, "Transit", "Neighborhood", 6);
-    addUseFlow(4, "Transit", "Resident", 2);
-    addUseFlow(4, "Transit", "Retail", 3);
-
-    //Resident out
-    addUseFlow(4, "Resident", "Business", 4);
-    addUseFlow(4, "Resident", "Retail", 3);
-    
-    //Retail out
-    addUseFlow(4, "Retail", "Business", 4);
-    addUseFlow(4, "Retail", "Student Resident", 4);
-    addUseFlow(4, "Retail", "Transit", 2);
-    addUseFlow(4, "Retail", "Resident", 3);
-    
-    //Light Industry out
-    addUseFlow(4, "Light Industry", "Transit", 6);
-    addUseFlow(4, "Light Industry", "Resident", 4);
-    addUseFlow(4, "Light Industry", "Retail", 4);
+    String lines[];
+    lines = loadStrings("flow_matrix.txt");
+    int count = 0;
+    while (count < lines.length) {
+      lines[count].trim();
+      if (!lines[count].startsWith("#") && lines[count].length() > 1) {
+        makeUseFlow(lines[count]);
+      }
+      count++;
+    }
   }
   
+  void makeUseFlow(String s)
+  {
+    String part[] = split(s, ";");  //parts: 0 = time ID, 1 = out building use, 2 = in building use, 3 = delay level
+    if (part.length == 4)
+    {
+      int timeID = int(part[0]);
+      String out_buildingUse = "" + part[1];
+      String in_buildingUse = "" + part[2];
+      int delayLevel = int(part[3]);
+      
+      try 
+      {
+        addUseFlow(timeID, out_buildingUse, in_buildingUse, delayLevel);
+      } 
+      catch (Exception e) 
+      {
+        println("Issue with making use flows from file: " + e);
+      }
+    }
+  }
+
+ 
   //initialize the time key and the matrix respond for the use_flows hashmap 
   void use_flows()
   {
@@ -549,5 +422,10 @@ class GNWMap
     use_flows.put(2, afternoonFlow);
     use_flows.put(3, eveningFlow);
     use_flows.put(4, midNightFlow);
+  }
+  
+  int getNumParticles()
+  {
+    return particles.size();
   }
 }

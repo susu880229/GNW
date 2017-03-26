@@ -64,7 +64,6 @@ void setup()
  * 
  */
 void draw() {
-  background(255);
   pushMatrix();
   scale(scaleFactor);
   pushMatrix();
