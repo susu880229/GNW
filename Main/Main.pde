@@ -64,7 +64,7 @@ void draw() {
   pushMatrix();
   scale(scaleFactor);
   pushMatrix();
-  translate(shiftX, shiftY); //<>// //<>//
+  translate(shiftX, shiftY); //<>//
   GNWMap.render(); //<>//
   //GNWPathFinder.drawGraph();
   update_time();
