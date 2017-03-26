@@ -52,6 +52,8 @@ class BuildingTooltip
 
   String selectBuildingUse(ArrayList<BuildingUse> buildingUses) throws Exception
   {
+    if (isOnRight) { tooltipX = tooltipX + initialIconX; }
+    
     for (int i = 0; i < buildingUses.size(); i++) {        
       String bUName = buildingUses.get(i).name;
 

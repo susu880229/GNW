@@ -86,7 +86,6 @@ void draw() {
 //update time and time change does not work
 void update_time()
 {
-
   if (cur_time != pre_time)
   {
     timeChanged = true;
