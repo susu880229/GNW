@@ -14,8 +14,8 @@ HashMap<String, ArrayList<Building>> use_buildings;
 HashMap<Integer, ArrayList<UseFlow>> use_flows;
 
 //transformations
-int shiftX;
-int shiftY;
+int shiftX = 0;
+int shiftY = 0;
 float scaleFactor;
 
 //define the time selection parameter
@@ -45,12 +45,9 @@ void setup()
   //FOR OUTPUT OF GRAPH NODE COORDINATES
   //outputPathCoordinates = createWriter("positions.txt"); 
 
-  fullScreen();
+  fullScreen(); //<>//
 
-  shiftX = 0;
-  shiftY = 0;
-
-  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
+  use_flows = new HashMap<Integer, ArrayList<UseFlow>>(); //<>//
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
 
@@ -103,7 +100,6 @@ void draw() {
 //update time and time change does not work
 void update_time()
 {
-
   if (cur_time != pre_time)
   {
     timeChanged = true;

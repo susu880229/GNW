@@ -43,9 +43,6 @@ class GNWInterface //<>//
       selectedBUIcon.render();
     }
 
-    fill(0);        
-    rect(interfaceImage.width, 0, width, interfaceImage.height);
-
     //render the pullup
     if (selectedBUBox != null && selectedBUBox.lock == true)
     {
@@ -53,7 +50,9 @@ class GNWInterface //<>//
     }
 
     time_bar.render(); //render the time bar
-    
+
+    renderActivityLevel();  //render the activity level
+
   }
 
   void createButtonsPanel()
@@ -211,6 +210,26 @@ class GNWInterface //<>//
     }
   }
 
+  void renderActivityLevel()
+  {
+    String s = "Activity Level:";
+    textSize(30);
+    fill(50);
+    text(s, 50, 70);
+    strokeWeight(30);
+    
+    stroke(200);
+    line(275, 60, 1275, 60);
+    
+    stroke(22, 184, 189);
+    int numParticles = GNWMap.getNumParticles();
+    int barLength = (int)(min(numParticles/450.0, 1) * 1000);
+    line(275, 60, 275 + barLength, 60);
+    noStroke();
+    
+    //for finding the max number of particles
+    //println(numParticles);
+  }
 
   void clearSelected ()
   {
