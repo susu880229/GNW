@@ -1,4 +1,5 @@
-import pathfinder.*; //<>//
+import in.omerjerk.processing.video.android.*; //<>// //<>// //<>//
+import pathfinder.*;
 import java.util.Map;
 
 //FOR OUTPUT OF GRAPH NODE COORDINATES
@@ -40,14 +41,17 @@ PImage glowImage_shaw;
 boolean start;
 PImage instruction;
 
+Boolean onboardingScreen = true;
+Onboarding onboarding;
+
 void setup()
 {
   //FOR OUTPUT OF GRAPH NODE COORDINATES
   //outputPathCoordinates = createWriter("positions.txt"); 
 
-  fullScreen(); //<>//
+  fullScreen(P2D);
 
-  use_flows = new HashMap<Integer, ArrayList<UseFlow>>(); //<>//
+  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
 
@@ -55,6 +59,8 @@ void setup()
   setBuildingUses();
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); 
+  onboarding = new Onboarding();
+
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   loadDropFeedbackImages();
@@ -66,11 +72,14 @@ void setup()
  * 
  */
 void draw() {
-  
+
   background(255);
   pushMatrix();
   scale(scaleFactor);
 
+  if (onboardingScreen) {
+    onboarding.playVideo();
+  } else {
     pushMatrix();
     translate(shiftX, shiftY);
     GNWMap.render();
@@ -88,12 +97,13 @@ void draw() {
     popMatrix();
     //render buildingUseBoxes and SelectedBUIcon
     GNWInterface.render();
-  
-  if(!start) 
-  {
-    image(instruction, 0, 0);
+
+    if (!start) 
+    {
+      image(instruction, 0, 0);
+    }
   }
-  popMatrix();  
+  popMatrix();
 }
 
 //update time and time change does not work
@@ -124,7 +134,9 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-  if(start)
+  if (onboardingScreen) {
+    onboarding.selectVideoFunction();
+  } else if (start)
   {
     if (!isOnMap()) {
       GNWMap.clearSelectedBuilding();
@@ -140,8 +152,7 @@ void mousePressed()
         GNWInterface.clearSelectedBox();
       }
     }
-  }
-  else
+  } else
   {
     GNWInterface.close_instruction();
   }
@@ -158,17 +169,15 @@ void mouseDragged()
 {
   scaleMouse();
   //avoid the user move the map to impact the close instruction button to work
-  if(start)
+  if (start)
   {
     if (GNWInterface.selectedBUIcon != null)
     {
       GNWInterface.update();
-    } 
-    else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
+    } else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
     {
       GNWInterface.time_bar.mouseDragged();
-    }
-    else if (isOnMap()) 
+    } else if (isOnMap()) 
     {
       mouseX = int(mouseX * scaleFactor);
       pmouseX = int(pmouseX * scaleFactor);
@@ -203,10 +212,10 @@ void mouseReleased()
  */
 boolean isOnMap()
 {
- int midY = 913;
- return mouseY < midY;
-   
+  int midY = 913;
+  return !onboardingScreen && mouseY < midY;
 }
+
 boolean isOnTimeSlider()
 {
   int time_top = 1280;

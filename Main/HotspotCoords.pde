@@ -1,6 +1,6 @@
 /**
-* HotspotCoords represents the 4 coordinates of a hotspot (e.g. building)
-*/
+ * HotspotCoords represents the 4 coordinates of a hotspot (e.g. building)
+ */
 class HotspotCoords
 {
   PVector topLeft;
@@ -30,9 +30,10 @@ class HotspotCoords
    * to detect one point(the mouse) if within this quad or not
    * Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
    */
-  boolean contains() {
+  boolean contains() 
+  {
     int x;
-    if(start)
+    if (start)
     {
       x = (isOnMap()) ? mouseX - shiftX : mouseX;
     }
@@ -54,5 +55,13 @@ class HotspotCoords
       }
     }
     return c;
+  }
+
+  void drawOutline() 
+  {
+    noFill();
+    strokeWeight(10);
+    stroke(255);
+    quad(topLeft.x, topLeft.y, topRight.x, topRight.y, bottomRight.x, bottomRight.y, bottomLeft.x, bottomLeft.y);
   }
 }

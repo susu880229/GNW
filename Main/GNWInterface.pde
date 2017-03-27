@@ -92,15 +92,15 @@ class GNWInterface //<>//
   }
 
   void selectInterface()
-  {  //<>//
+  {  //<>// //<>//
     float buttonsY = 1450;
     float bUBoxYBottom = 1280;
- //<>//
+ //<>// //<>//
     if (mouseY < bUBoxYBottom) {
-      update_buildingBox();  //<>//
-      function_buildingBox(); //<>//
+      update_buildingBox();  //<>// //<>//
+      function_buildingBox(); //<>// //<>//
     } else if (mouseY > buttonsY) {
-      selectButtonPanel(); //<>//
+      selectButtonPanel(); //<>// //<>//
     }
 
     if (mouseY > bUBoxYBottom) {
