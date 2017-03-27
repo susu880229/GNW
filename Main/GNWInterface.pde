@@ -112,6 +112,7 @@ class GNWInterface //<>//
   {
     if (buttonPanel.get("reset").contains()) {
       GNWMap.PCIMode = false;
+      timeChanged = true;
       setup();
       GNWMap.isBuildingUseChanged = true;
     }
@@ -124,12 +125,9 @@ class GNWInterface //<>//
 
   void close_instruction()
   {
-    if (close_instruButton.contains())
-    {
-      start = true;
-    }
-    
+      start = true;    
   }
+  
   //detect buildingUseBox
   void update_buildingBox()
   {

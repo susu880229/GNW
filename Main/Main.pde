@@ -70,8 +70,7 @@ void draw() {
   background(255);
   pushMatrix();
   scale(scaleFactor);
-  if(start)
-  {
+
     pushMatrix();
     translate(shiftX, shiftY);
     GNWMap.render();
@@ -89,8 +88,8 @@ void draw() {
     popMatrix();
     //render buildingUseBoxes and SelectedBUIcon
     GNWInterface.render();
-  }
-  else 
+  
+  if(!start) 
   {
     image(instruction, 0, 0);
   }
