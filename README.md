@@ -1,6 +1,17 @@
 GNW Creative Community
 ========================
 
+## Table of contents
+* [Introduction](#introduction)
+* [Requirements](#requirements)
+* [Getting started](#getting-Started)
+  * [compiling and deploying](#compiling-and-deploying)
+* [Documentation](#documentation)
+* [How to](#how-To)
+  * [edit text and images](#edit-text-and-images)
+  * [adjust the flow](#adjust-the-flow)
+* [FAQ and troubleshooting](#faq-and-troubleshooting)
+
 ## Introduction
 The following documentation is intended for developers or IT specialists wanting to install, run and make changes to the application.
 
@@ -14,11 +25,9 @@ The platform was built on Mac OS and Windows. The following programs were used:
 
 - Tablet: [Samsung Tab S2 9.7"](http://www.samsung.com/ca/tablets/galaxy-tab-s2-9-7-t810/) Android 6.0 Marshmallow Tablet with Exynos 5433 8-Core Processor
 - Tablet Operating System: Android 6.0.1
+- For projection: Mac or Windows PC with [Samsung SideSync](http://www.samsung.com/us/sidesync/) installed
 
 **NB: the app was designed and programmed specifically for the device and operating system mentioned above, it was not tested on any other device. Devices with lower specifications or a different OS might not be able to run the app or might have a lower frame rate.**
-
-## Projection
-- Mac or Windows PC with [Samsung SideSync](http://www.samsung.com/us/sidesync/) installed
 
 ## Getting started
 
@@ -38,7 +47,7 @@ The platform was built on Mac OS and Windows. The following programs were used:
 
 5. run the project
 
-### compiling and deploying to Android tablet
+### compiling and deploying
 
 1. open the project in processing
 2. click on "Add Mode..." in the top-right corner
@@ -83,9 +92,9 @@ Processing will automatically adjust it according to SDK used for development.
     |- // contains all the assets
 ```
 
-## How to:
+## How to
 
-### edit text
+### edit text and images
 
 1. Find corresponding image in `|-Main/data/`
 2. Edit text in the image without changing its size or proportion
@@ -97,20 +106,9 @@ Processing will automatically adjust it according to SDK used for development.
 The size of the particles is defined in `int particleSize`.
 - To adjust the **particle colour**, go to **[To Do]**
 
-## Troubleshooting
+## FAQ and troubleshooting
 
-**[To Do]**
+### What happens if the app crashes?
+Close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
 
-#### Issue #1
-1. open the app
-2. go back to the home screen by pressing the device's home button
-3. go back to the app
-4. the app crashes fails to open
-
-The application might crash on step 3. The user should in that case close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
-
-#### Issue #2 **[To Do]**
-Increasing the number of particles displayed on the map might have an impact of performance.
-
-#### Issue #3
-The app was designed for tablet. Running it on a computer might have a negative impact on performance and might affect the way the layout scales.
+### How do I display the app on an external monitor?
