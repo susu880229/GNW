@@ -109,6 +109,7 @@ The size of the particles is defined in `int particleSize`.
 ## FAQ and troubleshooting
 
 ### What happens if the app crashes?
-Close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
+1. Close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
+2. Reopen the application
 
 ### How do I display the app on an external monitor?
