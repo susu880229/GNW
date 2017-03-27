@@ -1,4 +1,4 @@
-Android application for PCI Developments
+GNW Creative Community
 ========================
 
 ## Introduction
