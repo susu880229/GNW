@@ -113,3 +113,7 @@ The size of the particles is defined in `int particleSize`.
 2. Reopen the application
 
 ### How do I display the app on an external monitor?
+
+## Releases
+- Delivery
+- Future plans
