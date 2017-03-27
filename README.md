@@ -4,10 +4,10 @@ GNW Creative Community
 ## Table of contents
 * [Introduction](#introduction)
 * [Requirements](#requirements)
-* [Getting started](#getting-Started)
+* [Getting started](#getting-started)
   * [compiling and deploying](#compiling-and-deploying)
 * [Documentation](#documentation)
-* [How to](#how-To)
+* [How to](#how-to)
   * [edit text and images](#edit-text-and-images)
   * [adjust the flow](#adjust-the-flow)
 * [FAQ and troubleshooting](#faq-and-troubleshooting)
@@ -15,7 +15,7 @@ GNW Creative Community
 ## Introduction
 The following documentation is intended for developers or IT specialists wanting to install, run and make changes to the application.
 
-### Technologies used
+### technologies used
 The platform was built on Mac OS and Windows. The following programs were used:
 - Adobe Illustrator CC (2017)
 - Adobe After Effects CC (2017)
