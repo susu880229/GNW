@@ -1,10 +1,10 @@
 /**
-* BuildingUse represents a possible category/type of building
-*/
+ * BuildingUse represents a possible category/type of building
+ */
 class BuildingUse
 {
   String name;
-  PImage img;
+  String imgSrc;
   color colorId;
 
 
@@ -12,13 +12,7 @@ class BuildingUse
   {
     this.name = name;
     this.colorId = colorId;
-    if (imgSrc != "") {
-      img = loadImage(imgSrc);
-      img.resize(90, 0);
-    } else {
-      img = null;
-    }
-    
+    this.imgSrc = imgSrc;
   }
 }
 
@@ -54,7 +48,6 @@ class BuildingUseBox
   {
     fill(buildingUse.colorId);
     rect(box_x, box_y, box_width, box_height);
-    
   }
 
   //detect the mouse is hover on the useBox to drag or to pull up the information
@@ -64,7 +57,7 @@ class BuildingUseBox
     boolean checkY_drag = mouseY > box_y && mouseY < box_y + box_height * 2 / 3;
     return checkX && checkY_drag;
   }
-  
+
   boolean pull_detect()
   {
     boolean checkX = mouseX > box_x && mouseX < box_x + box_width;
@@ -87,7 +80,7 @@ class BuildingUseIcon
   int difx = 0; 
   int dify = 0; 
   String icon_name;
-  PImage a;
+  PImage bUIconImg;
   int Icon_class = -1;
   int iconWidth = 100;
   int iconHeight = 100;
@@ -99,14 +92,13 @@ class BuildingUseIcon
     h = 100;
     bx = x - (iconWidth/2);
     by = y - (iconHeight/2);
-    a = buildingUse.img;
+    bUIconImg = loadImage(buildingUse.imgSrc);
   }
-
 
   //the image is controlled by the bx, by parameters
   void render()
   {
-    image(a, bx, by, w, h);
+    image(bUIconImg, bx, by, iconWidth, iconHeight);
   }
 
   void mouseDragged() 

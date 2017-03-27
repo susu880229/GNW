@@ -1,4 +1,4 @@
-import in.omerjerk.processing.video.android.*; //<>// //<>// //<>//
+import in.omerjerk.processing.video.android.*; //<>//
 import pathfinder.*;
 import java.util.Map;
 
@@ -50,6 +50,8 @@ void setup()
   //outputPathCoordinates = createWriter("positions.txt"); 
 
   fullScreen(P2D);
+
+  orientation(LANDSCAPE);  
 
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
