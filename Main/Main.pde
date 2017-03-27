@@ -1,4 +1,4 @@
-import pathfinder.*; //<>//
+import pathfinder.*; //<>// //<>// //<>//
 import java.util.Map;
 
 //FOR OUTPUT OF GRAPH NODE COORDINATES
@@ -45,9 +45,9 @@ void setup()
   //FOR OUTPUT OF GRAPH NODE COORDINATES
   //outputPathCoordinates = createWriter("positions.txt"); 
 
-  fullScreen(); //<>//
+  fullScreen();
 
-  use_flows = new HashMap<Integer, ArrayList<UseFlow>>(); //<>//
+  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
 
