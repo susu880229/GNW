@@ -50,7 +50,6 @@ void setup()
   //outputPathCoordinates = createWriter("positions.txt"); 
 
   fullScreen(P2D);
-
   orientation(LANDSCAPE);  
 
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();

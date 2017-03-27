@@ -1,4 +1,4 @@
-class GNWInterface //<>// //<>//
+class GNWInterface //<>//
 {
   PImage interfaceImage; 
   PImage hand;
@@ -52,7 +52,6 @@ class GNWInterface //<>// //<>//
     time_bar.render(); //render the time bar
 
     renderActivityLevel();  //render the activity level
-
   }
 
   void createButtonsPanel()
@@ -92,16 +91,16 @@ class GNWInterface //<>// //<>//
   }
 
   void selectInterface()
-  {  //<>//
-    float buttonsY = 1450;
+  {
+    float buttonsY = 1450; //<>//
     float bUBoxYBottom = 1280;
- //<>//
-    if (mouseY < bUBoxYBottom) {
-      update_buildingBox();    //<>//
-      function_buildingBox();  //<>//
-    } else if (mouseY > buttonsY) {
-      selectButtonPanel();  //<>//
-    }
+
+    if (mouseY < bUBoxYBottom) { //<>//
+      update_buildingBox();
+      function_buildingBox(); //<>//
+    } else if (mouseY > buttonsY) { //<>//
+      selectButtonPanel();
+    } //<>//
 
     if (mouseY > bUBoxYBottom) {
       clearSelectedBox();
@@ -115,8 +114,7 @@ class GNWInterface //<>// //<>//
       timeChanged = true;
       setup();
       GNWMap.isBuildingUseChanged = true;
-    }
-    else if (buttonPanel.get("instruction").contains())
+    } else if (buttonPanel.get("instruction").contains())
     {
       start = false;
       //close_instruButton = new HotspotCoords(1855 - shiftX, 35, 2015 - shiftX, 35, 2015 - shiftX, 195, 1855 - shiftX, 195);
@@ -125,9 +123,12 @@ class GNWInterface //<>// //<>//
 
   void close_instruction()
   {
-      start = true;    
+    if (close_instruButton.contains())
+    {
+      start = true;
+    }
   }
-  
+
   //detect buildingUseBox
   void update_buildingBox()
   {
@@ -215,16 +216,16 @@ class GNWInterface //<>// //<>//
     fill(50);
     text(s, 50, 70);
     strokeWeight(30);
-    
+
     stroke(200);
     line(275, 60, 1275, 60);
-    
+
     stroke(22, 184, 189);
     int numParticles = GNWMap.getNumParticles();
     int barLength = (int)(min(numParticles/450.0, 1) * 1000);
     line(275, 60, 275 + barLength, 60);
     noStroke();
-    
+
     //for finding the max number of particles
     //println(numParticles);
   }
