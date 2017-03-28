@@ -33,19 +33,20 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 ## Getting started
 
-1. Download Processing here: https://processing.org/download/
+1. Download processing here: https://processing.org/download/ on PC or Mac
 
-2. Install the following packages
+2. Open the project folder `|-Main/Main.pde`
 
-- [ControlP5](http://www.sojamo.de/libraries/controlP5/) from Andreas Schlegel
-- [Path Finder](http://www.lagers.org.uk/pfind/index.html) from Peter Lager
+3. Open `|-Main/Main.pde` 
 
-**Mac & Windows**: packages can be installed in Processing's menu bar.
-`Sketch > Import Library... > Add library... > Search > Install package`
+4. Switch from java (PC or Mac) to android mode (tablet)
 
-3. Open the project folder
+  - click the top right corner drop down list to `Add Mode`
+  - **install the android SDK if pop up window occurs**
 
-4. Open `|-Main/Main.pde`
+6. Set tablet (debug mode) and connect with PC or Mac
+
+7. Run the project
 
 ### Compiling and deploying on Mac or Windows
 
@@ -84,15 +85,15 @@ NB: the app was designed and programmed specifically for the device and operatin
     |- Building.pde
     |- BuildingTooltip.pde
     |- BuildingUse.pde
-    |- BuildingUseBox.pde
-    |- BuildingUseIcon.pde
     |- FlowRoute.pde
     |- GNWInterface.pde
     |- GNWMap.pde
     |- GNWPathFinder.pde
+    |- HotspotCoords.pde
     |- Main.pde
     |- Particle.pde
     |- Path.pde
+    |- TimeBar.pde
     |- UseFlow.pde
 ```
 
@@ -109,7 +110,59 @@ Processing will automatically adjust it according to SDK used for development.
 
 ```
 |-Main/data/
-    |- // contains all the assets
+    |- icon images
+      |- artCulture.png
+      |- lightIndustrial.png
+      |- offices.png
+      |- residential.png
+      |- retail.png
+
+    |- pull up images
+      |- sub_artCulture.png
+      |- sub_lightIndustrial.png
+      |- sub_offices.png
+      |- sub_residential.png
+      |- sub_retail.png
+
+    |- tooltip images
+      |- tooltip_left_1.png
+      |- tooltip_left_2.png
+      |- tooltip_left_3.png
+      |- tooltip_right_1.png
+      |- tooltip_right_2.png
+      |- tooltip_right_3.png
+      |- cross_sign.png
+
+    |- map image
+      |- map.png
+      |- map-paths.png
+
+    |- interface image
+      |- interface.png
+
+    |- drop feed back images
+      |- hightlight_515.png
+      |- hightlight_521.png
+      |- hightlight_701.png
+      |- hightlight_887.png
+      |- hightlight_901.png
+      |- hightlight_1933.png
+      |- hightlight_1980.png
+      |- hightlight_lot4.png
+      |- hightlight_lot5.png
+      |- hightlight_lot7.png
+      |- hightlight_shaw.png
+      |- hightlight_naturesPath.png
+
+    |- place holder image
+      |- place_holder.png
+
+    |- data files
+
+      |- flow_matrix.txt (store the flows of times)
+      |- graph.txt (store the nodes of the map)
+      |- customize_use.txt (store the reset and pci vision default uses)
+
 ```
 
 ## How to
