@@ -19,9 +19,9 @@ int shiftY = 0;
 float scaleFactor;
 
 //define the time selection parameter
-int cur_time = 0;
-int pre_time = -1;
-boolean timeChanged = false;
+int cur_time;
+int pre_time;
+boolean timeChanged;
 
 //images for the drop feedback
 PImage glowImage_515;
@@ -39,6 +39,7 @@ PImage glowImage_shaw;
 
 boolean start;
 PImage instruction;
+//Boolean show = true;
 
 void setup()
 {
@@ -46,7 +47,11 @@ void setup()
   //outputPathCoordinates = createWriter("positions.txt"); 
 
   fullScreen();
-
+  cur_time = 0;
+  pre_time = -1;
+  //shiftX = 0;
+  //shiftY = 0;
+  timeChanged = false;
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
@@ -66,34 +71,34 @@ void setup()
  * 
  */
 void draw() {
-  
+
   background(255);
   pushMatrix();
   scale(scaleFactor);
+  pushMatrix();
+  translate(shiftX, shiftY);
+  GNWMap.render();
+  //GNWPathFinder.drawGraph();
+  update_time();
+  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+  {
+    GNWMap.flowInit(timeChanged);
+    GNWMap.isBuildingUseChanged = false;
+    timeChanged = false;
+  }
+  GNWInterface.dropFeedback(isOnMap());
+  GNWMap.drawFlow();
+  GNWMap.showSelectedBuilding(); //draw the tooltip and place holder
+  popMatrix();
+  //render buildingUseBoxes and SelectedBUIcon
+  GNWInterface.render();
 
-    pushMatrix();
-    translate(shiftX, shiftY);
-    GNWMap.render();
-    //GNWPathFinder.drawGraph();
-    update_time();
-    if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
-    {
-      GNWMap.flowInit(timeChanged);
-      GNWMap.isBuildingUseChanged = false;
-      timeChanged = false;
-    }
-    GNWInterface.dropFeedback(isOnMap());
-    GNWMap.drawFlow();
-    GNWMap.showSelectedBuilding();
-    popMatrix();
-    //render buildingUseBoxes and SelectedBUIcon
-    GNWInterface.render();
-  
-  if(!start) 
+  if (!start) 
   {
     image(instruction, 0, 0);
   }
   popMatrix();  
+  println(cur_time);
 }
 
 //update time and time change does not work
@@ -124,8 +129,9 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-  if(start)
+  if (start)
   {
+    GNWMap.show = false; //turn off the place holder
     if (!isOnMap()) {
       GNWMap.clearSelectedBuilding();
       GNWInterface.selectInterface();
@@ -140,8 +146,7 @@ void mousePressed()
         GNWInterface.clearSelectedBox();
       }
     }
-  }
-  else
+  } else
   {
     GNWInterface.close_instruction();
   }
@@ -158,17 +163,15 @@ void mouseDragged()
 {
   scaleMouse();
   //avoid the user move the map to impact the close instruction button to work
-  if(start)
+  if (start)
   {
     if (GNWInterface.selectedBUIcon != null)
     {
       GNWInterface.update();
-    } 
-    else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
+    } else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
     {
       GNWInterface.time_bar.mouseDragged();
-    }
-    else if (isOnMap()) 
+    } else if (isOnMap()) 
     {
       mouseX = int(mouseX * scaleFactor);
       pmouseX = int(pmouseX * scaleFactor);
@@ -203,9 +206,8 @@ void mouseReleased()
  */
 boolean isOnMap()
 {
- int midY = 913;
- return mouseY < midY;
-   
+  int midY = 913;
+  return mouseY < midY;
 }
 boolean isOnTimeSlider()
 {
