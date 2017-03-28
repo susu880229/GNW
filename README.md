@@ -1,21 +1,10 @@
-GNW Creative Community
+Android application for PCI Developments
 ========================
-
-## Table of contents
-* [Introduction](#introduction)
-* [Requirements](#requirements)
-* [Getting started](#getting-started)
-  * [compiling and deploying](#compiling-and-deploying)
-* [Documentation](#documentation)
-* [How to](#how-to)
-  * [edit text and images](#edit-text-and-images)
-  * [adjust the flow](#adjust-the-flow)
-* [FAQ and troubleshooting](#faq-and-troubleshooting)
 
 ## Introduction
 The following documentation is intended for developers or IT specialists wanting to install, run and make changes to the application.
 
-### technologies used
+### Technologies used
 The platform was built on Mac OS and Windows. The following programs were used:
 - Adobe Illustrator CC (2017)
 - Adobe After Effects CC (2017)
@@ -23,13 +12,13 @@ The platform was built on Mac OS and Windows. The following programs were used:
 
 ## Requirements
 
-- Tablet: [Samsung Tab S2 9.7"](http://www.samsung.com/ca/tablets/galaxy-tab-s2-9-7-t810/) with Exynos 5433 8-Core Processor
+- Tablet: [Samsung Tab S2 9.7"](http://www.samsung.com/ca/tablets/galaxy-tab-s2-9-7-t810/) Android 6.0 Marshmallow Tablet with Exynos 5433 8-Core Processor
 - Tablet Operating System: Android 6.0.1
-- For projection: Mac or Windows PC with [Samsung SideSync](http://www.samsung.com/us/sidesync/) installed
 
-NB: the app was designed and programmed specifically for the device and operating system mentioned above, it was not tested on any other device. Devices with lower specifications or a different OS version might not be able to run the app or might have a lower frame rate.
+**NB: the app was designed and programmed specifically for the device and operating system mentioned above, it was not tested on any other device. Devices with lower specifications or a different OS might not be able to run the app or might have a lower frame rate.**
 
-**> Do not update the tablet's operating system without having tested the application on another device first. New Android operating systems might not be compatible with the app.**
+## Projection
+- Mac or Windows PC with [Samsung SideSync](http://www.samsung.com/us/sidesync/) installed
 
 ## Getting started
 
@@ -49,7 +38,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 5. run the project
 
-### compiling and deploying
+### compiling and deploying to Android tablet
 
 1. open the project in processing
 2. click on "Add Mode..." in the top-right corner
@@ -94,9 +83,9 @@ Processing will automatically adjust it according to SDK used for development.
     |- // contains all the assets
 ```
 
-## How to
+## How to:
 
-### edit text and images
+### edit text
 
 1. Find corresponding image in `|-Main/data/`
 2. Edit text in the image without changing its size or proportion
@@ -108,18 +97,20 @@ Processing will automatically adjust it according to SDK used for development.
 The size of the particles is defined in `int particleSize`.
 - To adjust the **particle colour**, go to **[To Do]**
 
-## FAQ and troubleshooting
+## Troubleshooting
 
-### What happens if the app crashes?
-1. Close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
-2. Reopen the application
+**[To Do]**
 
-### How do I display the app on an external monitor?
-1. Install [Samsung SideSync](http://www.samsung.com/us/sidesync/) on both the tablet and the computer
-2. Open SideSync on both the tablet and the computer
-  - either connect the tablet to the computer with and HDMI cable
-  - or pair both devices through the WIFI network (this may or may not work depending on the network's firewall configuration)
+#### Issue #1
+1. open the app
+2. go back to the home screen by pressing the device's home button
+3. go back to the app
+4. the app crashes fails to open
 
-## Releases
-- Delivery
-- Future plans
+The application might crash on step 3. The user should in that case close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
+
+#### Issue #2 **[To Do]**
+Increasing the number of particles displayed on the map might have an impact of performance.
+
+#### Issue #3
+The app was designed for tablet. Running it on a computer might have a negative impact on performance and might affect the way the layout scales.

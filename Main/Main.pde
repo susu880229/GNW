@@ -1,9 +1,5 @@
-import pathfinder.*; //<>// //<>// //<>//
+import pathfinder.*; //<>//
 import java.util.Map;
-
-//FOR OUTPUT OF GRAPH NODE COORDINATES
-//PrintWriter outputPathCoordinates;
-//int nodeCounter = 0;
 
 GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
@@ -14,8 +10,8 @@ HashMap<String, ArrayList<Building>> use_buildings;
 HashMap<Integer, ArrayList<UseFlow>> use_flows;
 
 //transformations
-int shiftX = 0;
-int shiftY = 0;
+int shiftX;
+int shiftY;
 float scaleFactor;
 
 //define the time selection parameter
@@ -37,15 +33,13 @@ PImage glowImage_lot7;
 PImage glowImage_naturesPath;
 PImage glowImage_shaw;
 
-boolean start;
-PImage instruction;
-
 void setup()
 {
-  //FOR OUTPUT OF GRAPH NODE COORDINATES
-  //outputPathCoordinates = createWriter("positions.txt"); 
-
   fullScreen();
+  //fframeRate(20);
+
+  shiftX = 0;
+  shiftY = 0;
 
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
@@ -58,47 +52,39 @@ void setup()
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   loadDropFeedbackImages();
-  start = true;
-  instruction = loadImage("instruction.png");
 }
 
 /** 
  * 
  */
 void draw() {
-  
-  background(255);
   pushMatrix();
   scale(scaleFactor);
-
-    pushMatrix();
-    translate(shiftX, shiftY);
-    GNWMap.render();
-    //GNWPathFinder.drawGraph();
-    update_time();
-    if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
-    {
-      GNWMap.flowInit(timeChanged);
-      GNWMap.isBuildingUseChanged = false;
-      timeChanged = false;
-    }
-    GNWInterface.dropFeedback(isOnMap());
-    GNWMap.drawFlow();
-    GNWMap.showSelectedBuilding();
-    popMatrix();
-    //render buildingUseBoxes and SelectedBUIcon
-    GNWInterface.render();
+  pushMatrix();
+  translate(shiftX, shiftY);
+  GNWMap.render();
+  //GNWPathFinder.drawGraph();
+  update_time();
   
-  if(!start) 
+  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, re-calculate the flow densities for all paths
   {
-    image(instruction, 0, 0);
+    GNWMap.flowInit(timeChanged);
+    GNWMap.isBuildingUseChanged = false;
+    timeChanged = false;
   }
-  popMatrix();  
+  
+  GNWInterface.dropFeedback(isOnMap());
+  GNWMap.drawFlow();
+  GNWMap.showSelectedBuilding();
+  popMatrix();
+  //render buildingUseBoxes and SelectedBUIcon
+  GNWInterface.render();
+  popMatrix();
 }
 
-//update time and time change does not work
 void update_time()
 {
+
   if (cur_time != pre_time)
   {
     timeChanged = true;
@@ -124,26 +110,20 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-  if(start)
-  {
-    if (!isOnMap()) {
-      GNWMap.clearSelectedBuilding();
-      GNWInterface.selectInterface();
-    } else {
-      try 
-      {
-        GNWMap.selectTooltip();
-      } 
-      catch(Exception e) 
-      {
-        GNWMap.selectBuilding();   
-        GNWInterface.clearSelectedBox();
-      }
+
+  if (!isOnMap()) {
+    GNWMap.clearSelectedBuilding();
+    GNWInterface.selectInterface();
+  } else {
+    try 
+    {
+      GNWMap.selectTooltip();
+    } 
+    catch(Exception e) 
+    {
+      GNWMap.selectBuilding();   
+      GNWInterface.clearSelectedBox();
     }
-  }
-  else
-  {
-    GNWInterface.close_instruction();
   }
 }
 
@@ -157,31 +137,28 @@ void mousePressed()
 void mouseDragged()
 {
   scaleMouse();
-  //avoid the user move the map to impact the close instruction button to work
-  if(start)
+
+  if (GNWInterface.selectedBUIcon != null)
   {
-    if (GNWInterface.selectedBUIcon != null)
-    {
-      GNWInterface.update();
-    } 
-    else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
-    {
-      GNWInterface.time_bar.mouseDragged();
-    }
-    else if (isOnMap()) 
-    {
-      mouseX = int(mouseX * scaleFactor);
-      pmouseX = int(pmouseX * scaleFactor);
-      pmouseY = int(pmouseY * scaleFactor); 
-      shiftX = shiftX - (pmouseX - mouseX);
-      shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
-    }
+    GNWInterface.update();
+  } 
+  else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
+  {
+    GNWInterface.time_bar.mouseDragged();
+  }
+  else if (isOnMap()) 
+  {
+    mouseX = int(mouseX * scaleFactor);
+    pmouseX = int(pmouseX * scaleFactor);
+    pmouseY = int(pmouseY * scaleFactor); 
+    shiftX = shiftX - (pmouseX - mouseX);
+    shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
   }
 }
 
 /**
  * Handles what happens when user releases icon; 
- * If dropped onto a building, handle any horizontal stroll and add building use to building and building to use
+ * If dropped onto a building, handle any horizontal scroll and add building use to building and building to use
  * Icon is always removed from sketch wherever icon is released
  */
 void mouseReleased()
@@ -203,10 +180,10 @@ void mouseReleased()
  */
 boolean isOnMap()
 {
- int midY = 913;
- return mouseY < midY;
-   
+  int midY = 913;
+  return mouseY < midY;
 }
+
 boolean isOnTimeSlider()
 {
   int time_top = 1280;
@@ -219,7 +196,7 @@ void setBuildingUses()
   buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
   buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
   buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #F9D463));
-  buildingUses.put("Business", new BuildingUse("Business", "offices.png", #66D9E2));
+  buildingUses.put("Office", new BuildingUse("Office", "offices.png", #66D9E2));
   buildingUses.put("Resident", new BuildingUse("Resident", "residential.png", #8ACE8A));
 
   buildingUses.put("Transit", new BuildingUse("Transit", "", 0));
@@ -231,7 +208,7 @@ void setBuildingUses()
   use_buildings.put("Retail", new ArrayList<Building>());
   use_buildings.put("Art and Culture", new ArrayList<Building>());
   use_buildings.put("Light Industry", new ArrayList<Building>());
-  use_buildings.put("Business", new ArrayList<Building>());
+  use_buildings.put("Office", new ArrayList<Building>());
   use_buildings.put("Resident", new ArrayList<Building>());
 
   use_buildings.put("Transit", new ArrayList<Building>());
@@ -263,19 +240,4 @@ void loadDropFeedbackImages()
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
 //  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
-//}
-
-////FOR OUTPUT OF GRAPH NODE COORDINATES
-//void mouseClicked() {
-//  nodeCounter++;
-//  mouseX = int(mouseX / scaleFactor);
-//  mouseY = int(mouseY / scaleFactor);
-
-//  outputPathCoordinates.println(nodeCounter + " " + (mouseX - shiftX) + " " + (mouseY - shiftY));
-//}
-
-//void keyPressed() {
-//  outputPathCoordinates.flush(); // Writes the remaining data to the file
-//  outputPathCoordinates.close(); // Finishes the file
-//  exit(); // Stops the program
 //}

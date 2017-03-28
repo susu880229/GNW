@@ -30,17 +30,8 @@ class HotspotCoords
    * to detect one point(the mouse) if within this quad or not
    * Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
    */
-  boolean contains() {
-    int x;
-    if(start)
-    {
-      x = (isOnMap()) ? mouseX - shiftX : mouseX;
-    }
-    //define the close instruction hotpot even though it is on Map, no move for the mouse
-    else
-    {
-      x = mouseX;
-    }
+  boolean contains() {    
+    int x = (isOnMap()) ? mouseX - shiftX : mouseX;
     int y = mouseY;
     PVector[] verts = {  topLeft, topRight, bottomRight, bottomLeft }; 
     PVector pos = new PVector(x, y);

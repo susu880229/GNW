@@ -50,10 +50,8 @@ class BuildingTooltip
     }
   }
 
-  int selectBuildingUse(ArrayList<BuildingUse> buildingUses) throws Exception
+  String selectBuildingUse(ArrayList<BuildingUse> buildingUses) throws Exception
   {
-    if (isOnRight) { tooltipX = tooltipX + initialIconX; }
-    
     for (int i = 0; i < buildingUses.size(); i++) {        
       String bUName = buildingUses.get(i).name;
 
@@ -64,7 +62,7 @@ class BuildingTooltip
       Boolean inY = tooltipY < mouseY && tooltipY + tooltipImage.height > mouseY;
 
       if (inX && inY) {
-        return i;
+        return bUName;
       }
     }
     throw new Exception ("No building use selected");
