@@ -15,7 +15,7 @@ GNW Creative Community
 ## Introduction
 The following documentation is intended for developers or IT specialists wanting to install, run and make changes to the application.
 
-### technologies used
+### Technologies used
 The platform was built on Mac OS and Windows. The following programs were used:
 - Adobe Illustrator CC (2017)
 - Adobe After Effects CC (2017)
@@ -33,9 +33,9 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 ## Getting started
 
-1. download processing here: https://processing.org/download/
+1. Download Processing here: https://processing.org/download/
 
-2. install the following packages
+2. Install the following packages
 
 - [ControlP5](http://www.sojamo.de/libraries/controlP5/) from Andreas Schlegel
 - [Path Finder](http://www.lagers.org.uk/pfind/index.html) from Peter Lager
@@ -43,21 +43,39 @@ NB: the app was designed and programmed specifically for the device and operatin
 **Mac & Windows**: packages can be installed in Processing's menu bar.
 `Sketch > Import Library... > Add library... > Search > Install package`
 
-3. open the project folder
+3. Open the project folder
 
-4. open `|-Main/Main.pde`
+4. Open `|-Main/Main.pde`
 
-5. run the project
+### Compiling and deploying on Mac or Windows
 
-### compiling and deploying
+**[To Do - changing the libraries for playing of Onboarding video]**
 
-1. open the project in processing
-2. click on "Add Mode..." in the top-right corner
-3. // To Do
+**> Be sure to make a backup of the original source code before making changes.**
+
+1. Ensure that Processing is in Java mode by clicking on the dropdown menu at the top-right corner and selecting "Java"
+2. Run the project by clicking the play button at the top-left corner
+
+### Compiling and deploying on Android tablet
+**> Be sure to make a backup of the original source code before making changes.**
+
+**> Uninstall any old versions of the app on the tablet before installing an updated version.**
+
+1. Open the project in Processing
+2. Click on the dropdown menu in the top-right corner
+3. Click on Add Mode...
+4. Select Android Mode
+5. Click Install
+6. Ensure that the top-right corner in Processing now shows "Android"
+7. Go to `File > Export Signed Package`
+8. Type in a password of your choice and press ok (if password is invalid, press "Reset Password")
+9. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
+10. Using the tablet, open the file and click install
+11. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
 
 ## Documentation
 
-### folder structure
+### Folder structure
 1. Application classes
 
 ```
@@ -96,17 +114,36 @@ Processing will automatically adjust it according to SDK used for development.
 
 ## How to
 
-### edit text and images
+### Edit text and images
 
-1. Find corresponding image in `|-Main/data/`
-2. Edit text in the image without changing its size or proportion
-3. Re-compile the application
+1. Find corresponding Adobe Illustrator file in `Delivery/Assets` **[To Do]**
+2. Using Adobe Illustrator, edit text and/or the image without changing its size or proportion
+3. Export the image in the same size and file name as the image found in `|- Main/data/`, and replace the image with the updated one
+4. Re-compile and re-install the app
 
-### adjust the flow
+### Adjust the flow
 
-- To adjust the **particle size**, go to the `Particle` class in `|-Main/Particle.pde`.
-The size of the particles is defined in `int particleSize`.
-- To adjust the **particle colour**, go to **[To Do]**
+1. To adjust **particle properties**, go to the `Particle` class in `|-Main/Particle.pde`.
+    - `particleSize`: adjust size of particles. (default 15)
+    - `minRandomVelocity` and `maxRandomVelocity`: adjust particle speed (default 8.0 and 11.0) **[To Do]**
+    - `maxPathDeviation`: adjust how far particles can stray from their path (default 5)
+    - `devChance`: adjust how likely particles are to stray from their path (default 10)
+    - `devScale`: adjust each 'step size' for particles straying from their path (default 3)
+    - `selectFill()` To toggle between single-coloured and multi-coloured particles, go to line 57: selectFill(). If selectFill() is commented out (i.e. `//selectFill()`), the particles will be single-coloured
+
+
+2. To adjust **general flow volume**, go to the `Building` class in `|-Main/Building.pde`.
+    - `FLOW_DELAY_MULTIPLIER`: a larger value means that particles will appear at a slower rate, so flow volume is lesser in general
+    - `MIN_DELAY_(TYPE)`: Sets the shortest amount of delay allowed for each type of building use. A higher value means that less particles will be allowed to enter or exit the building use per second
+
+
+3. To adjust **flow matrix**, go to `|-Main/data/flow_matrix.txt`.
+    - Change the last number on each line to adjust the delay for each flow. A higher number means a slower rate, i.e. less density. The rows are organised in the order of `TimeID, Flow Origin, Flow Destination, Delay Level`. For `TimeID`, `0=Morning, 1=Noon, 2=Afternoon, 3=Evening, 4=Late Evening`.
+
+4. After making the necessary adjustments, re-compile and re-install the app.
+
+### Adjust the default building uses and PCI Vision
+**[To Do]**
 
 ## FAQ and troubleshooting
 
@@ -114,11 +151,19 @@ The size of the particles is defined in `int particleSize`.
 1. Close the application by touching the left capacitive button and pressing "x" in the top-right corner of the app window.
 2. Reopen the application
 
-### How do I display the app on an external monitor?
+### How do I display the app on an external computer?
 1. Install [Samsung SideSync](http://www.samsung.com/us/sidesync/) on both the tablet and the computer
 2. Open SideSync on both the tablet and the computer
-  - either connect the tablet to the computer with and HDMI cable
-  - or pair both devices through the WIFI network (this may or may not work depending on the network's firewall configuration)
+  - Either connect the tablet to the computer with a USB cable; or
+  - Pair both devices through the same WIFI network (this may or may not work depending on the network's firewall configuration)
+3. If desired, connect the computer to a projector or large screen
+
+### How do I ensure that the screen stays on all the time?
+1. In `Settings > Display > Screen timeout`, the screen can be set to stay active for a maximum of 10 minutes
+2. For the tablet screen to be active all the time, install related apps on the tablet from the Google Play store such as "Stay Alive!"
+
+*Note that keeping the screen active will cause the tablet's battery to drain faster.*
+
 
 ## Releases
 - Delivery
