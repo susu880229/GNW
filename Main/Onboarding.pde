@@ -29,14 +29,19 @@ class Onboarding
   {
     if (closeButton.contains()) {
       onBoardingVideo.pause();
+      onBoardingVideo = null;
       onboardingScreen = false;
-    } else if (replayButton.contains()) {
+    } else if (replayButton.contains() && !onBoardingVideo.available()) {
       pushMatrix();
       scale(scaleFactor);
       image(onBoardingVideo, 0, 0);
       replayButton.drawOutline();
-      onBoardingVideo.play(); //This is for android
-      //onBoardingVideo.jump(0); //This is for desktop
+
+      //This is for android
+      onBoardingVideo.play();
+
+      //This is for desktop
+      //onBoardingVideo.jump(0); 
       popMatrix();
     }
   }

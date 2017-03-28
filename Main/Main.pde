@@ -138,27 +138,29 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-  if (onboardingScreen) {
+
+  if (onboardingScreen) 
+  {
     onboarding.selectVideoFunction();
-  } else if (start)
-  {
-    if (!isOnMap()) {
-      GNWMap.clearSelectedBuilding();
-      GNWInterface.selectInterface();
-    } else {
-      try 
-      {
-        GNWMap.selectTooltip();
-      } 
-      catch(Exception e) 
-      {
-        GNWMap.selectBuilding();   
-        GNWInterface.clearSelectedBox();
+  } else {
+    if (start) {
+      if (!isOnMap()) {
+        GNWMap.clearSelectedBuilding();
+        GNWInterface.selectInterface();
+      } else {
+        try 
+        {
+          GNWMap.selectTooltip();
+        } 
+        catch(Exception e) 
+        {
+          GNWMap.selectBuilding();   
+          GNWInterface.clearSelectedBox();
+        }
       }
+    } else {
+      GNWInterface.close_instruction();
     }
-  } else
-  {
-    GNWInterface.close_instruction();
   }
 }
 
@@ -173,7 +175,7 @@ void mouseDragged()
 {
   scaleMouse();
   //avoid the user move the map to impact the close instruction button to work
-  if (start)
+  if (start && !onboardingScreen)
   {
     if (GNWInterface.selectedBUIcon != null)
     {
