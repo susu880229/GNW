@@ -53,9 +53,8 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 ### Compiling and deploying on Mac or Windows
 
-**[To Do - changing the libraries for playing of Onboarding video]**
-
-**Be sure to make a backup of the original source code before making changes.**
+- **[To Do - changing the libraries for playing of Onboarding video]**
+- **Be sure to make a backup of the original source code before making changes.**
 
 1. Ensure that Processing is in Java mode by clicking on the dropdown menu at the top-right corner and selecting "Java"
 2. Run the project by clicking the play button at the top-left corner
