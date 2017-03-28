@@ -35,7 +35,8 @@ class Onboarding
       scale(scaleFactor);
       image(onBoardingVideo, 0, 0);
       replayButton.drawOutline();
-      onBoardingVideo.play();
+      onBoardingVideo.play(); //This is for android
+      //onBoardingVideo.jump(0); //This is for desktop
       popMatrix();
     }
   }

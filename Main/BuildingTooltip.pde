@@ -6,7 +6,7 @@ class BuildingTooltip //<>//
   float initialIconY;
   float tooltipX;
   float tooltipY;
-  float dividerSpace = 60;
+  float dividerSpace = 50;
   int maxSlots;
   HotspotCoords buildingCoords;
 
@@ -24,8 +24,8 @@ class BuildingTooltip //<>//
     imageName += "_" + maxSlots + ".png";
     tooltipImage = loadImage(imageName);
 
-    initialIconX = (isOnRight) ? 50 : 25;
-    initialIconY = 40;
+    initialIconX = (isOnRight) ? 45 : 20;
+    initialIconY = 30;
 
     tooltipX = (isOnRight) ? buildingCoords.topRight.x :  buildingCoords.bottomLeft.x - tooltipImage.width;
     tooltipY = (isOnRight) ? buildingCoords.topRight.y - 30 : buildingCoords.topLeft.y;
@@ -47,19 +47,21 @@ class BuildingTooltip //<>//
 
         PImage crossImage = loadImage("cross_sign.png");
         //crossImage.resize(50, 0);
-        image(crossImage, bUX + bUseImage.width - 20, bUY - 25);
+        image(crossImage, bUX + bUseImage.width - 30, bUY - 20);
       }
     }
   }
 
   int selectBuildingUse(ArrayList<BuildingUse> buildingUses) throws Exception
   {
+    float tooltipExtra = 25;
+    
     if (isOnRight) { 
-      tooltipX = tooltipX + initialIconX;
+      tooltipX = tooltipX + tooltipExtra;
     }
 
     for (int i = 0; i < buildingUses.size(); i++) {        
-      float bUTooltipWidth = (tooltipImage.width - initialIconX) / maxSlots;
+      float bUTooltipWidth = (tooltipImage.width - tooltipExtra) / maxSlots;
       int currentMouseX = mouseX - shiftX;
 
       Boolean inX = tooltipX + (i * bUTooltipWidth) < currentMouseX && tooltipX + ((i+1) * bUTooltipWidth) > currentMouseX; 
