@@ -53,17 +53,15 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 ### Compiling and deploying on Mac or Windows
 
-**[To Do - changing the libraries for playing of Onboarding video]**
-
-**Be sure to make a backup of the original source code before making changes.**
+- **[To Do - changing the libraries for playing of Onboarding video]**
+- **Be sure to make a backup of the original source code before making changes.**
 
 1. Ensure that Processing is in Java mode by clicking on the dropdown menu at the top-right corner and selecting "Java"
 2. Run the project by clicking the play button at the top-left corner
 
 ### Compiling and deploying on Android tablet
-**> Be sure to make a backup of the original source code before making changes.**
-
-**Uninstall any old versions of the app on the tablet before installing an updated version.**
+- **Be sure to make a backup of the original source code before making changes.**
+- **Uninstall any old versions of the app on the tablet before installing an updated version.**
 
 1. Open the project in Processing
 2. Click on the dropdown menu in the top-right corner
@@ -218,7 +216,6 @@ Processing will automatically adjust it according to SDK used for development.
 2. For the tablet screen to be active all the time, install related apps on the tablet from the Google Play store such as "Stay Alive!"
 
 *Note that keeping the screen active will cause the tablet's battery to drain faster.*
-
 
 ## Releases
 - Delivery
