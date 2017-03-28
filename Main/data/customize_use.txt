@@ -4,6 +4,7 @@
 # Art and Culture
 # Office
 # Resident
+# Light Industry
 # --------------------
 # List of all customizable buildings/lots: 
 # Lot5
