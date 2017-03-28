@@ -29,30 +29,29 @@ The platform was built on Mac OS and Windows. The following programs were used:
 
 NB: the app was designed and programmed specifically for the device and operating system mentioned above, it was not tested on any other device. Devices with lower specifications or a different OS version might not be able to run the app or might have a lower frame rate.
 
-**> Do not update the tablet's operating system without having tested the application on another device first. New Android operating systems might not be compatible with the app.**
+**Do not update the tablet's operating system without having tested the application on another device first. New Android operating systems might not be compatible with the app.**
 
 ## Getting started
 
 1. Download processing here: https://processing.org/download/ on PC or Mac
 
-2. Open the project folder `|-Main/Main.pde`
+2. Open the project folder
 
-3. Open `|-Main/Main.pde` 
+3. Open `|-Main/Main.pde`
 
-4. Switch from java (PC or Mac) to android mode (tablet)
+4. Switch to java if the application has to run on desktop **OR** switch to android mode if it has to run on tablet
 
-  - click the top right corner drop down list to `Add Mode`
-  - **install the android SDK if pop up window occurs**
+    - Click the top right corner drop down list to `Add Mode`
+    - For Android mode: install the android SDK if pop up window occurs
+    - To setup the debug mode on Android: go to `Settings` > `About device` > `Software info` > press on `Build number` 7 times then the `Developer options` will appear in the left menu. Tap on `Developer options` and enable `USB debugging`.
 
-6. Set tablet (debug mode) and connect with PC or Mac
-
-7. Run the project
+7. Run the project by pressing the play icon in Processing.
 
 ### Compiling and deploying on Mac or Windows
 
 **[To Do - changing the libraries for playing of Onboarding video]**
 
-**> Be sure to make a backup of the original source code before making changes.**
+**Be sure to make a backup of the original source code before making changes.**
 
 1. Ensure that Processing is in Java mode by clicking on the dropdown menu at the top-right corner and selecting "Java"
 2. Run the project by clicking the play button at the top-left corner
@@ -60,7 +59,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 ### Compiling and deploying on Android tablet
 **> Be sure to make a backup of the original source code before making changes.**
 
-**> Uninstall any old versions of the app on the tablet before installing an updated version.**
+**Uninstall any old versions of the app on the tablet before installing an updated version.**
 
 1. Open the project in Processing
 2. Click on the dropdown menu in the top-right corner
