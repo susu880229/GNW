@@ -48,6 +48,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 4. On the top right hand corner, switch to Java mode if the application has to run on desktop **OR** switch to Android mode if it has to run on tablet.
 
     -To install Android mode:
+       
        1. Click on the dropdown menu in the top-right corner
        2. Click on Add Mode...
        3. Select Android Mode
