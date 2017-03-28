@@ -206,6 +206,21 @@ Processing will automatically adjust it according to SDK used for development.
 ### Adjust the default building uses and PCI Vision
 **[To Do]**
 
+### Edit the app icon
+
+1. Design the app icon
+2. Export the icon in 3 sizes: 36x36, 48x48, 72x72
+3. Name the icons as such: icon-36.png, icon-48.png, icon-72.png
+4. Replace the existing icon images in the project folder `Main` with the new icons.
+5. Re-compile and re-install the app
+
+### Edit the app name
+
+1. Open `Main/AndroidManifest.xml` with a text editor
+2. Under `<application android:debuggable="true" android:icon="@drawable/icon" android:label="GNW Creative Community">`, rename `GNW Creative Community`
+3. Re-compile and re-install the app
+
+
 ## FAQ and troubleshooting
 
 ### What happens if the app crashes?
