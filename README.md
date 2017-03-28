@@ -23,11 +23,13 @@ The platform was built on Mac OS and Windows. The following programs were used:
 
 ## Requirements
 
-- Tablet: [Samsung Tab S2 9.7"](http://www.samsung.com/ca/tablets/galaxy-tab-s2-9-7-t810/) Android 6.0 Marshmallow Tablet with Exynos 5433 8-Core Processor
+- Tablet: [Samsung Tab S2 9.7"](http://www.samsung.com/ca/tablets/galaxy-tab-s2-9-7-t810/) with Exynos 5433 8-Core Processor
 - Tablet Operating System: Android 6.0.1
 - For projection: Mac or Windows PC with [Samsung SideSync](http://www.samsung.com/us/sidesync/) installed
 
-**NB: the app was designed and programmed specifically for the device and operating system mentioned above, it was not tested on any other device. Devices with lower specifications or a different OS might not be able to run the app or might have a lower frame rate.**
+NB: the app was designed and programmed specifically for the device and operating system mentioned above, it was not tested on any other device. Devices with lower specifications or a different OS version might not be able to run the app or might have a lower frame rate.
+
+**> Do not update the tablet's operating system without having tested the application on another device first. New Android operating systems might not be compatible with the app.**
 
 ## Getting started
 
