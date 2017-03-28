@@ -1,4 +1,4 @@
-class GNWInterface //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
+class GNWInterface  //<>//
 {
   PImage interfaceImage; 
   PImage hand;

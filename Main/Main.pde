@@ -40,7 +40,7 @@ PImage instruction;
 void setup()
 {
   fullScreen();
-  //fframeRate(20);
+  //frameRate(20);
 
   cur_time = 0;
   pre_time = -1;
