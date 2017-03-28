@@ -43,6 +43,9 @@ class GNWInterface //<>//
       selectedBUIcon.render();
     }
 
+    fill(0);        
+    rect(interfaceImage.width, 0, width, interfaceImage.height);
+
     //render the pullup
     if (selectedBUBox != null && selectedBUBox.lock == true)
     {
@@ -50,8 +53,7 @@ class GNWInterface //<>//
     }
 
     time_bar.render(); //render the time bar
-
-    renderActivityLevel();  //render the activity level
+    
   }
 
   void createButtonsPanel()
@@ -61,6 +63,11 @@ class GNWInterface //<>//
     //define the reset button
     HotspotCoords resetButton = new HotspotCoords(1206, topY, 1526, topY, 1526, bottomY, 1206, bottomY);
     buttonPanel.put("reset", resetButton);
+    
+    //define the PCI vision button
+    //HotspotCoords pciButton = new HotspotCoords(1526, topY, 1766, topY, 1766, bottomY, 1526, bottomY);
+    //buttonPanel.put("pci", pciButton);
+    
     //define the instruction button
     HotspotCoords instruButton = new HotspotCoords(1766, topY, 2086, topY, 2086, bottomY, 1766, bottomY);
     buttonPanel.put("instruction", instruButton);
@@ -91,16 +98,16 @@ class GNWInterface //<>//
   }
 
   void selectInterface()
-  {
-    float buttonsY = 1450; //<>//
+  {  //<>//
+    float buttonsY = 1450;
     float bUBoxYBottom = 1280;
-
-    if (mouseY < bUBoxYBottom) { //<>//
-      update_buildingBox();
+ //<>//
+    if (mouseY < bUBoxYBottom) {
+      update_buildingBox();  //<>//
       function_buildingBox(); //<>//
-    } else if (mouseY > buttonsY) { //<>//
-      selectButtonPanel();
-    } //<>//
+    } else if (mouseY > buttonsY) {
+      selectButtonPanel(); //<>//
+    }
 
     if (mouseY > bUBoxYBottom) {
       clearSelectedBox();
@@ -111,13 +118,15 @@ class GNWInterface //<>//
   {
     if (buttonPanel.get("reset").contains()) {
       GNWMap.PCIMode = false;
-      timeChanged = true;
       setup();
+      GNWMap.selectedBuilding = null;
       GNWMap.isBuildingUseChanged = true;
-    } else if (buttonPanel.get("instruction").contains())
+      
+    }
+    else if (buttonPanel.get("instruction").contains())
     {
       start = false;
-      //close_instruButton = new HotspotCoords(1855 - shiftX, 35, 2015 - shiftX, 35, 2015 - shiftX, 195, 1855 - shiftX, 195);
+      //close_instruButton = new HotspotCoords(1855, 35, 2015, 35, 2015, 195, 1855, 195);
     }
   }
 
@@ -127,8 +136,8 @@ class GNWInterface //<>//
     {
       start = true;
     }
+    
   }
-
   //detect buildingUseBox
   void update_buildingBox()
   {
@@ -209,26 +218,6 @@ class GNWInterface //<>//
     }
   }
 
-  void renderActivityLevel()
-  {
-    String s = "Activity Level:";
-    textSize(30);
-    fill(50);
-    text(s, 50, 70);
-    strokeWeight(30);
-
-    stroke(200);
-    line(275, 60, 1275, 60);
-
-    stroke(22, 184, 189);
-    int numParticles = GNWMap.getNumParticles();
-    int barLength = (int)(min(numParticles/450.0, 1) * 1000);
-    line(275, 60, 275 + barLength, 60);
-    noStroke();
-
-    //for finding the max number of particles
-    //println(numParticles);
-  }
 
   void clearSelected ()
   {

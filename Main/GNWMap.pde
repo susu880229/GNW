@@ -17,6 +17,7 @@ class GNWMap
   boolean isBuildingUseChanged;
   Building selectedBuilding;
   Boolean PCIMode = false;
+  Boolean show = true;
 
   GNWMap() 
   {
@@ -25,10 +26,9 @@ class GNWMap
     isBuildingUseChanged = false;
     flowRoutes = new ArrayList<FlowRoute>();
     particles = new ArrayList<Particle>();
-    selectedBuilding = null;
-
+    //selectedBuilding = null;
     createGNWMap();
-
+    selectedBuilding = buildings.get("Lot7");
     //initialize the five time flows
     morningFlow = new ArrayList<UseFlow>();
     noonFlow = new ArrayList<UseFlow>();
@@ -56,6 +56,10 @@ class GNWMap
   {
     if (selectedBuilding != null) {
       selectedBuilding.drawTooltip();
+      if(show)
+      {
+        selectedBuilding.draw_placeHolder(); //draw the place holder only once
+      }
     }
   }
 
