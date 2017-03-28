@@ -45,9 +45,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 3. Open `|-Main/Main.pde`
 
-4. Switch to java if the application has to run on desktop **OR** switch to android mode if it has to run on tablet
-
-    - Click the top right corner drop down list to `Add Mode`
+4. Click the top right corner drop down list to `Add Mode` : switch to `java` if the application has to run on desktop **OR** switch to `android mode` if it has to run on tablet
     - For Android mode: install the android SDK if pop up window occurs
     - To setup the debug mode on Android: go to `Settings` > `About device` > `Software info` > press on `Build number` 7 times then the `Developer options` will appear in the left menu. Tap on `Developer options` and enable `USB debugging`.
 
