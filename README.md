@@ -113,6 +113,10 @@ The size of the particles is defined in `int particleSize`.
 2. Reopen the application
 
 ### How do I display the app on an external monitor?
+1. Install [Samsung SideSync](http://www.samsung.com/us/sidesync/) on both the tablet and the computer
+2. Open SideSync on both the tablet and the computer
+  - either connect the tablet to the computer with and HDMI cable
+  - or pair both devices through the WIFI network (this may or may not work depending on the network's firewall configuration)
 
 ## Releases
 - Delivery
