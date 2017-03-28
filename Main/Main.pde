@@ -10,14 +10,14 @@ HashMap<String, ArrayList<Building>> use_buildings;
 HashMap<Integer, ArrayList<UseFlow>> use_flows;
 
 //transformations
-int shiftX;
-int shiftY;
+int shiftX = 0;
+int shiftY = 0;
 float scaleFactor;
 
 //define the time selection parameter
-int cur_time = 0;
-int pre_time = -1;
-boolean timeChanged = false;
+int cur_time;
+int pre_time;
+boolean timeChanged;
 
 //images for the drop feedback
 PImage glowImage_515;
@@ -33,13 +33,18 @@ PImage glowImage_lot7;
 PImage glowImage_naturesPath;
 PImage glowImage_shaw;
 
+boolean start;
+PImage instruction;
+//Boolean show = true;
+
 void setup()
 {
   fullScreen();
   //fframeRate(20);
 
-  shiftX = 0;
-  shiftY = 0;
+  cur_time = 0;
+  pre_time = -1;
+  timeChanged = false;
 
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
@@ -52,6 +57,8 @@ void setup()
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   loadDropFeedbackImages();
+   start = true;
+   instruction = loadImage("instruction.png");
 }
 
 /** 
@@ -60,25 +67,31 @@ void setup()
 void draw() {
   pushMatrix();
   scale(scaleFactor);
+  
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
   //GNWPathFinder.drawGraph();
   update_time();
-  
-  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, re-calculate the flow densities for all paths
+
+  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
     GNWMap.flowInit(timeChanged);
     GNWMap.isBuildingUseChanged = false;
     timeChanged = false;
   }
-  
   GNWInterface.dropFeedback(isOnMap());
   GNWMap.drawFlow();
-  GNWMap.showSelectedBuilding();
+  GNWMap.showSelectedBuilding(); //draw the tooltip and place holder
   popMatrix();
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
+ 
+  if (!start) 
+    {
+      image(instruction, 0, 0);
+    }
+  
   popMatrix();
 }
 
@@ -110,20 +123,26 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-
-  if (!isOnMap()) {
-    GNWMap.clearSelectedBuilding();
-    GNWInterface.selectInterface();
-  } else {
-    try 
-    {
-      GNWMap.selectTooltip();
-    } 
-    catch(Exception e) 
-    {
-      GNWMap.selectBuilding();   
-      GNWInterface.clearSelectedBox();
+  if (start)
+  {
+    GNWMap.show = false; //turn off the place holder
+    if (!isOnMap()) {
+      GNWMap.clearSelectedBuilding();
+      GNWInterface.selectInterface();
+    } else {
+      try 
+      {
+        GNWMap.selectTooltip();
+      } 
+      catch(Exception e) 
+      {
+        GNWMap.selectBuilding();   
+        GNWInterface.clearSelectedBox();
+      }
     }
+  } else
+  {
+    GNWInterface.close_instruction();
   }
 }
 
@@ -137,22 +156,23 @@ void mousePressed()
 void mouseDragged()
 {
   scaleMouse();
-
-  if (GNWInterface.selectedBUIcon != null)
+  //avoid the user move the map to impact the close instruction button to work
+  if (start)
   {
-    GNWInterface.update();
-  } 
-  else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
-  {
-    GNWInterface.time_bar.mouseDragged();
-  }
-  else if (isOnMap()) 
-  {
-    mouseX = int(mouseX * scaleFactor);
-    pmouseX = int(pmouseX * scaleFactor);
-    pmouseY = int(pmouseY * scaleFactor); 
-    shiftX = shiftX - (pmouseX - mouseX);
-    shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
+    if (GNWInterface.selectedBUIcon != null)
+    {
+      GNWInterface.update();
+    } else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
+    {
+      GNWInterface.time_bar.mouseDragged();
+    } else if (isOnMap()) 
+    {
+      mouseX = int(mouseX * scaleFactor);
+      pmouseX = int(pmouseX * scaleFactor);
+      pmouseY = int(pmouseY * scaleFactor); 
+      shiftX = shiftX - (pmouseX - mouseX);
+      shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
+    }
   }
 }
 

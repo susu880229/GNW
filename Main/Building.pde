@@ -35,6 +35,7 @@ class Building
   float particleGenRate;
 
   BuildingTooltip tooltip;
+  PImage place_holder;
   Boolean showTooltip;
   int maxBuildingUses;
 
@@ -60,6 +61,7 @@ class Building
     isCustomizable = maxBuildingUses > 0;
     tooltip = (isCustomizable) ? new BuildingTooltip(buildingCoords, maxBuildingUses) :  null;
     particleGenRate = 0;
+    place_holder = loadImage("place_holder.png");
   }
 
   //rendering the block
@@ -153,7 +155,17 @@ class Building
       tooltip.drawTooltip(customizableUses);
     }
   }
-
+  
+  //draw place holder
+  void draw_placeHolder()
+  {
+    //image(place_holder, buildingCoords.topRight.x, buildingCoords.topRight.y - 30);
+    image(place_holder, tooltip.tooltipX, tooltip.tooltipY);
+    
+  }
+  
+  
+  
   //find the particle generation rate of each FlowRoute and add the FlowRoutes into an array
   ArrayList<FlowRoute> findParticleGenRate(ArrayList<FlowRoute> flowRoutes)
   {
