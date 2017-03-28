@@ -1,6 +1,6 @@
-import processing.video.*; //this is for desktop //<>//
+//import processing.video.*; //this is for desktop //<>//
 
-//import in.omerjerk.processing.video.android.*; //this is for android
+import in.omerjerk.processing.video.android.*; //this is for android
 
 import pathfinder.*;
 import java.util.Map;
