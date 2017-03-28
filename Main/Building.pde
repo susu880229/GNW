@@ -155,17 +155,16 @@ class Building
       tooltip.drawTooltip(customizableUses);
     }
   }
-  
+
   //draw place holder
   void draw_placeHolder()
   {
     //image(place_holder, buildingCoords.topRight.x, buildingCoords.topRight.y - 30);
     image(place_holder, tooltip.tooltipX, tooltip.tooltipY);
-    
   }
-  
-  
-  
+
+
+
   //find the particle generation rate of each FlowRoute and add the FlowRoutes into an array
   ArrayList<FlowRoute> findParticleGenRate(ArrayList<FlowRoute> flowRoutes)
   {
@@ -291,9 +290,7 @@ class Building
     else if (useIndex == 2 && (FromUseName.equals(useNames[0]) || FromUseName.equals(useNames[1])))
     {
       return 2;
-    } 
-    
-    else
+    } else
     {
       return 1;
     }
@@ -472,47 +469,42 @@ class Building
 
   void deleteBuildingUse(ArrayList<Particle> particles, ArrayList<FlowRoute> flowRoutes) throws Exception
   {
-    String bUtoDelete = tooltip.selectBuildingUse(customizableUses);
+    int bUtoDeleteID = tooltip.selectBuildingUse(customizableUses);
+    String bUtoDeleteName = customizableUses.get(bUtoDeleteID).name;
     int repeatedUseIndex = 0;
 
     for (int useCount = 0; useCount < customizableUses.size(); useCount++)
     {
-      if (customizableUses.get(useCount).name.equals(bUtoDelete))
+      if (customizableUses.get(useCount).name.equals(bUtoDeleteName))
       {
         repeatedUseIndex++;
       }
     }
+    
+    customizableUses.remove(bUtoDeleteID);
 
-    for (int i = 0; i < customizableUses.size(); i++) {
-      String bUName = customizableUses.get(i).name;      
-      if (bUtoDelete.equals(bUName)) {
-        customizableUses.remove(i);
-
-        //remove the particles associated with the removed building use
-        for (int j = particles.size() - 1; j >= 0; j--)
-        {
-          Particle curParticle = particles.get(j);
-          if (curParticle.initial_nodeID == doorNodeId &&  curParticle.from_buildingUse.equals(bUName) || curParticle.dest_nodeID == doorNodeId && curParticle.to_buildingUse.equals(bUName))
-          {
-            particles.remove(j);
-          }
-        }
-
-        //remove the flow routes associated with the removed building use
-        for (int k = flowRoutes.size() - 1; k >= 0; k--)
-        {
-          FlowRoute curFlowRoute = flowRoutes.get(k);
-          if (curFlowRoute.initial_nodeID == doorNodeId && curFlowRoute.from_buildingUse.equals(bUName) && curFlowRoute.from_repeatUseIndex == repeatedUseIndex ||
-            curFlowRoute.dest_nodeID == doorNodeId && curFlowRoute.to_buildingUse.equals(bUName) && curFlowRoute.to_repeatUseIndex == repeatedUseIndex)
-          {
-            flowRoutes.remove(k);
-          }
-        }
-
-        ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDelete);        
-        bUBuildings.remove(this);
+    //remove the particles associated with the removed building use
+    for (int j = particles.size() - 1; j >= 0; j--)
+    {
+      Particle curParticle = particles.get(j);
+      if (curParticle.initial_nodeID == doorNodeId &&  curParticle.from_buildingUse.equals(bUtoDeleteName) || curParticle.dest_nodeID == doorNodeId && curParticle.to_buildingUse.equals(bUtoDeleteName))
+      {
+        particles.remove(j);
       }
     }
-    throw new Exception("Can't delete building use");
+
+    //remove the flow routes associated with the removed building use
+    for (int k = flowRoutes.size() - 1; k >= 0; k--)
+    {
+      FlowRoute curFlowRoute = flowRoutes.get(k);
+      if (curFlowRoute.initial_nodeID == doorNodeId && curFlowRoute.from_buildingUse.equals(bUtoDeleteName) && curFlowRoute.from_repeatUseIndex == repeatedUseIndex ||
+        curFlowRoute.dest_nodeID == doorNodeId && curFlowRoute.to_buildingUse.equals(bUtoDeleteName) && curFlowRoute.to_repeatUseIndex == repeatedUseIndex)
+      {
+        flowRoutes.remove(k);
+      }
+    }
+
+    ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDeleteName);        
+    bUBuildings.remove(this);
   }
 }
