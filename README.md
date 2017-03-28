@@ -5,12 +5,18 @@ GNW Creative Community
 * [Introduction](#introduction)
 * [Requirements](#requirements)
 * [Getting started](#getting-started)
-  * [compiling and deploying](#compiling-and-deploying)
+  * [Compiling and deploying on Mac or Windows](#compiling-and-deploying-on-mac-or-windows)
+  * [Compiling and deploying on Android tablet](#compiling-and-deploying-on-android-tablet)
 * [Documentation](#documentation)
 * [How to](#how-to)
-  * [edit text and images](#edit-text-and-images)
-  * [adjust the flow](#adjust-the-flow)
+  * [Edit text and images](#edit-text-and-images)
+  * [Adjust the flow](#adjust-the-flow)
+  * [Adjust the default building uses and PCI vision](#adjust-the-default-building-uses-and-pci-vision)
 * [FAQ and troubleshooting](#faq-and-troubleshooting)
+  * [What happens if the app crashes?](#what-happens-if-the-app-crashes)
+  * [How do I display the app on an external computer?](#how-do-i-display-the-app-on-an-external-computer)
+  * [How do I ensure that the screen stays on all the time?](#how-do-i-ensure-that-the-screen-stays-on-all-the-time)
+* [Releases](#releases)
 
 ## Introduction
 The following documentation is intended for developers or IT specialists wanting to install, run and make changes to the application.
@@ -139,7 +145,7 @@ Processing will automatically adjust it according to SDK used for development.
     |- interface image
       |- interface.png
 
-    |- drop feed back images
+    |- drop feedback images
       |- hightlight_515.png
       |- hightlight_521.png
       |- hightlight_701.png
@@ -153,14 +159,13 @@ Processing will automatically adjust it according to SDK used for development.
       |- hightlight_shaw.png
       |- hightlight_naturesPath.png
 
-    |- place holder image
+    |- placeholder image
       |- place_holder.png
 
     |- data files
-
-      |- flow_matrix.txt (store the flows of times)
-      |- graph.txt (store the nodes of the map)
-      |- customize_use.txt (store the reset and pci vision default uses)
+      |- flow_matrix.txt // flows according for each time option
+      |- graph.txt // map nodes
+      |- customize_use.txt // default and pci vision presets
 
 ```
 
