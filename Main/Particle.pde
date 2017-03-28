@@ -4,11 +4,12 @@
 
 class Particle
 {
-  int maxPathDeviation = 5;    //how far the particles deviate from the standard path
+  int maxPathDeviation = 5;    //how far the particles can deviate from the standard path (how much the particles can stray from their path)
   int devChance = 10;          //chance of particle deviating: a higher value means a lower chance
-  int devScale = 3;            //how large each deviating step is
+  int devScale = 3;            //how large each deviating step is 
   int particleSize = 15;       //size of particle drawn on the map
-  float randomVelocity = 8.0;  //the lower value of how fast the particles move
+  float minRandomVelocity = 8.0;  //the lowest value of how fast the particles move
+  float maxRandomVelocity = 11.0;  //the highest value of how fast the particles move
   
   int initial_nodeID;
   int dest_nodeID;
@@ -46,7 +47,7 @@ class Particle
     positionY = nodes.get(0).yf();
     velocityX = 0;
     velocityY = 0;
-    vectorVelocity = random(randomVelocity, randomVelocity + 3);
+    vectorVelocity = random(minRandomVelocity, maxRandomVelocity);
     currentPathIndex = 0;
     isEndOfRoute = false;
     paths = new ArrayList<Path>();
@@ -77,14 +78,20 @@ class Particle
     noStroke();
     fill(flowColor);
     
+    //draw the particle
     ellipse(positionX, positionY, particleSize, particleSize);
     
     boolean isOutOfBounds = false;
 
+    //calculate the next postion of the particle
     positionX += velocityX;
     positionY += velocityY;
     
+    //give a random chance for the particle to deviate from its path
     randomizeMovement(paths.get(currentPathIndex));
+    
+    //check if the particle has moved out of the current graph edge. 
+    //If it is, move it onto the next edge. If it has reached the destination, return isEndOfRoute = true.
     isOutOfBounds = checkBoundaries(paths.get(currentPathIndex));
     
     if(isOutOfBounds && currentPathIndex < paths.size() - 1)
@@ -206,7 +213,7 @@ class Particle
   
   void selectFill()
   {
-     if (from_buildingUse.equals("Business") || to_buildingUse.equals("Business"))
+    if (from_buildingUse.equals("Office") || to_buildingUse.equals("Office"))
     {
       flowColor = color(102, 217, 226, 200);
     } 

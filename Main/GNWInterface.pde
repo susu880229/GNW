@@ -1,4 +1,4 @@
-class GNWInterface //<>//
+class GNWInterface //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 {
   PImage interfaceImage; 
   PImage hand;
@@ -89,7 +89,7 @@ class GNWInterface //<>//
     buildingUseBoxes.add(buildingUseBox);
     xBuildingBox += space;
 
-    buildingUseBox =  new BuildingUseBox(buildingUses.get("Business"), xBuildingBox, yBuildingBox, "sub_offices.png");
+    buildingUseBox =  new BuildingUseBox(buildingUses.get("Office"), xBuildingBox, yBuildingBox, "sub_offices.png");
     buildingUseBoxes.add(buildingUseBox);
     xBuildingBox += space;
 
@@ -98,15 +98,15 @@ class GNWInterface //<>//
   }
 
   void selectInterface()
-  {  //<>//
+  {
     float buttonsY = 1450;
     float bUBoxYBottom = 1280;
- //<>//
+
     if (mouseY < bUBoxYBottom) {
-      update_buildingBox();  //<>//
-      function_buildingBox(); //<>//
+      update_buildingBox();  
+      function_buildingBox();
     } else if (mouseY > buttonsY) {
-      selectButtonPanel(); //<>//
+      selectButtonPanel();
     }
 
     if (mouseY > bUBoxYBottom) {

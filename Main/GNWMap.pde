@@ -2,14 +2,13 @@ class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
   PImage mapImage;
-  PImage mapDoorsImage;
 
   //define the five time use_flow matrix
   ArrayList<UseFlow> morningFlow;
   ArrayList<UseFlow> noonFlow;
   ArrayList<UseFlow> afternoonFlow;
   ArrayList<UseFlow> eveningFlow;
-  ArrayList<UseFlow> midNightFlow;
+  ArrayList<UseFlow> lateEveningFlow;
 
   ArrayList<FlowRoute> flowRoutes;
   ArrayList<Particle> particles;
@@ -34,7 +33,7 @@ class GNWMap
     noonFlow = new ArrayList<UseFlow>();
     afternoonFlow = new ArrayList<UseFlow>();
     eveningFlow = new ArrayList<UseFlow>();
-    midNightFlow = new ArrayList<UseFlow>();
+    lateEveningFlow = new ArrayList<UseFlow>();
 
     //initialize the hashmap use_flows
     use_flows();
@@ -70,7 +69,7 @@ class GNWMap
   {
     if (selectedBuilding != null) 
     {   
-      particles = selectedBuilding.deleteBuildingUse(particles, flowRoutes);
+      selectedBuilding.deleteBuildingUse(particles, flowRoutes);
       
       for (int i = 0; i < flowRoutes.size(); i++)
       {
@@ -78,14 +77,6 @@ class GNWMap
       }
       
       checkFlowDelayLimit(); 
-      
-      
-      //for debugging
-      //for (int i = 0; i < flowRoutes.size(); i++)
-      //{
-      //  FlowRoute a = flowRoutes.get(i);
-      //  println(i, a.delay, a.initial_nodeID, a.from_buildingUse, a.dest_nodeID, a.to_buildingUse);
-      //}
       
       return;
     } else {
@@ -117,6 +108,7 @@ class GNWMap
   //build all the FlowRoutes on the map and set their particle generation rate
   void flowInit(boolean timeIsChanged)
   {
+    //if there is a change of time, rebuild all flow routes and particles
     if (timeIsChanged)
     {
       flowRoutes = new ArrayList<FlowRoute>();
@@ -129,13 +121,6 @@ class GNWMap
     }
     
     checkFlowDelayLimit();
-    
-    //for debugging
-    //for (int i = 0; i < flowRoutes.size(); i++)
-    //{
-    //  FlowRoute a = flowRoutes.get(i);
-    //  println(i, a.delay, a.initial_nodeID, a.from_buildingUse, a.dest_nodeID, a.to_buildingUse);
-    //}
   }
 
   /*Check if new particles should be generated. 
@@ -151,7 +136,7 @@ class GNWMap
         flowRoutes.get(i).addNewParticle(particles);
         if (flowRoutes.get(i).isStartOfFlow == true)
         {
-          flowRoutes.get(i).timeToNextParticleGen = (int)random(0, flowRoutes.get(i).delay);
+          flowRoutes.get(i).timeToNextParticleGen = (int)random(0, flowRoutes.get(i).delay); //set time for second particle
           flowRoutes.get(i).isStartOfFlow = false;
         } 
         else
@@ -176,6 +161,7 @@ class GNWMap
     }
   }
   
+  //For each building and use, check if the level of flow going in and out of it is more than the limit set. If it is, limit the flow level.
   void checkFlowDelayLimit()
   {
     for (Map.Entry buildingEntry : buildings.entrySet()) 
@@ -186,8 +172,8 @@ class GNWMap
       }
   }
 
-  void assignBuildingUse(BuildingUse selectedBuildingUse) {
-
+  void assignBuildingUse(BuildingUse selectedBuildingUse) 
+  {
     try 
     {
       Building building = findBuilding();
@@ -286,7 +272,7 @@ class GNWMap
     BuildingUse neighbour = buildingUses.get("Neighborhood");
     BuildingUse retail = buildingUses.get("Retail");
     BuildingUse art = buildingUses.get("Art and Culture");
-    BuildingUse office = buildingUses.get("Business");
+    BuildingUse office = buildingUses.get("Office");
     BuildingUse resident = buildingUses.get("Resident");
     BuildingUse student_resident = buildingUses.get("Student Resident");
 
@@ -378,10 +364,11 @@ class GNWMap
       eveningFlow.add(use_flow);
     } else if (timeID == 4)
     {
-      midNightFlow.add(use_flow);
+      lateEveningFlow.add(use_flow);
     }
   }
 
+  //read flow matrix from flow_matrix.txt and put them into the respective use_flow arrays.
   void createUseFlowFromFile()
   { 
     String lines[];
@@ -425,7 +412,7 @@ class GNWMap
     use_flows.put(1, noonFlow);
     use_flows.put(2, afternoonFlow);
     use_flows.put(3, eveningFlow);
-    use_flows.put(4, midNightFlow);
+    use_flows.put(4, lateEveningFlow);
   }
   
   int getNumParticles()

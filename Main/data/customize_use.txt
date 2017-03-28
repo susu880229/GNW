@@ -2,7 +2,7 @@
 # Park and Public
 # Retail
 # Art and Culture
-# Business
+# Office
 # Resident
 # --------------------
 # List of all customizable buildings/lots: 
@@ -17,6 +17,6 @@
 # NaturesPath
 # --------------------
 <default>
-901 = Business
-Shaw = Business
+901 = Office
+Shaw = Office
 </default>

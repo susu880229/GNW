@@ -1,9 +1,5 @@
-import pathfinder.*; //<>// //<>// //<>//
+import pathfinder.*; //<>//
 import java.util.Map;
-
-//FOR OUTPUT OF GRAPH NODE COORDINATES
-//PrintWriter outputPathCoordinates;
-//int nodeCounter = 0;
 
 GNWPathFinder GNWPathFinder;
 GNWMap GNWMap;
@@ -43,15 +39,13 @@ PImage instruction;
 
 void setup()
 {
-  //FOR OUTPUT OF GRAPH NODE COORDINATES
-  //outputPathCoordinates = createWriter("positions.txt"); 
-
   fullScreen();
+  //fframeRate(20);
+
   cur_time = 0;
   pre_time = -1;
-  //shiftX = 0;
-  //shiftY = 0;
   timeChanged = false;
+
   use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
@@ -63,23 +57,23 @@ void setup()
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   loadDropFeedbackImages();
-  start = true;
-  instruction = loadImage("instruction.png");
+   start = true;
+   instruction = loadImage("instruction.png");
 }
 
 /** 
  * 
  */
 void draw() {
-
-  background(255);
   pushMatrix();
   scale(scaleFactor);
+  
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
   //GNWPathFinder.drawGraph();
   update_time();
+
   if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
   {
     GNWMap.flowInit(timeChanged);
@@ -92,18 +86,18 @@ void draw() {
   popMatrix();
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
-
+ 
   if (!start) 
-  {
-    image(instruction, 0, 0);
-  }
-  popMatrix();  
-  println(cur_time);
+    {
+      image(instruction, 0, 0);
+    }
+  
+  popMatrix();
 }
 
-//update time and time change does not work
 void update_time()
 {
+
   if (cur_time != pre_time)
   {
     timeChanged = true;
@@ -184,7 +178,7 @@ void mouseDragged()
 
 /**
  * Handles what happens when user releases icon; 
- * If dropped onto a building, handle any horizontal stroll and add building use to building and building to use
+ * If dropped onto a building, handle any horizontal scroll and add building use to building and building to use
  * Icon is always removed from sketch wherever icon is released
  */
 void mouseReleased()
@@ -209,6 +203,7 @@ boolean isOnMap()
   int midY = 913;
   return mouseY < midY;
 }
+
 boolean isOnTimeSlider()
 {
   int time_top = 1280;
@@ -221,7 +216,7 @@ void setBuildingUses()
   buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
   buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
   buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #F9D463));
-  buildingUses.put("Business", new BuildingUse("Business", "offices.png", #66D9E2));
+  buildingUses.put("Office", new BuildingUse("Office", "offices.png", #66D9E2));
   buildingUses.put("Resident", new BuildingUse("Resident", "residential.png", #8ACE8A));
 
   buildingUses.put("Transit", new BuildingUse("Transit", "", 0));
@@ -233,7 +228,7 @@ void setBuildingUses()
   use_buildings.put("Retail", new ArrayList<Building>());
   use_buildings.put("Art and Culture", new ArrayList<Building>());
   use_buildings.put("Light Industry", new ArrayList<Building>());
-  use_buildings.put("Business", new ArrayList<Building>());
+  use_buildings.put("Office", new ArrayList<Building>());
   use_buildings.put("Resident", new ArrayList<Building>());
 
   use_buildings.put("Transit", new ArrayList<Building>());
@@ -265,19 +260,4 @@ void loadDropFeedbackImages()
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
 //  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
-//}
-
-////FOR OUTPUT OF GRAPH NODE COORDINATES
-//void mouseClicked() {
-//  nodeCounter++;
-//  mouseX = int(mouseX / scaleFactor);
-//  mouseY = int(mouseY / scaleFactor);
-
-//  outputPathCoordinates.println(nodeCounter + " " + (mouseX - shiftX) + " " + (mouseY - shiftY));
-//}
-
-//void keyPressed() {
-//  outputPathCoordinates.flush(); // Writes the remaining data to the file
-//  outputPathCoordinates.close(); // Finishes the file
-//  exit(); // Stops the program
 //}
