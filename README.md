@@ -45,13 +45,18 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 3. Open `|-Main/Main.pde`
 
-4. Switch to java if the application has to run on desktop **OR** switch to android mode if it has to run on tablet
+4. On the top right hand corner, switch to Java mode if the application has to run on desktop **OR** switch to Android mode if it has to run on tablet.
 
-    - Click the top right corner drop down list to `Add Mode`
-    - For Android mode: install the android SDK if pop up window occurs
-    - To setup the debug mode on Android: go to `Settings` > `About device` > `Software info` > press on `Build number` 7 times then the `Developer options` will appear in the left menu. Tap on `Developer options` and enable `USB debugging`.
+    -To install Android mode:
+       1. Click on the dropdown menu in the top-right corner
+       2. Click on Add Mode...
+       3. Select Android Mode
+       4. Click Install
+       5. For Android mode: install the android SDK if pop up window occurs
 
-7. Run the project by pressing the play icon in Processing.
+5. To setup the debug mode on Android: On the tablet, go to `Settings` > `About device` > `Software info` > press on `Build number` 7 times then the `Developer options` will appear in the left menu. Tap on `Developer options` and enable `USB debugging`.
+
+6. Run the project by pressing the play icon in Processing.
 
 ### Compiling and deploying on Mac or Windows
 
@@ -67,17 +72,12 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 **Uninstall any old versions of the app on the tablet before installing an updated version.**
 
-1. Open the project in Processing
-2. Click on the dropdown menu in the top-right corner
-3. Click on Add Mode...
-4. Select Android Mode
-5. Click Install
-6. Ensure that the top-right corner in Processing now shows "Android"
-7. Go to `File > Export Signed Package`
-8. Type in a password of your choice and press ok (if password is invalid, press "Reset Password")
-9. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
-10. Using the tablet, open the file and click install
-11. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
+1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to "Getting Started" section on how to install Android mode)
+2. Go to `File > Export Signed Package`
+3. Type in a password of your choice and press ok (if password is invalid, press "Reset Password")
+4. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
+5. Using the tablet, open the file and click install
+6. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
 
 ## Documentation
 
@@ -87,19 +87,24 @@ NB: the app was designed and programmed specifically for the device and operatin
 ```
 |-Main/
     |- // contains all the classes
-    |- Building.pde
-    |- BuildingTooltip.pde
-    |- BuildingUse.pde
-    |- FlowRoute.pde
-    |- GNWInterface.pde
-    |- GNWMap.pde
-    |- GNWPathFinder.pde
-    |- HotspotCoords.pde
-    |- Main.pde
-    |- Particle.pde
-    |- Path.pde
-    |- TimeBar.pde
-    |- UseFlow.pde
+      |- Building.pde
+      |- BuildingTooltip.pde
+      |- BuildingUse.pde
+      |- FlowRoute.pde
+      |- GNWInterface.pde
+      |- GNWMap.pde
+      |- GNWPathFinder.pde
+      |- HotspotCoords.pde
+      |- Main.pde
+      |- Particle.pde
+      |- Path.pde
+      |- TimeBar.pde
+      |- UseFlow.pde
+      
+    |- // contains app icon
+      |- icon-36.png
+      |- icon-48.png
+      |- icon-72.png
 ```
 
 2. Sketch properties **[DO NOT EDIT]**
