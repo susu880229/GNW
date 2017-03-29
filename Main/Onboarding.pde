@@ -33,7 +33,7 @@ class Onboarding
     if (closeButton.contains()) {
       onBoardingVideo = null;
       onboardingScreen = false;
-    } else if (currentTimeOfVideo > videoSeconds && replayButton.contains()) {
+    } else if (currentTimeOfVideo >= videoSeconds && replayButton.contains()) {
       onboardingStartTime = getCurrentTimeSeconds();
 
       pushMatrix();

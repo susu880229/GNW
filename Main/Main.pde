@@ -1,4 +1,4 @@
-//import processing.video.*; //this is for desktop //<>// //<>//
+//import processing.video.*; //this is for desktop //<>//
 
 import in.omerjerk.processing.video.android.*; //this is for android
 
