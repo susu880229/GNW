@@ -7,9 +7,15 @@ class Building
   ArrayList<BuildingUse> customizableUses;
   ArrayList<BuildingUse> permanentUses;
 
-  int FLOW_DELAY_MULTIPLIER = 100;
+  /*
+  * Sets the constants for flow. 
+   * FLOW_DELAY_MULTIPLIER: A larger value means that particles will be generated at a slower rate, so less particles will exist.
+   * MIN_DELAY_(TYPE): Sets the shortest amount of delay allowed for each type of building use. A higher value means that less particles 
+   *                   will be allowed to enter or exit the building per second.
+   */
+  int FLOW_DELAY_MULTIPLIER = 20;
   int MIN_DELAY_MULTIPLIER = 5;
-  float MIN_DELAY_BUSINESS = 3 * MIN_DELAY_MULTIPLIER; 
+  float MIN_DELAY_OFFICE = 3 * MIN_DELAY_MULTIPLIER; 
   float MIN_DELAY_ART_CULTURE = 4 * MIN_DELAY_MULTIPLIER;
   float MIN_DELAY_EDUCATION = 3 * MIN_DELAY_MULTIPLIER;
   float MIN_DELAY_STUDENT_RES = 10 * MIN_DELAY_MULTIPLIER;
@@ -29,6 +35,7 @@ class Building
   float particleGenRate;
 
   BuildingTooltip tooltip;
+  PImage place_holder;
   Boolean showTooltip;
   int maxBuildingUses;
 
@@ -54,6 +61,7 @@ class Building
     isCustomizable = maxBuildingUses > 0;
     tooltip = (isCustomizable) ? new BuildingTooltip(buildingCoords, maxBuildingUses) :  null;
     particleGenRate = 0;
+    place_holder = loadImage("place_holder.png");
   }
 
   //rendering the block
@@ -63,6 +71,7 @@ class Building
     drawBuildingUses();
   }
 
+  //highlights a lot when an icon is hovered over it
   void highlight()
   { 
     if (customizableUses.size() < maxBuildingUses)
@@ -147,6 +156,15 @@ class Building
     }
   }
 
+  //draw place holder
+  void draw_placeHolder()
+  {
+    //image(place_holder, buildingCoords.topRight.x, buildingCoords.topRight.y - 30);
+    image(place_holder, tooltip.tooltipX, tooltip.tooltipY);
+  }
+
+
+
   //find the particle generation rate of each FlowRoute and add the FlowRoutes into an array
   ArrayList<FlowRoute> findParticleGenRate(ArrayList<FlowRoute> flowRoutes)
   {
@@ -176,56 +194,50 @@ class Building
     }
 
     for (int i = 0; i < buildingUses.size(); i++) {
+
       BuildingUse FromUse = buildingUses.get(i);
 
-      //find the index of repeated from_use
-      if (i == 1 && FromUse.name.equals(useNames[0]))
-      {
-        from_numRepeatedUse = 2;
-      } else if (i == 2 && FromUse.name.equals(useNames[0]) && FromUse.name.equals(useNames[1]))
-      {
-        from_numRepeatedUse = 3;
-      } else if (i == 2 && (FromUse.name.equals(useNames[0]) || FromUse.name.equals(useNames[1])))
-      {
-        from_numRepeatedUse = 2;
-      }
+      //find out if the building has repeated uses, and give each use a "repeated use index" to differentiate them from each other
+      from_numRepeatedUse = findRepeatedUseIndex(i, FromUse.name, useNames);
 
-      if (cur_time >= 0 || cur_time < 4)
+      //for the time selected, find all applicable flow logic and delay values
+      if (cur_time >= 0 && cur_time <= 4)
       {
         time_flows = findFlows(cur_time);
         for (UseFlow flow : time_flows)
         {
+          //if the building use currently being examined has an outflow at the current time, find all buildings that it should be linked to, and get their doorNodeIds.
           if (flow.from_use.equals(FromUse.name))
           {
             destBuildings = findBuildings(flow.to_use);
-            delay = (int)(pow(2, flow.delay - 1)) * FLOW_DELAY_MULTIPLIER;
+            delay = flow.delay * FLOW_DELAY_MULTIPLIER;
             if (destBuildings != null && !destBuildings.isEmpty()) 
             { 
               for (int j = 0; j < destBuildings.size(); j++) 
               {
                 int destDoorNodeId = destBuildings.get(j).doorNodeId;
-                if (destDoorNodeId != this.doorNodeId)
-                {
 
-                  //find the index of repeated to_use
-                  int countSameUse = 0;
+                //if the destination is not the current building, find the "repeated use index" of the destination use, and create the FlowPath using the parameters found
+                if (destDoorNodeId != this.doorNodeId)
+                {  
+                  to_numRepeatedUse = 1;
                   for (int j1 = 0; j1 < j; j1++)
                   {
                     if (destDoorNodeId == destBuildings.get(j1).doorNodeId) 
                     {
-                      countSameUse++;
+                      to_numRepeatedUse++;
                     }
                   }
-                  to_numRepeatedUse = countSameUse + 1;
 
                   FlowRoute fA = new FlowRoute (this.doorNodeId, destDoorNodeId, flow.delay, delay, flow.from_use, flow.to_use, from_numRepeatedUse, to_numRepeatedUse);
-                  flowRoutes.add(fA);
+
+                  //if the flowRoutes array is empty (i.e. it is the first route), add it into the array
                   if (flowRoutes.isEmpty())
                   {
                     flowRoutes.add(fA);
                   } else
                   {
-                    //if the flow route exists, update the delay. Else, add it into the array.
+                    //if the flow route exists, update the delay of the route. Else, add the flow route into the array.
                     Boolean flowExists = false;
                     for (int flowCount = 0; flowCount < flowRoutes.size(); flowCount++)
                     {
@@ -235,6 +247,8 @@ class Building
                       {
                         flowRoutes.get(flowCount).delay = delay;
                         flowExists = true;
+
+                        //if the countdown to next particle generation is longer than the new delay, set the countdown to the new delay
                         if (curFlowRoute.timeToNextParticleGen > delay)
                         {
                           flowRoutes.get(flowCount).timeToNextParticleGen = delay;
@@ -257,10 +271,35 @@ class Building
     return flowRoutes;
   }
 
+
+  int findRepeatedUseIndex(int useIndex, String FromUseName, String[] useNames)
+  {
+    //if the building use being examined is the second use of the building, and if the first use has the same name, index = 2
+    if (useIndex == 1 && FromUseName.equals(useNames[0]))
+    {
+      return 2;
+    }
+
+    //if the building use being examined is the third use of the building, and if the first two uses have the same name, index = 3
+    else if (useIndex == 2 && FromUseName.equals(useNames[0]) && FromUseName.equals(useNames[1]))
+    {
+      return 3;
+    }
+
+    //or else, if the building use being examined is the third use of the building, and if either the first or second use has the same name, index = 2
+    else if (useIndex == 2 && (FromUseName.equals(useNames[0]) || FromUseName.equals(useNames[1])))
+    {
+      return 2;
+    } else
+    {
+      return 1;
+    }
+  }
+
   /*
-  * Checks if the combined in and out flows from a particular use in a building is less than a minimum delay limit.
-   * If it is lesser, split the minimum delay limit among the flows that are affected.
-   * The result is equivalent to having a maximum 'number' of particles that can enter or leave a use at any one time.
+  * Checks if the combined in and out flows from a particular use in a building is less than a minimum (shortest) delay limit.
+   * If it the actual delay is lesser, cap the delay to the minimum allowable limit by splitting it among the flows that are affected.
+   * The result is similar to having a maximum 'number' of particles that can enter or leave a use at any one time.
    */
   ArrayList<FlowRoute> checkDelayLimit(ArrayList<FlowRoute> flowRoutes, boolean isIn, boolean isOut)
   {
@@ -285,21 +324,38 @@ class Building
       int[] flowRouteIndex = new int[flowRoutes.size()];
       int flowIndexCount = 0;
       int totalDelayUnits = 0;
+      int repeatUseIndex = 1;
       boolean flowMatchCondition;
 
       BuildingUse curUse = buildingUses.get(i);
       float minDelay = findMinDelay(curUse.name);
 
-      //finds all the flows that are generated from/to this particular building and use
+      //find the repeat index for the particular use
+      if (i == 1 && buildingUses.get(0).name.equals(curUse.name))
+      {
+        repeatUseIndex = 2;
+      } else if (i == 2)
+      {
+        if ((buildingUses.get(0).name.equals(curUse.name) && !buildingUses.get(1).name.equals(curUse.name)) ||
+          (!buildingUses.get(0).name.equals(curUse.name) && buildingUses.get(1).name.equals(curUse.name)))
+        {
+          repeatUseIndex = 2;
+        } else if (buildingUses.get(0).name.equals(curUse.name) && buildingUses.get(1).name.equals(curUse.name))
+        {
+          repeatUseIndex = 3;
+        }
+      }
+
+      //finds all the flows that are generated from/to this particular building and use, and add them into array flowList
       for (int j = 0; j < flowRoutes.size(); j++)
       {
         FlowRoute curFlowRoute = flowRoutes.get(j);
         flowMatchCondition = false;
 
-        if (isOut && curFlowRoute.from_buildingUse.equals(curUse.name) && curFlowRoute.initial_nodeID == doorNodeId)
+        if (isOut && curFlowRoute.from_buildingUse.equals(curUse.name) && curFlowRoute.initial_nodeID == doorNodeId && curFlowRoute.from_repeatUseIndex == repeatUseIndex)
         {
           flowMatchCondition = true;
-        } else if (isIn && curFlowRoute.to_buildingUse.equals(curUse.name) && curFlowRoute.dest_nodeID == doorNodeId)
+        } else if (isIn && curFlowRoute.to_buildingUse.equals(curUse.name) && curFlowRoute.dest_nodeID == doorNodeId && curFlowRoute.to_repeatUseIndex == repeatUseIndex)
         {
           flowMatchCondition = true;
         }
@@ -310,37 +366,31 @@ class Building
           flowRouteIndex[flowIndexCount] = j;
           flowIndexCount++;
 
+          //calculate the total number of delay units, which is the delay number specified for each flow in flow matrix.txt
           totalDelayUnits += curFlowRoute.numDelayUnit;
         }
       }
 
       if (flowIndexCount != 0)
       {
-        //perform calculations to see if delay is less than min allowed for that particular building and use
-        int numRepeatUse = 0;
-        for (int bUseCount = 0; bUseCount < buildingUses.size(); bUseCount++)
-        {
-          if (buildingUses.get(bUseCount) == curUse)
-          {
-            numRepeatUse++;
-          }
-        }
+        //perform calculations to see if actual delay is less than minimum allowed for that particular building and use
         float numFlows_squared = pow(flowIndexCount-1, 2);
-        float actualDelay = numRepeatUse * ((totalDelayUnits * FLOW_DELAY_MULTIPLIER) / numFlows_squared);
+        float actualDelay = (totalDelayUnits * FLOW_DELAY_MULTIPLIER) / numFlows_squared;
 
-        //if delay is less than min allowed, calculate the delay per unit to achieve min delay
+        //if delay is less than minimum allowed, calculate the delay per unit to achieve minimum delay
         float allowedUnitDelay;
         if (actualDelay < minDelay)
         {
           allowedUnitDelay = (minDelay * numFlows_squared) / totalDelayUnits;
 
-          //update flowRoutes with the new delay values
+          //update flowRoutes with the new delay values and countdown to next particle generation
           for (int k = 0; k < flowList.size(); k++)
           {
-            if (allowedUnitDelay > flowRoutes.get(flowRouteIndex[k]).delay)
+            FlowRoute curFlowRoute = flowRoutes.get(flowRouteIndex[k]);
+            if ((allowedUnitDelay * curFlowRoute.numDelayUnit)  > curFlowRoute.delay)
             {
-              flowRoutes.get(flowRouteIndex[k]).delay = (int)(flowRoutes.get(flowRouteIndex[k]).numDelayUnit * allowedUnitDelay);
-              flowRoutes.get(flowRouteIndex[k]).timeToNextParticleGen = (int)random(0, flowRoutes.get(flowRouteIndex[k]).delay);
+              flowRoutes.get(flowRouteIndex[k]).delay = (int)(curFlowRoute.numDelayUnit * allowedUnitDelay);
+              flowRoutes.get(flowRouteIndex[k]).timeToNextParticleGen = (int)random(0, curFlowRoute.delay);
             }
           }
         }
@@ -349,6 +399,37 @@ class Building
     return(flowRoutes);
   }
 
+  float findMinDelay(String use_name)
+  {
+    if (use_name.equals("Office"))
+    {
+      return MIN_DELAY_OFFICE;
+    } else if (use_name.equals("Art and Culture"))
+    {
+      return MIN_DELAY_ART_CULTURE;
+    } else if (use_name.equals("Education"))
+    {
+      return MIN_DELAY_EDUCATION;
+    } else if (use_name.equals("Student Resident"))
+    {
+      return MIN_DELAY_STUDENT_RES;
+    } else if (use_name.equals("Transit"))
+    {
+      return MIN_DELAY_TRANSIT;
+    } else if (use_name.equals("Resident"))
+    {
+      return MIN_DELAY_RESIDENT;
+    } else if (use_name.equals("Retail"))
+    {
+      return MIN_DELAY_RETAIL;
+    } else if (use_name.equals("Light Industry"))
+    {
+      return MIN_DELAY_LIGHT_IND;
+    } else 
+    {
+      return -1;
+    }
+  }
 
   /**
    * Returns list of buildings for specific building use
@@ -386,7 +467,7 @@ class Building
     use_buildings.get(buildingUse.name).add(this);
   }
 
-  ArrayList<Particle> deleteBuildingUse(ArrayList<Particle> particles, ArrayList<FlowRoute> flowRoutes) throws Exception
+  void deleteBuildingUse(ArrayList<Particle> particles, ArrayList<FlowRoute> flowRoutes) throws Exception
   {
     int bUtoDeleteID = tooltip.selectBuildingUse(customizableUses);
     String bUtoDeleteName = customizableUses.get(bUtoDeleteID).name;
@@ -399,7 +480,7 @@ class Building
         repeatedUseIndex++;
       }
     }
-
+    
     customizableUses.remove(bUtoDeleteID);
 
     //remove the particles associated with the removed building use
@@ -425,39 +506,5 @@ class Building
 
     ArrayList<Building> bUBuildings = (ArrayList<Building>)use_buildings.get(bUtoDeleteName);        
     bUBuildings.remove(this);
-
-    return particles;
-  }
-
-  float findMinDelay(String use_name)
-  {
-    if (use_name.equals("Business"))
-    {
-      return MIN_DELAY_BUSINESS;
-    } else if (use_name.equals("Art and Culture"))
-    {
-      return MIN_DELAY_ART_CULTURE;
-    } else if (use_name.equals("Education"))
-    {
-      return MIN_DELAY_EDUCATION;
-    } else if (use_name.equals("Student Resident"))
-    {
-      return MIN_DELAY_STUDENT_RES;
-    } else if (use_name.equals("Transit"))
-    {
-      return MIN_DELAY_TRANSIT;
-    } else if (use_name.equals("Resident"))
-    {
-      return MIN_DELAY_RESIDENT;
-    } else if (use_name.equals("Retail"))
-    {
-      return MIN_DELAY_RETAIL;
-    } else if (use_name.equals("Light Industry"))
-    {
-      return MIN_DELAY_LIGHT_IND;
-    } else 
-    {
-      return 100*MIN_DELAY_MULTIPLIER;
-    }
   }
 }
