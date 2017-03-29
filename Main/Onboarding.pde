@@ -35,17 +35,13 @@ class Onboarding
       onboardingScreen = false;
     } else if (currentTimeOfVideo >= videoSeconds && replayButton.contains()) {
       onboardingStartTime = getCurrentTimeSeconds();
-
       pushMatrix();
       scale(scaleFactor);
-      image(onBoardingVideo, 0, 0);
       replayButton.drawOutline();
 
-      //This is for android
+      //onBoardingVideo.stop(); //this line is required for desktop
       onBoardingVideo.play();
 
-      //This is for desktop
-      //onBoardingVideo.jump(0); 
       popMatrix();
     }
   }
