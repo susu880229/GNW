@@ -118,17 +118,17 @@ class GNWInterface  //<>//
   {
     if (buttonPanel.get("reset").contains()) {
       PCIMode = false;
-      setup();
-      GNWMap.selectedBuilding = null;
-      GNWMap.isBuildingUseChanged = true;
+      reset();
+      //GNWMap.selectedBuilding = null;
+      //GNWMap.isBuildingUseChanged = true;
       
     }
     else if (buttonPanel.get("pci").contains())
     {
       PCIMode = true;
-      setup();
-      GNWMap.selectedBuilding = null;
-      GNWMap.isBuildingUseChanged = true;
+      reset();
+      //GNWMap.selectedBuilding = null;
+      //GNWMap.isBuildingUseChanged = true;
       
     }
     else if (buttonPanel.get("instruction").contains())

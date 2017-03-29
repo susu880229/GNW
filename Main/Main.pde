@@ -1,4 +1,4 @@
-//import processing.video.*; //this is for desktop //<>//
+//import processing.video.*; //this is for desktop //<>// //<>//
 
 import in.omerjerk.processing.video.android.*; //this is for android
 
@@ -52,9 +52,8 @@ void setup()
   //outputPathCoordinates = createWriter("positions.txt"); 
 
   fullScreen(P2D);
-  orientation(LANDSCAPE);  
-  ;
-  
+  orientation(LANDSCAPE);
+  //frameRate(20);
   cur_time = 0;
   pre_time = -1;
   timeChanged = false;
@@ -75,6 +74,37 @@ void setup()
   start = true;
   frameRate(25);
   instruction = loadImage("instruction.png");
+}
+
+void reset()
+{
+  //clear all the customizable uses and permanent uses on each building
+  for (Map.Entry buildingEntry : GNWMap.buildings.entrySet()) 
+  {
+    Building building = (Building) buildingEntry.getValue();
+    building.customizableUses.clear();
+    building.permanentUses.clear();
+  }
+  use_buildings.clear();
+  //set up use_building hashmap and re add the default customizable and permanent uses
+  setUse_buildings();
+  GNWInterface.selectedBUIcon = null;
+  GNWInterface.selectedBUBox = null;
+  GNWMap.flowRoutes.clear();
+  GNWMap.particles.clear();
+  GNWMap.selectedBuilding = null;
+  GNWMap.isBuildingUseChanged = true;
+  timeChanged = true;
+  onboardingScreen = false;
+  start = true;
+  cur_time = 0;
+  pre_time = -1;
+  //re initialize the time bar
+  GNWInterface.time_bar.x = 157;
+  GNWInterface.time_bar.position = 0;
+  //GNWMap.makeDefaultUseFromFile();
+  
+  
 }
 
 /** 
@@ -112,6 +142,7 @@ void draw() {
     }
   }
   popMatrix();
+  
 }
 
 void update_time()
@@ -248,7 +279,13 @@ void setBuildingUses()
   buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
   buildingUses.put("Education", new BuildingUse("Education", "", 0));
   buildingUses.put("Student Resident", new BuildingUse("Student Resident", "", 0));
+  
+  setUse_buildings();
+  
+}
 
+void setUse_buildings()
+{
   use_buildings.put("Retail", new ArrayList<Building>());
   use_buildings.put("Art and Culture", new ArrayList<Building>());
   use_buildings.put("Light Industry", new ArrayList<Building>());
@@ -260,7 +297,6 @@ void setBuildingUses()
   use_buildings.put("Park and Public", new ArrayList<Building>());
   use_buildings.put("Education", new ArrayList<Building>());
   use_buildings.put("Student Resident", new ArrayList<Building>());
-
   GNWMap.addDefaultBuildingUses();
 }
 
