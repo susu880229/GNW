@@ -65,8 +65,8 @@ class GNWInterface  //<>//
     buttonPanel.put("reset", resetButton);
     
     //define the PCI vision button
-    //HotspotCoords pciButton = new HotspotCoords(1526, topY, 1766, topY, 1766, bottomY, 1526, bottomY);
-    //buttonPanel.put("pci", pciButton);
+    HotspotCoords pciButton = new HotspotCoords(1526, topY, 1766, topY, 1766, bottomY, 1526, bottomY);
+    buttonPanel.put("pci", pciButton);
     
     //define the instruction button
     HotspotCoords instruButton = new HotspotCoords(1766, topY, 2086, topY, 2086, bottomY, 1766, bottomY);
@@ -117,7 +117,15 @@ class GNWInterface  //<>//
   void selectButtonPanel()
   {
     if (buttonPanel.get("reset").contains()) {
-      GNWMap.PCIMode = false;
+      PCIMode = false;
+      setup();
+      GNWMap.selectedBuilding = null;
+      GNWMap.isBuildingUseChanged = true;
+      
+    }
+    else if (buttonPanel.get("pci").contains())
+    {
+      PCIMode = true;
       setup();
       GNWMap.selectedBuilding = null;
       GNWMap.isBuildingUseChanged = true;

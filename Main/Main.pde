@@ -35,7 +35,8 @@ PImage glowImage_shaw;
 
 boolean start;
 PImage instruction;
-//Boolean show = true;
+//define the PCIMode outside of setup to set it true
+Boolean PCIMode = false;
 
 void setup()
 {
@@ -57,8 +58,8 @@ void setup()
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   loadDropFeedbackImages();
-   start = true;
-   instruction = loadImage("instruction.png");
+  start = true;
+  instruction = loadImage("instruction.png");
 }
 
 /** 
@@ -67,7 +68,7 @@ void setup()
 void draw() {
   pushMatrix();
   scale(scaleFactor);
-  
+
   pushMatrix();
   translate(shiftX, shiftY);
   GNWMap.render();
@@ -86,13 +87,14 @@ void draw() {
   popMatrix();
   //render buildingUseBoxes and SelectedBUIcon
   GNWInterface.render();
- 
+
   if (!start) 
-    {
-      image(instruction, 0, 0);
-    }
-  
+  {
+    image(instruction, 0, 0);
+  }
+
   popMatrix();
+  println(cur_time);
 }
 
 void update_time()
