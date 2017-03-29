@@ -41,11 +41,28 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 1. Download processing here: https://processing.org/download/ on PC or Mac
 
-2. Open the project folder
+2. install the following packages
 
-3. Open `|-Main/Main.pde`
+Mac & Windows: the below packages can be installed in Processing's menu bar. Sketch > Import Library... > Add library... > Search > Install package
+ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
+Path Finder from Peter Lager: http://www.lagers.org.uk/pfind/index.html
+Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
 
-4. On the top right hand corner, switch to Java mode if the application has to run on desktop **OR** switch to Android mode if it has to run on tablet.
+Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
+Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
+
+    -To manually install the Android video package:
+       
+       1. From the project folder, go to GNW > Lib > video_android
+       2. Copy the entire video_android folder into the Processing Library (should be in Documents/Processing/libraries)
+       3. Restart Processing
+	   4. Check if video_android is listed as an available library to use under Sketch > Import Library... > `Video Library for Processing Android` should appear under Contributed library . If not, restart computer.
+
+3. Open the project folder
+
+4. Open `|-Main/Main.pde`
+
+5. On the top right hand corner, switch to Java mode if the application has to run on desktop **OR** switch to Android mode if it has to run on tablet.
 
     -To install Android mode:
        
@@ -55,9 +72,9 @@ NB: the app was designed and programmed specifically for the device and operatin
        4. Click Install
        5. For Android mode: install the android SDK if pop up window occurs
 
-5. To setup the debug mode on Android: On the tablet, go to `Settings` > `About device` > `Software info` > press on `Build number` 7 times then the `Developer options` will appear in the left menu. Tap on `Developer options` and enable `USB debugging`.
+6. To setup the debug mode on Android: On the tablet, go to `Settings` > `About device` > `Software info` > press on `Build number` 7 times then the `Developer options` will appear in the left menu. Tap on `Developer options` and enable `USB debugging`.
 
-6. Run the project by pressing the play icon in Processing.
+7. Run the project by pressing the play icon in Processing.
 
 ### Compiling and deploying on Mac or Windows
 
@@ -65,18 +82,22 @@ NB: the app was designed and programmed specifically for the device and operatin
 - **Be sure to make a backup of the original source code before making changes.**
 
 1. Ensure that Processing is in Java mode by clicking on the dropdown menu at the top-right corner and selecting "Java"
-2. Run the project by clicking the play button at the top-left corner
+2. Ensure that the correct video library is selected. The library `processing.video.*` should be imported and in.omerjerk.processing.video.android.* should be commented out
+3. Go to the Onboarding class and uncomment line 42 for `onBoardingVideo.stop();`. The video library for desktop, `processing.video.*`, requires the video to stop before replaying it
+4. Run the project by clicking the play button at the top-left corner
 
 ### Compiling and deploying on Android tablet
 - **Be sure to make a backup of the original source code before making changes.**
 - **Uninstall any old versions of the app on the tablet before installing an updated version.**
 
 1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to "Getting Started" section on how to install Android mode)
-2. Go to `File > Export Signed Package`
-3. Type in a password of your choice and press ok (if password is invalid, press "Reset Password")
-4. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
-5. Using the tablet, open the file and click install
-6. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
+2. Ensure that the correct video library is selected. The library `in.omerjerk.processing.video.android.*` should be uncommented for import and `processing.video.*` should be commented out
+3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`
+4. Go to `File > Export Signed Package`
+5. Type in a password of your choice and press ok (if password is invalid, press "Reset Password")
+6. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
+7. Using the tablet, open the file and click install
+8. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
 
 ## Documentation
 
@@ -171,6 +192,22 @@ Processing will automatically adjust it according to SDK used for development.
       |- graph.txt // map nodes
       |- customize_use.txt // default and pci vision presets
 
+```
+
+4. Android Video Library  **[DO NOT EDIT]**
+```
+|-Lib/video_android/
+    |- // a basic example of how to use the  video_android library
+	   | - examples/Movie/GettngStartedMovie 
+	
+	|- library
+		|- video_android.jar
+
+	|- library
+		|- video_android.jar
+
+	|- library
+		|- video_android.jar		
 ```
 
 ## How to
