@@ -7,6 +7,7 @@ class Onboarding
   HotspotCoords closeButton;
   HotspotCoords replayButton;
   PImage background;
+  int videoSeconds = 23;
 
   Onboarding()
   {  
@@ -27,11 +28,14 @@ class Onboarding
 
   void selectVideoFunction()
   {
+    int currentTimeOfVideo = getCurrentTimeSeconds() - onboardingStartTime;
+
     if (closeButton.contains()) {
-      onBoardingVideo.pause();
       onBoardingVideo = null;
       onboardingScreen = false;
-    } else if (replayButton.contains() && !onBoardingVideo.available()) {
+    } else if (currentTimeOfVideo > videoSeconds && replayButton.contains()) {
+      onboardingStartTime = getCurrentTimeSeconds();
+
       pushMatrix();
       scale(scaleFactor);
       image(onBoardingVideo, 0, 0);

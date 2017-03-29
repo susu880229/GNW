@@ -46,6 +46,7 @@ PImage instruction;
 
 Boolean onboardingScreen = true;
 Onboarding onboarding;
+int onboardingStartTime = getCurrentTimeSeconds();
 
 void setup()
 {
@@ -274,6 +275,10 @@ void loadDropFeedbackImages()
   glowImage_shaw = loadImage("highlight_shaw.png");
 }
 
+int getCurrentTimeSeconds()
+{
+  return (minute() * 60) + second();
+}
 
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
