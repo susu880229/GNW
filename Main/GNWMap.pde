@@ -15,7 +15,7 @@ class GNWMap
 
   boolean isBuildingUseChanged;
   Building selectedBuilding;
-  Boolean PCIMode = false;
+  //Boolean PCIMode = false;
   Boolean show = true;
 
   GNWMap() 

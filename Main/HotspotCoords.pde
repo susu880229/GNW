@@ -30,9 +30,19 @@ class HotspotCoords
    * to detect one point(the mouse) if within this quad or not
    * Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
    */
-  boolean contains() {    
-    int x = (isOnMap()) ? mouseX - shiftX : mouseX;
-    int y = mouseY;
+  boolean contains() {
+    //avoid mouseX be subtracted by shiftX when interact with the close instructio button
+    int x;
+    int y;
+    if(start)
+    {
+      x  = (isOnMap()) ? mouseX - shiftX : mouseX;
+    }
+    else
+    {
+      x = mouseX;
+    }
+    y  = mouseY;
     PVector[] verts = {  topLeft, topRight, bottomRight, bottomLeft }; 
     PVector pos = new PVector(x, y);
     int i, j;
