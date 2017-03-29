@@ -8,8 +8,8 @@ class Particle
   int devChance = 10;          //chance of particle deviating: a higher value means a lower chance
   int devScale = 3;            //how large each deviating step is 
   int particleSize = 15;       //size of particle drawn on the map
-  float minRandomVelocity = 8.0;  //the lowest value of how fast the particles move
-  float maxRandomVelocity = 11.0;  //the highest value of how fast the particles move
+  float minRandomVelocity = 7.0;  //the lowest value of how fast the particles move
+  float maxRandomVelocity = 9.0;  //the highest value of how fast the particles move
   
   int initial_nodeID;
   int dest_nodeID;

@@ -54,8 +54,7 @@ void setup()
   fullScreen(P2D);
   orientation(LANDSCAPE);  
   ;
-  //frameRate(20);
-
+  
   cur_time = 0;
   pre_time = -1;
   timeChanged = false;
@@ -74,6 +73,7 @@ void setup()
 
   loadDropFeedbackImages();
   start = true;
+  frameRate(25);
   instruction = loadImage("instruction.png");
 }
 
