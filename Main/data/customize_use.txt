@@ -23,13 +23,14 @@
 <default>
 901 = Office
 Shaw = Office
+Lot4 = Art and Culture
 </default>
 <PCIMode>
 Lot5 = Retail
 Lot5 = Art and Culture
 Lot5 = Resident
-Lot4 = Office
 Lot4 = Art and Culture
+Lot4 = Office
 Lot7 = Retail
 Lot7 = Resident
 Lot7 = Office
