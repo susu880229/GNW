@@ -186,7 +186,7 @@ Processing will automatically adjust it according to SDK used for development.
 
 1. To adjust **particle properties**, go to the `Particle` class in `|-Main/Particle.pde`.
     - `particleSize`: adjust size of particles. (default 15)
-    - `minRandomVelocity` and `maxRandomVelocity`: adjust particle speed (default 8.0 and 11.0) **[To Do]**
+    - `minRandomVelocity` and `maxRandomVelocity`: adjust particle speed (default 7.0 and 9.0)
     - `maxPathDeviation`: adjust how far particles can stray from their path (default 5)
     - `devChance`: adjust how likely particles are to stray from their path (default 10)
     - `devScale`: adjust each 'step size' for particles straying from their path (default 3)
