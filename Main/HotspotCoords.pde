@@ -1,6 +1,6 @@
 /**
-* HotspotCoords represents the 4 coordinates of a hotspot (e.g. building)
-*/
+ * HotspotCoords represents the 4 coordinates of a hotspot (e.g. building)
+ */
 class HotspotCoords
 {
   PVector topLeft;
@@ -55,5 +55,13 @@ class HotspotCoords
       }
     }
     return c;
+  }
+
+  void drawOutline() 
+  {
+    noFill();
+    strokeWeight(10);
+    stroke(255);
+    quad(topLeft.x, topLeft.y, topRight.x, topRight.y, bottomRight.x, bottomRight.y, bottomLeft.x, bottomLeft.y);
   }
 }

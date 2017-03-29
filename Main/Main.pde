@@ -1,4 +1,8 @@
-import pathfinder.*; //<>//
+//import processing.video.*; //this is for desktop //<>//
+
+import in.omerjerk.processing.video.android.*; //this is for android
+
+import pathfinder.*;
 import java.util.Map;
 
 GNWPathFinder GNWPathFinder;
@@ -38,9 +42,18 @@ PImage instruction;
 //define the PCIMode outside of setup to set it true
 Boolean PCIMode = false;
 
+Boolean onboardingScreen = true;
+Onboarding onboarding;
+int onboardingStartTime = getCurrentTimeSeconds();
+
 void setup()
 {
-  fullScreen();
+  //FOR OUTPUT OF GRAPH NODE COORDINATES
+  //outputPathCoordinates = createWriter("positions.txt"); 
+
+  fullScreen(P2D);
+  orientation(LANDSCAPE);  
+  ;
   //frameRate(20);
 
   cur_time = 0;
@@ -55,6 +68,8 @@ void setup()
   setBuildingUses();
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); 
+  onboarding = new Onboarding();
+
   scaleFactor = height/(float)GNWInterface.interfaceImage.height;
 
   loadDropFeedbackImages();
@@ -69,32 +84,34 @@ void draw() {
   pushMatrix();
   scale(scaleFactor);
 
-  pushMatrix();
-  translate(shiftX, shiftY);
-  GNWMap.render();
-  //GNWPathFinder.drawGraph();
-  update_time();
+  if (onboardingScreen) {
+    onboarding.playVideo();
+  } else {
+    pushMatrix();
+    translate(shiftX, shiftY);
+    GNWMap.render();
+    //GNWPathFinder.drawGraph();
+    update_time();
 
-  if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
-  {
-    GNWMap.flowInit(timeChanged);
-    GNWMap.isBuildingUseChanged = false;
-    timeChanged = false;
+    if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+    {
+      GNWMap.flowInit(timeChanged);
+      GNWMap.isBuildingUseChanged = false;
+      timeChanged = false;
+    }
+    GNWInterface.dropFeedback(isOnMap());
+    GNWMap.drawFlow();
+    GNWMap.showSelectedBuilding(); //draw the tooltip and place holder
+    popMatrix();
+    //render buildingUseBoxes and SelectedBUIcon
+    GNWInterface.render();
+
+    if (!start) 
+    {
+      image(instruction, 0, 0);
+    }
   }
-  GNWInterface.dropFeedback(isOnMap());
-  GNWMap.drawFlow();
-  GNWMap.showSelectedBuilding(); //draw the tooltip and place holder
   popMatrix();
-  //render buildingUseBoxes and SelectedBUIcon
-  GNWInterface.render();
-
-  if (!start) 
-  {
-    image(instruction, 0, 0);
-  }
-
-  popMatrix();
-  println(cur_time);
 }
 
 void update_time()
@@ -125,29 +142,34 @@ void scaleMouse() {
 void mousePressed()
 {
   scaleMouse();
-  if (start)
+
+  if (onboardingScreen) 
   {
-    GNWMap.show = false; //turn off the place holder
-    if (!isOnMap()) {
-      GNWMap.clearSelectedBuilding();
-      GNWInterface.selectInterface();
-    } else {
-      try 
-      {
-        GNWMap.selectTooltip();
-      } 
-      catch(Exception e) 
-      {
-        GNWMap.selectBuilding();   
-        GNWInterface.clearSelectedBox();
+    onboarding.selectVideoFunction();
+  } else {
+    if (start)
+    {
+      GNWMap.show = false; //turn off the place holder
+      if (!isOnMap()) {
+        GNWMap.clearSelectedBuilding();
+        GNWInterface.selectInterface();
+      } else {
+        try 
+        {
+          GNWMap.selectTooltip();
+        } 
+        catch(Exception e) 
+        {
+          GNWMap.selectBuilding();   
+          GNWInterface.clearSelectedBox();
+        }
       }
+    } else
+    {
+      GNWInterface.close_instruction();
     }
-  } else
-  {
-    GNWInterface.close_instruction();
   }
 }
-
 
 /**
  * Handles how to interpret different mouse drags
@@ -159,7 +181,7 @@ void mouseDragged()
 {
   scaleMouse();
   //avoid the user move the map to impact the close instruction button to work
-  if (start)
+  if (start && !onboardingScreen)
   {
     if (GNWInterface.selectedBUIcon != null)
     {
@@ -203,7 +225,7 @@ void mouseReleased()
 boolean isOnMap()
 {
   int midY = 913;
-  return mouseY < midY;
+  return !onboardingScreen && mouseY < midY;
 }
 
 boolean isOnTimeSlider()
@@ -258,6 +280,10 @@ void loadDropFeedbackImages()
   glowImage_shaw = loadImage("highlight_shaw.png");
 }
 
+int getCurrentTimeSeconds()
+{
+  return (minute() * 60) + second();
+}
 
 ////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
