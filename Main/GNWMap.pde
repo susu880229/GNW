@@ -344,7 +344,6 @@ class GNWMap
   {
     String tagString = (PCIMode) ? "PCIMode" : "default";
     String lines[];
-
     lines = loadStrings("customize_use.txt");
     int mode = 0;
     int count = 0;
