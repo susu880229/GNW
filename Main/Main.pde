@@ -1,4 +1,4 @@
-//import processing.video.*; //this is for desktop  //<>//
+//import processing.video.*; //this is for desktop  //<>// //<>//
 
 import in.omerjerk.processing.video.android.*; //this is for android
 
@@ -92,7 +92,6 @@ void reset()
   GNWMap.flowRoutes.clear();
   GNWMap.particles.clear();
   GNWMap.selectedBuilding = null;
-  GNWMap.isBuildingUseChanged = true;
   timeChanged = true;
   onboardingScreen = false;
   start = true;
@@ -103,9 +102,9 @@ void reset()
  * 
  */
 void draw() {
+  
   pushMatrix();
   scale(scaleFactor);
-
   if (onboardingScreen) {
     onboarding.playVideo();
   } else {
@@ -135,7 +134,6 @@ void draw() {
     }
   }
   popMatrix();
-
 }
 
 void update_time()

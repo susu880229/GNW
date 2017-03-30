@@ -133,8 +133,6 @@ class GNWInterface  //<>//
       GNWMap.isBuildingUseChanged = false;
       isDefaultSelected = true;
       isPCIVisionSelected = false;
-      //GNWMap.selectedBuilding = null;
-      //GNWMap.isBuildingUseChanged = true;
     }
     else if (buttonPanel.get("pci").contains())
     {
@@ -143,15 +141,11 @@ class GNWInterface  //<>//
       GNWMap.isBuildingUseChanged = false;
       isDefaultSelected = false;
       isPCIVisionSelected = true;
-      //GNWMap.selectedBuilding = null;
-      //GNWMap.isBuildingUseChanged = true;
-      
     }
     else if (buttonPanel.get("instruction").contains())
     {
       start = false;
       isInstructionSelected = true;
-      //close_instruButton = new HotspotCoords(1855, 35, 2015, 35, 2015, 195, 1855, 195);
     }
   }
 
