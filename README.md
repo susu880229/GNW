@@ -42,21 +42,18 @@ NB: the app was designed and programmed specifically for the device and operatin
 1. Download processing here: https://processing.org/download/ on PC or Mac
 
 2. install the following packages
-
-Mac & Windows: the below packages can be installed in Processing's menu bar. Sketch > Import Library... > Add library... > Search > Install package
-	1. ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
-	2. Path Finder from Peter Lager: http://www.lagers.org.uk/pfind/index.html
-	3. Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
-
-Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
-	1. Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
-
-    -To manually install the Android video package:
-       
-       1. From the project folder, go to GNW > Lib > video_android
-       2. Copy the entire video_android folder into the Processing Library (should be in Documents/Processing/libraries)
-       3. Restart Processing
-	   4. Check if video_android is listed as an available library to use under Sketch > Import Library... > `Video Library for Processing Android` should appear under Contributed library . If not, restart computer.
+	1.Mac & Windows: the below packages can be installed in Processing's menu bar. Sketch > Import Library... > Add library... > Search > Install package
+		1. ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
+		2. Path Finder from Peter Lager: http://www.lagers.org.uk/pfind/index.html
+		3. Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
+	2.Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
+		1. Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
+			-To manually install the Android video package:
+			   
+			   1. From the project folder, go to GNW > Lib > video_android
+			   2. Copy the entire video_android folder into the Processing Library (should be in Documents/Processing/libraries)
+			   3. Restart Processing
+			   4. Check if video_android is listed as an available library to use under Sketch > Import Library... > `Video Library for Processing Android` should appear under Contributed library . If not, restart computer.
 
 3. Open the project folder
 
