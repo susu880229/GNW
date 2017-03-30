@@ -1,4 +1,4 @@
-//import processing.video.*; //this is for desktop //<>// //<>//
+//import processing.video.*; //this is for desktop //<>// //<>// //<>//
 
 import in.omerjerk.processing.video.android.*; //this is for android
 
@@ -97,13 +97,6 @@ void reset()
   timeChanged = true;
   onboardingScreen = false;
   start = true;
-  cur_time = 0;
-  pre_time = -1;
-  //re initialize the time bar
-  GNWInterface.time_bar.x = 157;
-  GNWInterface.time_bar.position = 0;
-  //GNWMap.makeDefaultUseFromFile();
-  
   
 }
 
@@ -142,7 +135,7 @@ void draw() {
     }
   }
   popMatrix();
-  
+
 }
 
 void update_time()
