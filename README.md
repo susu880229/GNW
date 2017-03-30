@@ -15,8 +15,8 @@ GNW Creative Community
 * [FAQ and troubleshooting](#faq-and-troubleshooting)
   * [What happens if the app crashes?](#what-happens-if-the-app-crashes)
   * [How do I display the app on an external computer?](#how-do-i-display-the-app-on-an-external-computer)
+  * [Are there other options to mirror the screen of the tablet to a computer?](are-there-other-options-to-mirror-the-screen-of-the-tablet-to-a-computer)
   * [How do I ensure that the screen stays on all the time?](#how-do-i-ensure-that-the-screen-stays-on-all-the-time)
-  * [What are other options to mirror the screen of the tablet to a computer?](what-are-other-options-to-mirror-the-screen-of-the-tablet-to-a-computer)
   * [What if running on the tablet using the USB debugging mode does not work?](what-if-running-on-the-tablet-using-the-usb-debugging-mode-does-not-work)
 * [Releases](#releases)
 
@@ -259,8 +259,8 @@ Processing will automatically adjust it according to SDK used for development.
 ### Edit the app icon
 
 1. Design the app icon
-2. Export the icon in 3 sizes: 36x36, 48x48, 72x72
-3. Name the icons as such: icon-36.png, icon-48.png, icon-72.png
+2. Export the icon in 5 sizes: 36x36, 48x48, 72x72, 144x144, 192x192
+3. Name the icons as such: icon-36.png, icon-48.png, icon-72.png, icon-144.png, icon-192.png
 4. Replace the existing icon images in the project folder `Main` with the new icons.
 5. Re-compile and re-install the app
 
@@ -284,18 +284,18 @@ Processing will automatically adjust it according to SDK used for development.
   - Pair both devices through the same WIFI network (this may or may not work depending on the network's firewall configuration)
 3. If desired, connect the computer to a projector or large screen
 
+### Are there other options to mirror the screen of the tablet to a computer?
+1. On Windows 10 PCs, search for "Connect". On the Samsung Tab S2 tablet, pull down the notification bar, and tap on "Quick Connect", then "Scan for nearby devices". Select the PC, and the tablet screen will show on the PC. For other tablets, the setting may be found in `Settings > Display > Screen Mirroring`.
+2. Download "AirDroid" on the tablet from the Google Play store and follow the instructions. The app allows for screen mirroring through a desktop client or through the Google Chrome browser on the PC.
+
 ### How do I ensure that the screen stays on all the time?
 1. In `Settings > Display > Screen timeout`, the screen can be set to stay active for a maximum of 10 minutes
 2. For the tablet screen to be active all the time, install related apps on the tablet from the Google Play store such as "Stay Alive!"
 
 *Note that keeping the screen active will cause the tablet's battery to drain faster.*
 
-### What are other options to mirror the screen of the tablet to a computer?
-1. On Windows 10 PCs, search for "Connect". On the Samsung Tab S2 tablet, pull down the notification bar, and tap on "Quick Connect", then "Scan for nearby devices". Select the PC, and the tablet screen will show on the PC. For other tablets, the setting may be found in `Settings > Display > Screen Mirroring`.
-2. Download "AirDroid" on the tablet from the Google Play store and follow the instructions. The app allows for screen mirroring through a desktop client or through the Google Chrome browser on the PC.
-
 ### What if running on the tablet using the USB debugging mode does not work?
-1. Try exporting the app to a .apk instead, then transfer and install the .apk to the tablet. See [Compiling and deploying on Mac or Windows](#compiling-and-deploying-on-mac-or-windows) for more details.
+1. Try exporting the app to a .apk instead, then transfer and install the .apk to the tablet. See [Compiling and deploying on Android tablet](#compiling-and-deploying-on-android-tablet) for more details.
 
 ## Releases
 - Delivery
