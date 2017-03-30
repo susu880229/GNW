@@ -49,11 +49,11 @@ NB: the app was designed and programmed specifically for the device and operatin
 		1. ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
 		2. Path Finder from Peter Lager: http://www.lagers.org.uk/pfind/index.html
 		3. Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
-	
+
 	2. Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
 		1. Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
 			-To manually install the Android video package:
-			   
+
 			   1. From the project folder, go to GNW > Lib > video_android
 			   2. Copy the entire video_android folder into the Processing Library (should be in Documents/Processing/libraries)
 			   3. Restart Processing
@@ -66,7 +66,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 5. On the top right hand corner, switch to Java mode if the application has to run on desktop **OR** switch to Android mode if it has to run on tablet.
 
     -To install Android mode:
-       
+
        1. Click on the dropdown menu in the top-right corner
        2. Click on Add Mode...
        3. Select Android Mode
@@ -93,7 +93,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to [Getting Started](#getting-started) section on how to install Android mode)
 2. Ensure that the correct video library is selected. The library `in.omerjerk.processing.video.android.*` should be imported and uncommented, and `processing.video.*` should be commented out
-3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`. This is not compatible with the Android video library and it is not needed here. 
+3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`. This is not compatible with the Android video library and it is not needed here.
 4. Go to `File > Export Signed Package`
 5. Type in a password of your choice and press ok (if password is invalid, press "Reset Password" and set a new one)
 6. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
@@ -121,7 +121,7 @@ NB: the app was designed and programmed specifically for the device and operatin
       |- Path.pde
       |- TimeBar.pde
       |- UseFlow.pde
-      
+
     |- // contains app icon
       |- icon-36.png
       |- icon-48.png
@@ -199,8 +199,8 @@ Processing will automatically adjust it according to SDK used for development.
 ```
 |-Lib/video_android/
     |- this folder holds the basic example of how to use the video_android library
-	   | - examples/Movie/GettngStartedMovie 
-	
+	   | - examples/Movie/GettngStartedMovie
+
 	|- this file is a package that contains all the library java files
 		|- library/video_android.jar
 
@@ -248,13 +248,30 @@ Processing will automatically adjust it according to SDK used for development.
 	1. Locate the lines that says `<default>` and `</default>`. Each line in between represents an assignment of a building use to a lot for the default view.
 	2. Change the first word of a line to change the lot (Refer to list of all the possible customizable buildings/lots that is near the top of file under the line `# List of all customizable buildings/lots:`)
 	3. Change the last word of the line to change the building use (Refer to list of all the possible building uses that is at the top of file under the line `# List of possible uses to add:`)
-	4. If you want to assign more than one building use to a building/lot, you will need a new line for each. 
+	4. If you want to assign more than one building use to a building/lot, you will need a new line for each.
 	5. The format of each line is `building_name = building_use`
-	
+
 2. To adjust **PCI Vision**, go to `|-Main/data/customize_use.txt`.
 
 	1. Locate the lines that says`<PCIMode>` and `</PCIMode>`. Each line in between represents an assignment of a building use to a lot for the PCI Vision.
-	2. Changing the building use assignments for the PCI Vision is the same as for default. Refer to above from the second step. 
+	2. Changing the building use assignments for the PCI Vision is the same as for default. Refer to above from the second step.
+
+### Edit or add new lots
+1. Locate the Adobe Illustrator file of the map in `Delivery/Assets`**[To do]** and edit it. Export the map in .png format with a white background. Name it as map.png.
+
+2. Locate the Adobe Illustrator file of the map paths in `Delivery/Assets` **[To do]**. Using the new map as a guide, edit the paths so that there is a path leading into the new/edited lot. Give each new path intersection a number. Each number is a "node", and the number will be used in the code.
+
+http://i288.photobucket.com/albums/ll174/twin_friends/map-paths_zpsnovhra7m.png
+
+3. Go to `|-Main/data`. Locate the map.png in the folder and make a backup of it in another folder. Delete it, then place the file you exported in Step 1 into this folder.
+
+4. Open `|-Main/Main.pde`. At the end of the file, you will see these lines:
+
+http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%204.30.51%20PM_zpschzar4lg.png
+
+Uncomment them by removing the double slashes "//".
+
+Go to `|-Main/data/graph.txt`.
 
 ### Edit the app icon
 
