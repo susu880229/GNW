@@ -15,9 +15,9 @@ GNW Creative Community
 * [FAQ and troubleshooting](#faq-and-troubleshooting)
   * [What happens if the app crashes?](#what-happens-if-the-app-crashes)
   * [How do I display the app on an external computer?](#how-do-i-display-the-app-on-an-external-computer)
-  * [Are there other options to mirror the screen of the tablet to a computer?](are-there-other-options-to-mirror-the-screen-of-the-tablet-to-a-computer)
+  * [Are there other options to mirror the screen of the tablet to a computer?](#are-there-other-options-to-mirror-the-screen-of-the-tablet-to-a-computer)
   * [How do I ensure that the screen stays on all the time?](#how-do-i-ensure-that-the-screen-stays-on-all-the-time)
-  * [What if running on the tablet using the USB debugging mode does not work?](what-if-running-on-the-tablet-using-the-usb-debugging-mode-does-not-work)
+  * [What if running on the tablet using the USB debugging mode does not work?](#what-if-running-on-the-tablet-using-the-usb-debugging-mode-does-not-work)
 * [Releases](#releases)
 
 ## Introduction
@@ -91,11 +91,11 @@ NB: the app was designed and programmed specifically for the device and operatin
 - **Be sure to make a backup of the original source code before making changes.**
 - **Uninstall any old versions of the app on the tablet before installing an updated version.**
 
-1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to "Getting Started" section on how to install Android mode)
-2. Ensure that the correct video library is selected. The library `in.omerjerk.processing.video.android.*` should be uncommented for import and `processing.video.*` should be commented out
+1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to [Getting Started](getting-started) section on how to install Android mode)
+2. Ensure that the correct video library is selected. The library `in.omerjerk.processing.video.android.*` should be imported and uncommented, and `processing.video.*` should be commented out
 3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`. This is not compatible with the Android video library and it is not needed here. 
 4. Go to `File > Export Signed Package`
-5. Type in a password of your choice and press ok (if password is invalid, press "Reset Password")
+5. Type in a password of your choice and press ok (if password is invalid, press "Reset Password" and set a new one)
 6. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
 7. Using the tablet, open the file and click install
 8. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
