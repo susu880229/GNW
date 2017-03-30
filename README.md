@@ -242,15 +242,17 @@ Processing will automatically adjust it according to SDK used for development.
 ### Adjust the default building uses and PCI Vision
 
 1. To adjust **default building uses**, go to `|-Main/data/customize_use.txt`.
-	- Locate the lines that says `<default>` and `</default>`. Each line in between represents an assignment of a building use to a lot for the default view.
-	- Change the first word of a line to change the lot (Refer to list of all the possible customizable buildings/lots that is near the top of file under the line `# List of all customizable buildings/lots:`)
-	- Change the last word of the line to change the building use (Refer to list of all the possible building uses that is at the top of file under the line `# List of possible uses to add:`)
-	- If you want to assign more than one building use to a building/lot, you will need a new line for each. 
-	- The format of each line is `building_name = building_use`
+
+	1. Locate the lines that says `<default>` and `</default>`. Each line in between represents an assignment of a building use to a lot for the default view.
+	2. Change the first word of a line to change the lot (Refer to list of all the possible customizable buildings/lots that is near the top of file under the line `# List of all customizable buildings/lots:`)
+	3. Change the last word of the line to change the building use (Refer to list of all the possible building uses that is at the top of file under the line `# List of possible uses to add:`)
+	4. If you want to assign more than one building use to a building/lot, you will need a new line for each. 
+	5. The format of each line is `building_name = building_use`
 	
 2. To adjust **PCI Vision**, go to `|-Main/data/customize_use.txt`.
-	- Locate the lines that says`<PCIMode>` and `</PCIMode>`. Each line in between represents an assignment of a building use to a lot for the PCI Vision.
-	- Changing the building use assignments for the PCI Vision is the same as for default. Refer to above for the second step. 
+
+	1. Locate the lines that says`<PCIMode>` and `</PCIMode>`. Each line in between represents an assignment of a building use to a lot for the PCI Vision.
+	2. Changing the building use assignments for the PCI Vision is the same as for default. Refer to above from the second step. 
 
 ### Edit the app icon
 
