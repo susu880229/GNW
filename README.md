@@ -16,6 +16,8 @@ GNW Creative Community
   * [What happens if the app crashes?](#what-happens-if-the-app-crashes)
   * [How do I display the app on an external computer?](#how-do-i-display-the-app-on-an-external-computer)
   * [How do I ensure that the screen stays on all the time?](#how-do-i-ensure-that-the-screen-stays-on-all-the-time)
+  * [What are other options to mirror the screen of the tablet to a computer?](what-are-other-options-to-mirror-the-screen-of-the-tablet-to-a-computer)
+  * [What if running on the tablet using the USB debugging mode does not work?](what-if-running-on-the-tablet-using-the-usb-debugging-mode-does-not-work)
 * [Releases](#releases)
 
 ## Introduction
@@ -287,6 +289,13 @@ Processing will automatically adjust it according to SDK used for development.
 2. For the tablet screen to be active all the time, install related apps on the tablet from the Google Play store such as "Stay Alive!"
 
 *Note that keeping the screen active will cause the tablet's battery to drain faster.*
+
+### What are other options to mirror the screen of the tablet to a computer?
+1. On Windows 10 PCs, search for "Connect". On the Samsung Tab S2 tablet, pull down the notification bar, and tap on "Quick Connect", then "Scan for nearby devices". Select the PC, and the tablet screen will show on the PC. For other tablets, the setting may be found in `Settings > Display > Screen Mirroring`.
+2. Download "AirDroid" on the tablet from the Google Play store and follow the instructions. The app allows for screen mirroring through a desktop client or through the Google Chrome browser on the PC.
+
+### What if running on the tablet using the USB debugging mode does not work?
+1. Try exporting the app to a .apk instead, then transfer and install the .apk to the tablet. See [Compiling and deploying on Mac or Windows](#compiling-and-deploying-on-mac-or-windows) for more details.
 
 ## Releases
 - Delivery
