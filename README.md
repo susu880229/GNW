@@ -81,7 +81,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 - **Be sure to make a backup of the original source code before making changes.**
 
 1. Ensure that Processing is in Java mode by clicking on the dropdown menu at the top-right corner and selecting "Java"
-2. Ensure that the correct video library is selected. The library `processing.video.*` should be imported and in.omerjerk.processing.video.android.* should be commented out
+2. Ensure that the correct video library is selected. The library `processing.video.*` should be imported and `in.omerjerk.processing.video.android.*` should be commented out
 3. Go to the Onboarding class and uncomment line 42 for `onBoardingVideo.stop();`. The video library for desktop, `processing.video.*`, requires the video to stop before replaying it
 4. Run the project by clicking the play button at the top-left corner
 
@@ -91,7 +91,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to "Getting Started" section on how to install Android mode)
 2. Ensure that the correct video library is selected. The library `in.omerjerk.processing.video.android.*` should be uncommented for import and `processing.video.*` should be commented out
-3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`
+3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`. This is not compatible with the Android video library and it is not needed here. 
 4. Go to `File > Export Signed Package`
 5. Type in a password of your choice and press ok (if password is invalid, press "Reset Password")
 6. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
@@ -196,16 +196,16 @@ Processing will automatically adjust it according to SDK used for development.
 4. Android Video Library  **[DO NOT EDIT]**
 ```
 |-Lib/video_android/
-    |- // this folder holds the basic example of how to use the video_android library
+    |- this folder holds the basic example of how to use the video_android library
 	   | - examples/Movie/GettngStartedMovie 
 	
-	|- // this file is a package that contains all the library java files
+	|- this file is a package that contains all the library java files
 		|- library/video_android.jar
 
-	|- // this folder holds all the java files for to create the jar file
+	|- this folder holds all the java files for to create the jar file
 		|- src/in/omerjerk/processing/video/android
 
-	|- // this file holds the meta data for the package
+	|- this file holds the meta data for the package
 		|- library.properties		
 ```
 
@@ -240,7 +240,17 @@ Processing will automatically adjust it according to SDK used for development.
 4. After making the necessary adjustments, re-compile and re-install the app.
 
 ### Adjust the default building uses and PCI Vision
-**[To Do]**
+
+1. To adjust **default building uses**, go to `|-Main/data/customize_use.txt`.
+	- Locate the lines that says `<default>` and `</default>`. Each line in between represents an assignment of a building use to a lot for the default view.
+	- Change the first word of a line to change the lot (Refer to list of all the possible customizable buildings/lots that is near the top of file under the line `# List of all customizable buildings/lots:`)
+	- Change the last word of the line to change the building use (Refer to list of all the possible building uses that is at the top of file under the line `# List of possible uses to add:`)
+	- If you want to assign more than one building use to a building/lot, you will need a new line for each. 
+	- The format of each line is `building_name = building_use`
+	
+2. To adjust **PCI Vision**, go to `|-Main/data/customize_use.txt`.
+	- Locate the lines that says`<PCIMode>` and `</PCIMode>`. Each line in between represents an assignment of a building use to a lot for the PCI Vision.
+	- Changing the building use assignments for the PCI Vision is the same as for default. Refer to above for the second step. 
 
 ### Edit the app icon
 
