@@ -91,7 +91,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 - **Be sure to make a backup of the original source code before making changes.**
 - **Uninstall any old versions of the app on the tablet before installing an updated version.**
 
-1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to [Getting Started](getting-started) section on how to install Android mode)
+1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to [Getting Started](#getting-started) section on how to install Android mode)
 2. Ensure that the correct video library is selected. The library `in.omerjerk.processing.video.android.*` should be imported and uncommented, and `processing.video.*` should be commented out
 3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`. This is not compatible with the Android video library and it is not needed here. 
 4. Go to `File > Export Signed Package`
