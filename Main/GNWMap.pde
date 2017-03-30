@@ -79,6 +79,9 @@ class GNWMap
       }
 
       checkFlowDelayLimit(); 
+      
+      GNWInterface.isDefaultSelected = false;          //clear the UI button border
+      GNWInterface.isPCIVisionSelected = false;        //clear the UI button border
 
       return;
     } else {
@@ -141,7 +144,6 @@ class GNWMap
         {
           curFlowRoute.addNewParticle(particles);
           hasNewOutFlow = true;
-          println("out", newAssignedBuildingID);
           break;
         }
       }
@@ -154,7 +156,6 @@ class GNWMap
           if (curFlowRoute.isStartOfFlow && curFlowRoute.dest_nodeID == newAssignedBuildingID)
           {
             curFlowRoute.addNewParticle(particles);
-            println("in", newAssignedBuildingID);
             break;
           }
         }

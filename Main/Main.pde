@@ -1,4 +1,4 @@
-//import processing.video.*; //this is for desktop //<>// //<>// //<>//
+//import processing.video.*; //this is for desktop  //<>//
 
 import in.omerjerk.processing.video.android.*; //this is for android
 
@@ -53,7 +53,6 @@ void setup()
 
   fullScreen(P2D);
   orientation(LANDSCAPE);
-  //frameRate(20);
   cur_time = 0;
   pre_time = -1;
   timeChanged = false;
@@ -119,6 +118,7 @@ void draw() {
     if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
     {
       GNWMap.flowInit(timeChanged);
+      GNWInterface.updateButtonBorder();
       GNWMap.isBuildingUseChanged = false;
       timeChanged = false;
     }
