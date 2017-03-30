@@ -43,14 +43,12 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 2. install the following packages
 
-	1.Mac & Windows: the below packages can be installed in Processing's menu bar. Sketch > Import Library... > Add library... > Search > Install package
-		
+	1. Mac & Windows: the below packages can be installed in Processing's menu bar. Sketch > Import Library... > Add library... > Search > Install package
 		1. ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
 		2. Path Finder from Peter Lager: http://www.lagers.org.uk/pfind/index.html
 		3. Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
 	
-	2.Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
-		
+	2. Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
 		1. Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
 			-To manually install the Android video package:
 			   
