@@ -11,6 +11,11 @@ class GNWInterface  //<>//
   BuildingUseIcon selectedBUIcon;
   TimeBar time_bar;
   HotspotCoords close_instruButton;
+  
+  boolean isDefaultSelected;
+  boolean isPCIVisionSelected;
+  boolean isInstructionSelected;
+  
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
@@ -26,6 +31,10 @@ class GNWInterface  //<>//
     createBuildingUseBoxes();
     createButtonsPanel();
     close_instruButton = new HotspotCoords(1855, 35, 2015, 35, 2015, 195, 1855, 195);
+    
+    isDefaultSelected = true;
+    isPCIVisionSelected = false;
+    isInstructionSelected = false;
   }
 
   void render() 
@@ -53,6 +62,8 @@ class GNWInterface  //<>//
     }
 
     time_bar.render(); //render the time bar
+    
+    drawButtonPanelBorder();  //render the border around the buttons at the bottom
     
   }
 
@@ -119,15 +130,22 @@ class GNWInterface  //<>//
     if (buttonPanel.get("reset").contains()) {
       PCIMode = false;
       reset();
+      GNWMap.isBuildingUseChanged = false;
+      isDefaultSelected = true;
+      isPCIVisionSelected = false;
     }
     else if (buttonPanel.get("pci").contains())
     {
       PCIMode = true;
-      reset(); 
+      reset();
+      GNWMap.isBuildingUseChanged = false;
+      isDefaultSelected = false;
+      isPCIVisionSelected = true;
     }
     else if (buttonPanel.get("instruction").contains())
     {
       start = false;
+      isInstructionSelected = true;
     }
   }
 
@@ -136,9 +154,40 @@ class GNWInterface  //<>//
     if (close_instruButton.contains())
     {
       start = true;
+      isInstructionSelected = false;
     }
     
   }
+  
+  void drawButtonPanelBorder()
+  {
+    noFill();
+    strokeWeight(2);
+    stroke(255);
+    if (isDefaultSelected)
+    {
+      rect(1238, 1460, 286, 66);
+    }
+    else if (isPCIVisionSelected)
+    {
+      rect(1524, 1460, 235, 66);
+    }
+    
+    if (isInstructionSelected)
+    {
+      rect(1770, 1460, 260, 66);
+    }
+  }
+  
+  void updateButtonBorder()
+  {
+    if (GNWMap.isBuildingUseChanged)
+    {
+      isDefaultSelected = false;
+      isPCIVisionSelected = false;
+    }
+  }
+  
   //detect buildingUseBox
   void update_buildingBox()
   {
