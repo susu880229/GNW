@@ -44,12 +44,12 @@ NB: the app was designed and programmed specifically for the device and operatin
 2. install the following packages
 
 Mac & Windows: the below packages can be installed in Processing's menu bar. Sketch > Import Library... > Add library... > Search > Install package
-ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
-Path Finder from Peter Lager: http://www.lagers.org.uk/pfind/index.html
-Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
+	i. ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
+	ii. Path Finder from Peter Lager: http://www.lagers.org.uk/pfind/index.html
+	iii. Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
 
 Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
-Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
+	i. Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
 
     -To manually install the Android video package:
        
@@ -197,17 +197,17 @@ Processing will automatically adjust it according to SDK used for development.
 4. Android Video Library  **[DO NOT EDIT]**
 ```
 |-Lib/video_android/
-    |- // a basic example of how to use the  video_android library
+    |- // this folder holds the basic example of how to use the video_android library
 	   | - examples/Movie/GettngStartedMovie 
 	
-	|- library
-		|- video_android.jar
+	|- // this file is a package that contains all the library java files
+		|- library/video_android.jar
 
-	|- library
-		|- video_android.jar
+	|- // this folder holds all the java files for to create the jar file
+		|- src/in/omerjerk/processing/video/android
 
-	|- library
-		|- video_android.jar		
+	|- // this file holds the meta data for the package
+		|- library.properties		
 ```
 
 ## How to
