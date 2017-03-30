@@ -221,6 +221,7 @@ class Building
                 if (destDoorNodeId != this.doorNodeId)
                 {  
                   to_numRepeatedUse = 1;
+                  //increase the to_numRepeatedUse when the repeadted building and use are added
                   for (int j1 = 0; j1 < j; j1++)
                   {
                     if (destDoorNodeId == destBuildings.get(j1).doorNodeId) 

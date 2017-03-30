@@ -104,9 +104,9 @@ void reset()
  * 
  */
 void draw() {
+  
   pushMatrix();
   scale(scaleFactor);
-
   if (onboardingScreen) {
     onboarding.playVideo();
   } else {
@@ -135,7 +135,6 @@ void draw() {
     }
   }
   popMatrix();
-
 }
 
 void update_time()

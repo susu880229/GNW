@@ -119,22 +119,15 @@ class GNWInterface  //<>//
     if (buttonPanel.get("reset").contains()) {
       PCIMode = false;
       reset();
-      //GNWMap.selectedBuilding = null;
-      //GNWMap.isBuildingUseChanged = true;
-      
     }
     else if (buttonPanel.get("pci").contains())
     {
       PCIMode = true;
-      reset();
-      //GNWMap.selectedBuilding = null;
-      //GNWMap.isBuildingUseChanged = true;
-      
+      reset(); 
     }
     else if (buttonPanel.get("instruction").contains())
     {
       start = false;
-      //close_instruButton = new HotspotCoords(1855, 35, 2015, 35, 2015, 195, 1855, 195);
     }
   }
 

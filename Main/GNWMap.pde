@@ -249,18 +249,18 @@ class GNWMap
    */
   void createGNWMap() 
   {  
-    PVector[] dotCoords_lot5 = {new PVector(367, 190), new PVector(306, 230), new PVector(351, 281)};
-    PVector[] dotCoords_lot7 = {new PVector(356, 594), new PVector(305, 640), new PVector(315, 682)};
-    PVector[] dotCoords_lot4 = {new PVector(476, 208), new PVector(594, 202)};
-    PVector[] dotCoords_521 = {new PVector(464, 410), new PVector(428, 466), new PVector(464, 508)};
-    PVector[] dotCoords_515 = {new PVector(428, 637), new PVector(486, 644), new PVector(534, 606)};
-    PVector[] dotCoords_1933 = {new PVector(1433, 260), new PVector(1519, 242)};
-    PVector[] dotCoords_701 = {new PVector(1757, 306), new PVector(1950, 336), new PVector(2129, 312)};
-    PVector[] dotCoords_1980 = {new PVector(2424, 220), new PVector(2456, 373)};
-    PVector[] dotCoords_887 = {new PVector(2826, 385)};
-    PVector[] dotCoords_901 = {new PVector(2967, 402), new PVector(3047, 408), new PVector(3142, 416)};
-    PVector[] dotCoords_Shaw = {new PVector(3653, 384), new PVector(3773, 376), new PVector(3901, 336)};
-    PVector[] dotCoords_NaturesPath = {new PVector(4102, 302), new PVector(4338, 250)};
+    PVector[] dotCoords_lot5 = {new PVector(340, 182), new PVector(304, 234), new PVector(332, 280)}; 
+    PVector[] dotCoords_lot7 = {new PVector(356, 600), new PVector(300, 645), new PVector(315, 692)};
+    PVector[] dotCoords_lot4 = {new PVector(476, 215), new PVector(594, 215)};
+    PVector[] dotCoords_521 = {new PVector(464, 417), new PVector(428, 468), new PVector(460, 512)};
+    PVector[] dotCoords_515 = {new PVector(429, 637), new PVector(481, 640), new PVector(531, 620)};
+    PVector[] dotCoords_1933 = {new PVector(1436, 270), new PVector(1519, 255)};
+    PVector[] dotCoords_701 = {new PVector(1780, 336), new PVector(1960, 350), new PVector(2133, 347)};
+    PVector[] dotCoords_1980 = {new PVector(2430, 228), new PVector(2485, 376)};
+    PVector[] dotCoords_887 = {new PVector(2820, 380)};
+    PVector[] dotCoords_901 = {new PVector(2972, 399), new PVector(3065, 407), new PVector(3157, 417)};
+    PVector[] dotCoords_Shaw = {new PVector(3666, 395), new PVector(3783, 376), new PVector(3901, 350)};
+    PVector[] dotCoords_NaturesPath = {new PVector(4115, 305), new PVector(4338, 258)};
     PVector[] dotCoords_null = null;
 
     addBuilding("Lot5", true, 64, 285, 155, 390, 164, 387, 300, 277, 305, dotCoords_lot5);
