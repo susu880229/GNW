@@ -278,16 +278,17 @@ Uncomment the last three lines by removing the double slashes "//". This allows 
 
 6. Go to `|-Main/data/graph.txt`. All the nodes in the map are specified between `<nodes>` and `</nodes>` in three columns: Number, x coordinate, y coordinate. Add the new nodes into the file using the number given in Step 2 and the x/y coordinates obtained in step 5.
 
-7. In the same `graph.txt` file, all the edges in the map are specified between `<edges>` and `</edges>`. They represent all the paths, or lines, on the map. Add the new edges in by appending `Node1 Node2 0 0` in the last line of <edges>. For example. for the below, the edges are:
+7. In the same `graph.txt` file, all the edges in the map are specified between `<edges>` and `</edges>`. They represent all the paths, or lines, on the map. Add the new edges in by appending `Node1 Node2 0 0` in the last line of `<edges>`. For example. for the below, the edges are:
 
   ```
   2 3 0 0
   3 4 0 0
   4 5 0 0
   ```
-  Keep in mind that some of the new nodes might have split some existing edges into two, and you will need to update those edges.
 
   ![Example of edges](http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%205.04.09%20PM_zpsj2m6pxdb.png)
+
+  Keep in mind that some of the new nodes might have split some existing edges into two, and you will need to update those edges.
 
 8. Replace the map.png in `|-Main/data` with the new one that you have created in Step 1.
 
@@ -299,11 +300,11 @@ Uncomment the last three lines by removing the double slashes "//". This allows 
 
 10. Run the app again and get the x-y coordinates of the dot positions of the lot where you want them to be (also by mouse clicks). Save the values down somewhere for later reference.
 
-11. In the Processing file `GNWMap.pde`, go to the function `void createGNWMap`. If you have a new lot, give it a name (let's call it "newLot in this instance".) Under the `PVector[]` initializations, initialize the new dot coordinates by typing `PVector[] dotCoords_newLot = {new PVector(x-coord of dot 1, y-coord of dot 1), new PVector(x-coord of dot 2, y-coord of dot 2), new PVector(x-coord of dot 3, y-coord of dot 3)};`, replacing the "newLot" by the name you have given to the lot and "x/y-coord of dot 1/2/3" by the values obtained in step 10.
+11. In the Processing file `GNWMap.pde`, go to the function `void createGNWMap`. If you have a new lot, give it a name (let's call it "newLot" in this instance.) Under the `PVector[]` initializations, initialize the new dot coordinates by typing `PVector[] dotCoords_newLot = {new PVector(x-coord of dot 1, y-coord of dot 1), new PVector(x-coord of dot 2, y-coord of dot 2), new PVector(x-coord of dot 3, y-coord of dot 3)};`, replacing "newLot" by the name you have given to the lot and "x-coord of dot 1, y-coord of dot 1.." etc by the values obtained in step 10.
 
-12. In the same function, initialize the new lot(s) by typing `addBuilding("newLot", true/false, number of the node that leads into the lot, x1, y1, x2, y2, x3, y3, x4, y4, dotCoords_newLot);`, where newLot is the name of the lot, "true" if the lot's dots should be small-sized and "false" if its dots should be large-sized, the node number is from step 2, and x1, y1 etc are the vertices of the lot from step 9.
+12. In the same function, initialize the new lot(s) by typing `addBuilding("newLot", true/false, number of the node that leads into the lot, x1, y1, x2, y2, x3, y3, x4, y4, dotCoords_newLot);`, where newLot is the name of the lot, "true" if the lot's dots should be small-sized and "false" if its dots should be large-size. The node number is from step 2, and x1, y1 etc are the vertices of the lot obtained in step 9.
 
-13. Comment out the code in `|-Main/Main.pde` that prints the x and y coordinates of the mouse click.
+13. Comment out the code in `|-Main/Main.pde` that prints the x and y coordinates of the mouse click. i.e. type "//" in front of the lines and make sure they are greyed out.
 
   ![Lines to output X and Y coordinates of mouse click](http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%204.30.51%20PM_zpschzar4lg.png)
 
