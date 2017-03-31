@@ -259,19 +259,48 @@ Processing will automatically adjust it according to SDK used for development.
 ### Edit or add new lots
 1. Locate the Adobe Illustrator file of the map in `Delivery/Assets`**[To do]** and edit it. Export the map in .png format with a white background. Name it as map.png.
 
-2. Locate the Adobe Illustrator file of the map paths in `Delivery/Assets` **[To do]**. Using the new map as a guide, edit the paths so that there is a path leading into the new/edited lot. Give each new path intersection a number. Each number is a "node", and the number will be used in the code.
+2. Locate the Adobe Illustrator file of the map paths in `Delivery/Assets` **[To do]**. Using the new map as a guide, edit the paths so that there is a path leading into the new/edited lot. Give each new path intersection and end point (i.e. the start and end of any new straight lines created) a number. Each intersection and end point is a "node", and the number of the node will be used in the code. Export the image in .png format.
 
-http://i288.photobucket.com/albums/ll174/twin_friends/map-paths_zpsnovhra7m.png
+![image of map paths](http://i288.photobucket.com/albums/ll174/twin_friends/map-paths_zpsnovhra7m.png)
 
-3. Go to `|-Main/data`. Locate the map.png in the folder and make a backup of it in another folder. Delete it, then place the file you exported in Step 1 into this folder.
+3. Go to `|-Main/data`. Locate the map.png in the folder. Delete the image from the `data` folder, then place the file you exported in Step 2 into this folder, naming it map.png. This will be used temporarily to determine the x and y coordinates of the new nodes.
 
 4. Open `|-Main/Main.pde`. At the end of the file, you will see these lines:
 
-http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%204.30.51%20PM_zpschzar4lg.png
+  ![Lines to output X and Y coordinates of mouse click](http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%204.30.51%20PM_zpschzar4lg.png)
 
-Uncomment them by removing the double slashes "//".
+Uncomment the last three lines by removing the double slashes "//". This allows the program to print the x and y coordinates of mouse clicks.
 
-Go to `|-Main/data/graph.txt`.
+5. Switch to Java mode and run the app on the computer. (Remember to change the video libraries! Refer to [Compiling and deploying on Mac or Windows](#compiling-and-deploying-on-mac-or-windows).) Hover the mouse cursor over the new path intersections and end points ("nodes") created in Step 2, and click. Upon exiting the app by pressing "Esc", the x and y coordinates of the mouse clicks are printed in the console of Processing. Note that the mouse click to close the tutorial video is also recorded, so remember to ignore the first of the recorded clicks.
+
+  ![Example of x and y coordinates on console](http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%204.50.21%20PM_zpsz2pehfjf.png)
+
+6. Go to `|-Main/data/graph.txt`. All the nodes in the map are specified between <nodes> and </nodes> in three columns: Number, x coordinate, y coordinate. Add the new nodes into the file using the number given in Step 2 and the x/y coordinates obtained in step 5.
+
+7. In the same `graph.txt` file, all the edges in the map are specified between <edges> and </edges>. They represent all the paths, or lines, on the map. Add the new edges in by appending `Node1 Node2 0 0` in the last line of <edges>. For example. for the below, the edges are:
+
+  ```
+  2 3 0 0
+  3 4 0 0
+  4 5 0 0
+  ```
+  Keep in mind that some of the new nodes might have split some existing edges into two, and you will need to update those edges.
+
+  ![Example of edges](http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%205.04.09%20PM_zpsj2m6pxdb.png)
+
+8. Replace the map.png in `|-Main/data` with the new one that you have created in Step 1.
+
+9. Next, for the new/edited lots, find out the x-y coordinates by running the app again and clicking on the corners of the new/edited lots in this order:
+
+  ![Order of finding x-y coordinates](http://i288.photobucket.com/albums/ll174/twin_friends/Artboard%201_zpsp1gbcjlm.png)
+
+  Don't worry about being too accurate, the vertices are used for hotspots and will be invisible. If the lots have rounded corners, it is ok to just get an approximate rectangle that covers the whole lot. Save the values down somewhere for later reference.
+
+10. Run the app again and get the x-y coordinates of the dot positions of the lot where you want them to be (also by mouse clicks). Save the values down somewhere for later reference.
+
+11. In the Processing file `GNWMap.pde`, go to the function `void createGNWMap`. If you have a new lot, give it a name (let's call it "newLot in this instance".) Under the `PVector[]` initializations, initialize the new dot coordinates by typing `PVector[] dotCoords_newLot = {new PVector(x-coord of dot 1, y-coord of dot 1), new PVector(x-coord of dot 2, y-coord of dot 2), new PVector(x-coord of dot 3, y-coord of dot 3)};`, replacing the "newLot" by the name you have given to the lot and "x/y-coord of dot 1/2/3" by the values obtained in step 10.
+
+12. In the same function, initialize the new lot(s) by typing `addBuilding("newLot", true/false, number of the node that leads into the lot, x1, y1, x2, y2, x3, y3, x4, y4, dotCoords_newLot);`, where newLot is the name of the lot, "true" if the lot's dots should be small-sized and "false" if its dots should be large-sized, the node number is from step 2, and x1, y1 etc are the vertices of the lot from step 9.
 
 ### Edit the app icon
 
