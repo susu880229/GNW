@@ -12,6 +12,7 @@ GNW Creative Community
   * [Edit text and images](#edit-text-and-images)
   * [Adjust the flow](#adjust-the-flow)
   * [Adjust the default building uses and PCI vision](#adjust-the-default-building-uses-and-pci-vision)
+  * [Edit or add new lots](#edit-or-add-new-lots)
 * [FAQ and troubleshooting](#faq-and-troubleshooting)
   * [What happens if the app crashes?](#what-happens-if-the-app-crashes)
   * [How do I display the app on an external computer?](#how-do-i-display-the-app-on-an-external-computer)
@@ -275,9 +276,9 @@ Uncomment the last three lines by removing the double slashes "//". This allows 
 
   ![Example of x and y coordinates on console](http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%204.50.21%20PM_zpsz2pehfjf.png)
 
-6. Go to `|-Main/data/graph.txt`. All the nodes in the map are specified between <nodes> and </nodes> in three columns: Number, x coordinate, y coordinate. Add the new nodes into the file using the number given in Step 2 and the x/y coordinates obtained in step 5.
+6. Go to `|-Main/data/graph.txt`. All the nodes in the map are specified between `<nodes>` and `</nodes>` in three columns: Number, x coordinate, y coordinate. Add the new nodes into the file using the number given in Step 2 and the x/y coordinates obtained in step 5.
 
-7. In the same `graph.txt` file, all the edges in the map are specified between <edges> and </edges>. They represent all the paths, or lines, on the map. Add the new edges in by appending `Node1 Node2 0 0` in the last line of <edges>. For example. for the below, the edges are:
+7. In the same `graph.txt` file, all the edges in the map are specified between `<edges>` and `</edges>`. They represent all the paths, or lines, on the map. Add the new edges in by appending `Node1 Node2 0 0` in the last line of <edges>. For example. for the below, the edges are:
 
   ```
   2 3 0 0
@@ -301,6 +302,12 @@ Uncomment the last three lines by removing the double slashes "//". This allows 
 11. In the Processing file `GNWMap.pde`, go to the function `void createGNWMap`. If you have a new lot, give it a name (let's call it "newLot in this instance".) Under the `PVector[]` initializations, initialize the new dot coordinates by typing `PVector[] dotCoords_newLot = {new PVector(x-coord of dot 1, y-coord of dot 1), new PVector(x-coord of dot 2, y-coord of dot 2), new PVector(x-coord of dot 3, y-coord of dot 3)};`, replacing the "newLot" by the name you have given to the lot and "x/y-coord of dot 1/2/3" by the values obtained in step 10.
 
 12. In the same function, initialize the new lot(s) by typing `addBuilding("newLot", true/false, number of the node that leads into the lot, x1, y1, x2, y2, x3, y3, x4, y4, dotCoords_newLot);`, where newLot is the name of the lot, "true" if the lot's dots should be small-sized and "false" if its dots should be large-sized, the node number is from step 2, and x1, y1 etc are the vertices of the lot from step 9.
+
+13. Comment out the code in `|-Main/Main.pde` that prints the x and y coordinates of the mouse click.
+
+  ![Lines to output X and Y coordinates of mouse click](http://i288.photobucket.com/albums/ll174/twin_friends/Screen%20Shot%202017-03-30%20at%204.30.51%20PM_zpschzar4lg.png)
+
+14. Build and run the app on the computer or on the tablet by following the instructions in [Compiling and deploying on Mac or Windows](#compiling-and-deploying-on-mac-or-windows) or [Compiling and deploying on Android tablet](#compiling-and-deploying-on-android-tablet).
 
 ### Edit the app icon
 
