@@ -235,7 +235,7 @@ Processing will automatically adjust it according to SDK used for development.
 
 ### Edit text and images
 
-1. Find corresponding Adobe Illustrator file in `Delivery/Assets` **[To Do]**
+1. Find corresponding Adobe Illustrator file in the delivery package under `delivery/design assets`
 2. Using Adobe Illustrator, edit text and/or the image without changing its size or proportion
 3. Export the image in the same size and file name as the image found in `|- Main/data/`, and replace the image with the updated one
 4. Re-compile and re-install the app
@@ -279,9 +279,9 @@ Processing will automatically adjust it according to SDK used for development.
 	2. Changing the building use assignments for the PCI Vision is the same as for default. Refer to above from the second step.
 
 ### Edit or add new lots
-1. Locate the Adobe Illustrator file of the map in `Delivery/Assets`**[To do]** and edit it. Export the map in .png format with a white background. Name it as map.png.
+1. Locate the Adobe Illustrator file of the map in in the delivery package under `delivery/design assets/entire-map.ai` and edit it. Export the map in .png format with a white background. Name it as map.png.
 
-2. Locate the Adobe Illustrator file of the map paths in `Delivery/Assets` **[To do]**. Using the new map as a guide, edit the paths so that there is a path leading into the new/edited lot. Give each new path intersection and end point (i.e. the start and end of any new straight lines created) a number. Each intersection and end point is a "node", and the number of the node will be used in the code. Export the image in .png format.
+2. On the same `entire-map.ai` file, unhide the `paths` layer. Edit the paths so that there is a path leading into the new/edited lot. Give each new path intersection and end point (i.e. the start and end of any new straight lines created) a number. Each intersection and end point is a "node", and the number of the node will be used in the code. Export the image in .png format.
 
 ![image of map paths](http://i288.photobucket.com/albums/ll174/twin_friends/map-paths_zpsnovhra7m.png)
 
