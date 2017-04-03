@@ -232,15 +232,17 @@ Processing will automatically adjust it according to SDK used for development.
     - `selectFill()` To toggle between single-coloured and multi-coloured particles, go to line 57: selectFill(). If selectFill() is commented out (i.e. `//selectFill()`), the particles will be single-coloured
 
 
-2. To adjust **general flow volume**, go to the `Building` class in `|-Main/Building.pde`.
+2. To adjust **Flow volume and upper limits**, go to the `Building` class in `|-Main/Building.pde`.
     - `FLOW_DELAY_MULTIPLIER`: a larger value means that particles will appear at a slower rate, so flow volume is lesser in general
-    - `MIN_DELAY_(TYPE)`: Sets the shortest amount of delay allowed for each type of building use. A higher value means that less particles will be allowed to enter or exit the building use per second
+    - `MIN_DELAY_MULTIPLIER`: Sets the shortest amount of delay allowed for all building uses (i.e. an upper limit to the number of particles entering and exiting). A higher value means that less particles will be allowed to enter or exit **all** building uses per second.
+    - `MIN_DELAY_[TYPE]`: Adjusts the upper limit of particles entering and exiting each type of building use. It is expressed as `number * MIN_DELAY_MULTIPLIER`. The higher the `number`, the less particles will be allowed to enter or exit the building use per second.
 
 
 3. To adjust **flow matrix**, go to `|-Main/data/flow_matrix.txt`.
     - Change the last number on each line to adjust the delay for each flow. A higher number means a slower rate, i.e. less density. The rows are organised in the order of `TimeID, Flow Origin, Flow Destination, Delay Level`. For `TimeID`, `0=Morning, 1=Noon, 2=Afternoon, 3=Evening, 4=Late Evening`.
 
 4. After making the necessary adjustments, re-compile and re-install the app.
+
 
 ### Adjust the default building uses and PCI Vision
 
