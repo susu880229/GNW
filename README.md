@@ -80,13 +80,15 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 ### Compiling and deploying on Mac or Windows
 
-- **[To Do - changing the libraries for playing of Onboarding video]**
 - **Be sure to make a backup of the original source code before making changes.**
 
 1. Ensure that Processing is in Java mode by clicking on the dropdown menu at the top-right corner and selecting "Java"
 2. Ensure that the correct video library is selected. The library `processing.video.*` should be imported and `in.omerjerk.processing.video.android.*` should be commented out
 3. Go to the Onboarding class and uncomment line 42 for `onBoardingVideo.stop();`. The video library for desktop, `processing.video.*`, requires the video to stop before replaying it
-4. Run the project by clicking the play button at the top-left corner
+4. Run the project by clicking the play button at the top-left corner to ensure that everything is working properly
+5. Before creating any new executable(s), remove any existing executable files & folders from the `Main` project folder. 
+6. Go to `File` > `Export Application... ` > check off the platforms you want (if you are on a Windows computer, you may not be able to export for Mac) > click `Export`
+7. The new executable(s) can be found inside the `Main` project folder
 
 ### Compiling and deploying on Android tablet
 - **Be sure to make a backup of the original source code before making changes.**
@@ -95,11 +97,28 @@ NB: the app was designed and programmed specifically for the device and operatin
 1. Ensure that Processing is in Android mode by clicking the top-right corner and selecting "Android" (refer to [Getting Started](#getting-started) section on how to install Android mode)
 2. Ensure that the correct video library is selected. The library `in.omerjerk.processing.video.android.*` should be imported and uncommented, and `processing.video.*` should be commented out
 3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`. This is not compatible with the Android video library and it is not needed here.
-4. Go to `File > Export Signed Package`
+4. Go to `File` > `Export Signed Package`
 5. Type in a password of your choice and press ok (if password is invalid, press "Reset Password" and set a new one)
 6. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
 7. Using the tablet, open the file and click install
 8. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
+
+### Running Executables
+
+1. Windows: 
+	
+	1. Unzip windows.zip (this step is only applicable if accessing the executable the first time from the Delivery folder)
+	2. Open `application.windows64` folder
+	3. Double click `Main.exe` (note: You need Java installed on your computer. If you don't have it, follow the prompts or go to https://www.java.com/en/download/ to download it)
+	4. If you want to run this program on the outside of the folder, right click `Main.exe` > Click Create Shortcut > Drag shortcut to where you want to run the program.
+	
+	
+2. Mac:
+
+	1. Unzip mac.zip (this step is only applicable if accessing the executable the first time from the Delivery folder)
+	2. Open `Main.app/Contents/MacOS` folder
+	3. Double click `Main.app` 
+	4. If you want to run this program on the outside of the folder, right click `Main.app` > Click Copy > Go to where you want to run it from and paste the app there. 
 
 ## Documentation
 
