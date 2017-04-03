@@ -375,3 +375,6 @@ Uncomment the last three lines by removing the double slashes "//". This allows 
 ## Releases
 - Delivery
 - Future plans
+  - Having a different density depending on the lot size
+  - Giving users statistics on the number of people in the area as well as the number of people attracted by each use
+  - Saving user sessions and showing the collected data in a dashboard to help PCI understand what the public really values in terms of uses
