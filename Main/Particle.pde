@@ -193,7 +193,6 @@ class Particle
   * Checks if the particle's position is within the same path
   * 
   * @param path Path to check 
-  * @return     
   */
   boolean checkBoundaries(Path path)
   {

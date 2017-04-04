@@ -1,4 +1,7 @@
-class GNWInterface  //<>//
+/** //<>//
+ * GNWInterface is the dashboard of the application
+ */
+class GNWInterface 
 {
   PImage interfaceImage; 
   PImage hand;
@@ -11,11 +14,11 @@ class GNWInterface  //<>//
   BuildingUseIcon selectedBUIcon;
   TimeBar time_bar;
   HotspotCoords close_instruButton;
-  
+
   boolean isDefaultSelected;
   boolean isPCIVisionSelected;
   boolean isInstructionSelected;
-  
+
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
@@ -31,59 +34,55 @@ class GNWInterface  //<>//
     createBuildingUseBoxes();
     createButtonsPanel();
     close_instruButton = new HotspotCoords(1855, 35, 2015, 35, 2015, 195, 1855, 195);
-    
+
     isDefaultSelected = true;
     isPCIVisionSelected = false;
     isInstructionSelected = false;
   }
 
+  /**
+   * Draws the dashboard onto the screen 
+   */
   void render() 
   {
-    if (buildingUseBoxes.size() > 0) {
-      for (int i = 0; i < buildingUseBoxes.size(); i++) {
-        BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
-        buildingUseBox.render();
-      }
-    }
-
     image(interfaceImage, 0, 0);
 
     if (selectedBUIcon != null) {
       selectedBUIcon.render();
     }
 
-    fill(0);        
-    rect(interfaceImage.width, 0, width, interfaceImage.height);
-
-    //render the pullup
-    if (selectedBUBox != null && selectedBUBox.lock == true)
-    {
-      image(selectedBUBox.pull_img, selectedBUBox.box_x + 10, selectedBUBox.box_y + 16, selectedBUBox.box_width - 20, selectedBUBox.box_height - 16);
+    if (selectedBUBox != null && selectedBUBox.lock == true) {
+      selectedBUBox.renderPullUp();
     }
 
     time_bar.render(); //render the time bar
-    
     drawButtonPanelBorder();  //render the border around the buttons at the bottom
-    
   }
 
+  /**
+   * Creates the three buttons at the bottom of the screen
+   */
   void createButtonsPanel()
   {
     int topY = 1450;
     int bottomY = 1530;
+
     //define the reset button
     HotspotCoords resetButton = new HotspotCoords(1206, topY, 1526, topY, 1526, bottomY, 1206, bottomY);
     buttonPanel.put("reset", resetButton);
-    
+
     //define the PCI vision button
     HotspotCoords pciButton = new HotspotCoords(1526, topY, 1766, topY, 1766, bottomY, 1526, bottomY);
     buttonPanel.put("pci", pciButton);
-    
+
     //define the instruction button
     HotspotCoords instruButton = new HotspotCoords(1766, topY, 2086, topY, 2086, bottomY, 1766, bottomY);
     buttonPanel.put("instruction", instruButton);
   }
 
+  /**
+   * Creates the five category boxes on the dashboard
+   */
   void createBuildingUseBoxes() 
   {
     BuildingUseBox buildingUseBox =  new BuildingUseBox(buildingUses.get("Retail"), xBuildingBox, yBuildingBox, "sub_retail.png");
@@ -108,6 +107,9 @@ class GNWInterface  //<>//
     buildingUseBoxes.add(buildingUseBox);
   }
 
+  /**
+   * Handles mouse clicks on the dashboard
+   */
   void selectInterface()
   {
     float buttonsY = 1450;
@@ -125,6 +127,9 @@ class GNWInterface  //<>//
     }
   }
 
+  /**
+   * Handles mouse clicks on the button panel of the dashboard
+   */
   void selectButtonPanel()
   {
     if (buttonPanel.get("reset").contains()) {
@@ -133,22 +138,23 @@ class GNWInterface  //<>//
       GNWMap.isBuildingUseChanged = false;
       isDefaultSelected = true;
       isPCIVisionSelected = false;
-    }
-    else if (buttonPanel.get("pci").contains())
+    } else if (buttonPanel.get("pci").contains())
     {
       PCIMode = true;
       reset();
       GNWMap.isBuildingUseChanged = false;
       isDefaultSelected = false;
       isPCIVisionSelected = true;
-    }
-    else if (buttonPanel.get("instruction").contains())
+    } else if (buttonPanel.get("instruction").contains())
     {
       start = false;
       isInstructionSelected = true;
     }
   }
 
+  /**
+   * Closes the instruction page/overlay
+   */
   void close_instruction()
   {
     if (close_instruButton.contains())
@@ -156,9 +162,11 @@ class GNWInterface  //<>//
       start = true;
       isInstructionSelected = false;
     }
-    
   }
-  
+
+  /**
+   * Draws the outline of the button for the currently displayed vision 
+   */
   void drawButtonPanelBorder()
   {
     noFill();
@@ -167,18 +175,20 @@ class GNWInterface  //<>//
     if (isDefaultSelected)
     {
       rect(1238, 1460, 286, 66);
-    }
-    else if (isPCIVisionSelected)
+    } else if (isPCIVisionSelected)
     {
       rect(1524, 1460, 235, 66);
     }
-    
+
     if (isInstructionSelected)
     {
       rect(1770, 1460, 260, 66);
     }
   }
-  
+
+  /**
+   * Remove selected button border if any of the building uses have changed
+   */
   void updateButtonBorder()
   {
     if (GNWMap.isBuildingUseChanged)
@@ -187,7 +197,7 @@ class GNWInterface  //<>//
       isPCIVisionSelected = false;
     }
   }
-  
+
   //detect buildingUseBox
   void update_buildingBox()
   {

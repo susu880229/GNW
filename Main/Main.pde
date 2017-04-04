@@ -1,4 +1,4 @@
-//import processing.video.*; //this is for desktop  //<>// //<>//
+//import processing.video.*; //this is for desktop //<>//
 
 import in.omerjerk.processing.video.android.*; //this is for android
 
@@ -95,16 +95,16 @@ void reset()
   timeChanged = true;
   onboardingScreen = false;
   start = true;
-  
 }
 
 /** 
  * 
  */
 void draw() {
-  
+
   pushMatrix();
   scale(scaleFactor);
+
   if (onboardingScreen) {
     onboarding.playVideo();
   } else {
@@ -133,6 +133,10 @@ void draw() {
       image(instruction, 0, 0);
     }
   }
+  
+  fill(0);        
+  rect(GNWInterface.interfaceImage.width, 0, width, GNWInterface.interfaceImage.height);
+
   popMatrix();
 }
 
@@ -270,9 +274,8 @@ void setBuildingUses()
   buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
   buildingUses.put("Education", new BuildingUse("Education", "", 0));
   buildingUses.put("Student Resident", new BuildingUse("Student Resident", "", 0));
-  
+
   setUse_buildings();
-  
 }
 
 void setUse_buildings()

@@ -27,18 +27,17 @@ class HotspotCoords
   }
 
   /**
-   * to detect one point(the mouse) if within this quad or not
+   * Detect if mouse location is within this quad or not
    * Note: shiftX is referring to global public variable from Main. It tracks the change in x via horizontal scroll.
    */
   boolean contains() {
     //avoid mouseX be subtracted by shiftX when interact with the close instructio button
     int x;
     int y;
-    if(start)
+    if (start)
     {
       x  = (isOnMap()) ? mouseX - shiftX : mouseX;
-    }
-    else
+    } else
     {
       x = mouseX;
     }
@@ -57,6 +56,9 @@ class HotspotCoords
     return c;
   }
 
+  /**
+   * Draws a white border around the hotspot
+   */
   void drawOutline() 
   {
     noFill();
