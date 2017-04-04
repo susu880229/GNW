@@ -1,7 +1,6 @@
 /**
  * The Path class represents each graph edge on the map that has a flow running.
  */
-
 class Path 
 {
   float dis_x;
@@ -13,13 +12,12 @@ class Path
   PVector pathEndPoint;
   ArrayList<GraphNode> nodes;
 
-
   /**
    * The Path constructor
+   *
    * @param start x and y value of start point
    * @param end x and y value of end point
    */
-
   Path (PVector start, PVector end) 
   {
     pathStartPoint = start;

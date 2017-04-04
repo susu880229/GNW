@@ -82,8 +82,8 @@ class BuildingTooltip
   /**
    * Selects the building use that the mouse has pressed. Exception is thrown if no building use was identified at the mouse position.
    *
-   * @param ArrayList<BuildingUse> buildingUses This is an arraylist of all the current building uses of the building
-   * @return Returns the index of the building use that the mouse pressed.
+   * @param buildingUses This is an arraylist of all the current building uses of the building
+   * @return             Returns the index of the building use that the mouse pressed.
    */
   int selectBuildingUse(ArrayList<BuildingUse> buildingUses) throws Exception
   {
