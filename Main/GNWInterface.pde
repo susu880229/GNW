@@ -1,4 +1,7 @@
-class GNWInterface  //<>//
+/** //<>//
+ * GNWInterface is the dashboard of the application
+ */
+class GNWInterface 
 {
   PImage interfaceImage; 
   PImage hand;
@@ -11,11 +14,7 @@ class GNWInterface  //<>//
   BuildingUseIcon selectedBUIcon;
   TimeBar time_bar;
   HotspotCoords close_instruButton;
-  
-  boolean isDefaultSelected;
-  boolean isPCIVisionSelected;
-  boolean isInstructionSelected;
-  
+
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
@@ -31,59 +30,51 @@ class GNWInterface  //<>//
     createBuildingUseBoxes();
     createButtonsPanel();
     close_instruButton = new HotspotCoords(1855, 35, 2015, 35, 2015, 195, 1855, 195);
-    
-    isDefaultSelected = true;
-    isPCIVisionSelected = false;
-    isInstructionSelected = false;
   }
 
+  /**
+   * Draws the dashboard onto the screen 
+   */
   void render() 
   {
-    if (buildingUseBoxes.size() > 0) {
-      for (int i = 0; i < buildingUseBoxes.size(); i++) {
-        BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
-        buildingUseBox.render();
-      }
-    }
-
     image(interfaceImage, 0, 0);
 
     if (selectedBUIcon != null) {
       selectedBUIcon.render();
     }
 
-    fill(0);        
-    rect(interfaceImage.width, 0, width, interfaceImage.height);
-
-    //render the pullup
-    if (selectedBUBox != null && selectedBUBox.lock == true)
-    {
-      image(selectedBUBox.pull_img, selectedBUBox.box_x + 10, selectedBUBox.box_y + 16, selectedBUBox.box_width - 20, selectedBUBox.box_height - 16);
+    if (selectedBUBox != null && selectedBUBox.lock == true) {
+      selectedBUBox.renderPullUp();
     }
 
     time_bar.render(); //render the time bar
-    
     drawButtonPanelBorder();  //render the border around the buttons at the bottom
-    
   }
 
+  /**
+   * Creates the three buttons at the bottom of the screen
+   */
   void createButtonsPanel()
   {
     int topY = 1450;
     int bottomY = 1530;
+
     //define the reset button
     HotspotCoords resetButton = new HotspotCoords(1206, topY, 1526, topY, 1526, bottomY, 1206, bottomY);
     buttonPanel.put("reset", resetButton);
-    
+
     //define the PCI vision button
     HotspotCoords pciButton = new HotspotCoords(1526, topY, 1766, topY, 1766, bottomY, 1526, bottomY);
     buttonPanel.put("pci", pciButton);
-    
+
     //define the instruction button
     HotspotCoords instruButton = new HotspotCoords(1766, topY, 2086, topY, 2086, bottomY, 1766, bottomY);
     buttonPanel.put("instruction", instruButton);
   }
 
+  /**
+   * Creates the five category boxes on the dashboard
+   */
   void createBuildingUseBoxes() 
   {
     BuildingUseBox buildingUseBox =  new BuildingUseBox(buildingUses.get("Retail"), xBuildingBox, yBuildingBox, "sub_retail.png");
@@ -108,6 +99,9 @@ class GNWInterface  //<>//
     buildingUseBoxes.add(buildingUseBox);
   }
 
+  /**
+   * Handles mouse clicks on the dashboard
+   */
   void selectInterface()
   {
     float buttonsY = 1450;
@@ -125,30 +119,32 @@ class GNWInterface  //<>//
     }
   }
 
+  /**
+   * Handles mouse clicks on the button panel of the dashboard
+   */
   void selectButtonPanel()
   {
     if (buttonPanel.get("reset").contains()) {
-      PCIMode = false;
-      reset();
-      GNWMap.isBuildingUseChanged = false;
       isDefaultSelected = true;
       isPCIVisionSelected = false;
-    }
-    else if (buttonPanel.get("pci").contains())
-    {
-      PCIMode = true;
-      reset();
+      reset(); //<>//
       GNWMap.isBuildingUseChanged = false;
+    } else if (buttonPanel.get("pci").contains())
+    {
       isDefaultSelected = false;
       isPCIVisionSelected = true;
-    }
-    else if (buttonPanel.get("instruction").contains())
+      reset();
+      GNWMap.isBuildingUseChanged = false;
+    } else if (buttonPanel.get("instruction").contains())
     {
       start = false;
       isInstructionSelected = true;
     }
   }
 
+  /**
+   * Closes the instruction page/overlay
+   */
   void close_instruction()
   {
     if (close_instruButton.contains())
@@ -156,9 +152,11 @@ class GNWInterface  //<>//
       start = true;
       isInstructionSelected = false;
     }
-    
   }
-  
+
+  /**
+   * Draws the outline of the button for the currently displayed vision 
+   */
   void drawButtonPanelBorder()
   {
     noFill();
@@ -167,18 +165,20 @@ class GNWInterface  //<>//
     if (isDefaultSelected)
     {
       rect(1238, 1460, 286, 66);
-    }
-    else if (isPCIVisionSelected)
+    } else if (isPCIVisionSelected)
     {
       rect(1524, 1460, 235, 66);
     }
-    
+
     if (isInstructionSelected)
     {
       rect(1770, 1460, 260, 66);
     }
   }
-  
+
+  /**
+   * Remove selected button border if any of the building uses have changed
+   */
   void updateButtonBorder()
   {
     if (GNWMap.isBuildingUseChanged)
@@ -187,64 +187,70 @@ class GNWInterface  //<>//
       isPCIVisionSelected = false;
     }
   }
-  
-  //detect buildingUseBox
+
+  /**
+   * Selects new building use box based on user input
+   */
   void update_buildingBox()
   {
-    selectedBUIcon = null;
-    boolean found = false;
+    clearSelectedBUse(); //clear existing selected building use
+
     for (int i = 0; i < buildingUseBoxes.size(); i++) {
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
-      if (buildingUseBox.drag_detect() || buildingUseBox.pull_detect())
-      {
-        found = true;
-        //tap to different buildingBox to set the lock default setting
-        if (selectedBUBox == null || buildingUseBox.buildingUse.name != selectedBUBox.buildingUse.name)
-        {
-          buildingUseBox.lock = false; 
-          selectedBUBox = buildingUseBox; //create a new cur_selectedBUBox
-        }
-        break;
-      }
-    }
 
-    if (!found)
-    {
-      clearSelectedBox();
+      Boolean changeDetected = buildingUseBox.drag_detect() || buildingUseBox.pull_detect();
+      Boolean validBUBox = selectedBUBox == null || buildingUseBox.buildingUse.name != selectedBUBox.buildingUse.name;
+
+      if (changeDetected && validBUBox)
+      {
+        buildingUseBox.lock = false; 
+        selectedBUBox = buildingUseBox; 
+        return;
+      }
     }
   }
 
-  //add use_icon or pull up the image
+  /**
+   * When building use box is selected, create building use icon or pull up the image depending on current states of interface
+   * Case 1: If drag is detected and that building use box is not locked, then create a new building use icon
+   * Case 2: If pull is detected on a building use but there is a lock on the building use box, then release the lock
+   * Case 3: If pull is detected and there's no lock on the building use box, then activate the lock.
+   */
   void function_buildingBox()
   {
-    if (selectedBUBox != null)
-    {
-      if (selectedBUBox.drag_detect())
+    if (selectedBUBox != null) {
+      if (selectedBUBox.drag_detect() && !selectedBUBox.lock)
       {
-        if (selectedBUBox.lock == false)
-        {
-          selectedBUIcon = new BuildingUseIcon(selectedBUBox.buildingUse, mouseX, mouseY);
-        }
-      } else if (selectedBUBox.pull_detect())
+        selectedBUIcon = new BuildingUseIcon(selectedBUBox.buildingUse, mouseX, mouseY);
+      } else if (selectedBUBox.pull_detect() && selectedBUBox.lock)
       {
-        //selectedBUBox.lock = true;
-        if (selectedBUBox.lock == true)
-        {
-          clearSelectedBox();
-        } else
-        {
-          selectedBUBox.lock = true;
-        }
+        clearSelectedBox();
+      } else if (selectedBUBox.pull_detect() && !selectedBUBox.lock)
+      {
+        selectedBUBox.lock = true;
       }
     }
   }
 
+  /**
+   * Deselects currently selected building use box
+   */
   void clearSelectedBox()
   {
-
     selectedBUBox = null;
   }
 
+  /**
+   * Deselects currently selected building use
+   */
+  void clearSelectedBUse()
+  {
+    selectedBUIcon = null;
+  }
+
+  /**
+   * Updates location of building use icon when user drags it
+   */
   void update() 
   {
     if (selectedBUIcon != null) {
@@ -252,6 +258,9 @@ class GNWInterface  //<>//
     }
   }
 
+  /**
+   * Highlight building that has the building use icon hovering over it 
+   */
   void dropFeedback(boolean isOnMap)
   {
     if (selectedBUIcon != null && mousePressed == true && isOnMap)
@@ -266,11 +275,5 @@ class GNWInterface  //<>//
         //println(e);
       }
     }
-  }
-
-
-  void clearSelected ()
-  {
-    selectedBUIcon = null;
   }
 }

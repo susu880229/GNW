@@ -1,5 +1,4 @@
-//import processing.video.*; //this is for desktop  //<>// //<>//
-
+//import processing.video.*; //this is for desktop //<>//
 import in.omerjerk.processing.video.android.*; //this is for android
 
 import pathfinder.*;
@@ -18,7 +17,7 @@ int shiftX = 0;
 int shiftY = 0;
 float scaleFactor;
 
-//define the time selection parameter
+//time selection parameters
 int cur_time;
 int pre_time;
 boolean timeChanged;
@@ -39,8 +38,10 @@ PImage glowImage_shaw;
 
 boolean start;
 PImage instruction;
-//define the PCIMode outside of setup to set it true
-Boolean PCIMode = false;
+
+boolean isDefaultSelected = true;
+boolean isPCIVisionSelected = false;
+boolean isInstructionSelected = false;
 
 Boolean onboardingScreen = true;
 Onboarding onboarding;
@@ -50,9 +51,10 @@ void setup()
 {
   //FOR OUTPUT OF GRAPH NODE COORDINATES
   //outputPathCoordinates = createWriter("positions.txt"); 
-
   fullScreen(P2D);
+  background(0);
   orientation(LANDSCAPE);
+  
   cur_time = 0;
   pre_time = -1;
   timeChanged = false;
@@ -61,8 +63,10 @@ void setup()
   use_buildings = new HashMap<String, ArrayList<Building>>();
   buildingUses = new HashMap<String, BuildingUse>();
 
-  GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
   setBuildingUses();
+  setUse_buildings();
+
+  GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
   GNWInterface = new GNWInterface();
   GNWPathFinder = new GNWPathFinder(); 
   onboarding = new Onboarding();
@@ -77,68 +81,76 @@ void setup()
 
 void reset()
 {
-  //clear all the customizable uses and permanent uses on each building
+  // Clear all the customizable uses and permanent uses on each building
   for (Map.Entry buildingEntry : GNWMap.buildings.entrySet()) 
   {
     Building building = (Building) buildingEntry.getValue();
     building.customizableUses.clear();
     building.permanentUses.clear();
   }
+
+  // Reset use_buildings hasmap
   use_buildings.clear();
-  //set up use_building hashmap and re add the default customizable and permanent uses
   setUse_buildings();
+
+  // Clear selected interface values  
   GNWInterface.selectedBUIcon = null;
   GNWInterface.selectedBUBox = null;
+
+  // Clear flow routes and dots and selected building
   GNWMap.flowRoutes.clear();
   GNWMap.particles.clear();
   GNWMap.selectedBuilding = null;
+
+  // Add default or PCI building uses to map
+  GNWMap.addDefaultBuildingUses();
+
   timeChanged = true;
   onboardingScreen = false;
   start = true;
-  
 }
 
-/** 
- * 
- */
 void draw() {
-  
   pushMatrix();
   scale(scaleFactor);
+
   if (onboardingScreen) {
     onboarding.playVideo();
   } else {
     pushMatrix();
     translate(shiftX, shiftY);
     GNWMap.render();
-    //GNWPathFinder.drawGraph();
+    //GNWPathFinder.drawGraph(); //Show graph on map for debugging
     update_time();
 
-    if (GNWMap.isBuildingUseChanged || timeChanged)           //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+    if (GNWMap.isBuildingUseChanged || timeChanged)  //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
     {
       GNWMap.flowInit(timeChanged);
       GNWInterface.updateButtonBorder();
       GNWMap.isBuildingUseChanged = false;
       timeChanged = false;
     }
+
     GNWInterface.dropFeedback(isOnMap());
     GNWMap.drawFlow();
     GNWMap.showSelectedBuilding(); //draw the tooltip and place holder
     popMatrix();
-    //render buildingUseBoxes and SelectedBUIcon
-    GNWInterface.render();
+    GNWInterface.render();    //render buildingUseBoxes and SelectedBUIcon
 
     if (!start) 
     {
       image(instruction, 0, 0);
     }
   }
+
+  fill(0);        
+  rect(GNWInterface.interfaceImage.width, 0, width, GNWInterface.interfaceImage.height);
+
   popMatrix();
 }
 
 void update_time()
 {
-
   if (cur_time != pre_time)
   {
     timeChanged = true;
@@ -235,14 +247,15 @@ void mouseReleased()
       GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
     } 
     catch(Exception e) {
-      GNWInterface.clearSelected();
+      GNWInterface.clearSelectedBUse();
     }
   }
-  GNWInterface.clearSelected();
+  GNWInterface.clearSelectedBUse();
 }
 
 /**
- * Checks if mouse position is on map / drag and drop / time bar/ setting ; this checks raw coordinates (i.e. when scaleFactor is 1)
+ * Checks if mouse position is on map
+ * This checks raw coordinates (i.e. when scaleFactor is 1)
  */
 boolean isOnMap()
 {
@@ -250,6 +263,10 @@ boolean isOnMap()
   return !onboardingScreen && mouseY < midY;
 }
 
+/**
+ * Checks if mouse position is on time bar
+ * This checks raw coordinates (i.e. when scaleFactor is 1)
+ */
 boolean isOnTimeSlider()
 {
   int time_top = 1280;
@@ -257,6 +274,9 @@ boolean isOnTimeSlider()
   return mouseY > time_top && mouseY < time_bottom;
 }
 
+/**
+ * Sets building categories 
+ */
 void setBuildingUses()
 {
   buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
@@ -270,11 +290,12 @@ void setBuildingUses()
   buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
   buildingUses.put("Education", new BuildingUse("Education", "", 0));
   buildingUses.put("Student Resident", new BuildingUse("Student Resident", "", 0));
-  
-  setUse_buildings();
-  
 }
 
+/**
+ * Adds empty lists for each building categories into use_buildings
+ * Use_buildings keeps track of all the buildings for each category
+ */
 void setUse_buildings()
 {
   use_buildings.put("Retail", new ArrayList<Building>());
@@ -288,7 +309,6 @@ void setUse_buildings()
   use_buildings.put("Park and Public", new ArrayList<Building>());
   use_buildings.put("Education", new ArrayList<Building>());
   use_buildings.put("Student Resident", new ArrayList<Building>());
-  GNWMap.addDefaultBuildingUses();
 }
 
 void loadDropFeedbackImages()
@@ -307,6 +327,9 @@ void loadDropFeedbackImages()
   glowImage_shaw = loadImage("highlight_shaw.png");
 }
 
+/**
+ * Returns current time (only minute and second) in seconds
+ */
 int getCurrentTimeSeconds()
 {
   return (minute() * 60) + second();

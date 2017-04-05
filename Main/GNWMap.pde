@@ -1,3 +1,6 @@
+/**
+ * GNWMap represents the map of Great Northern Way on the to of the application
+ */
 class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
@@ -15,9 +18,8 @@ class GNWMap
 
   boolean isBuildingUseChanged;
   Building selectedBuilding;
-  //Boolean PCIMode = false;
   Boolean show = true;
-  
+
   int newAssignedBuildingID = -1;
 
   GNWMap() 
@@ -40,6 +42,8 @@ class GNWMap
     //initialize the hashmap use_flows
     use_flows();
     createUseFlowFromFile();
+    
+    addDefaultBuildingUses();
   }
 
   void render()
@@ -79,9 +83,9 @@ class GNWMap
       }
 
       checkFlowDelayLimit(); 
-      
-      GNWInterface.isDefaultSelected = false;          //clear the UI button border
-      GNWInterface.isPCIVisionSelected = false;        //clear the UI button border
+
+      isDefaultSelected = false;          //clear the UI button border
+      isPCIVisionSelected = false;        //clear the UI button border
 
       return;
     } else {
@@ -124,44 +128,44 @@ class GNWMap
       Building building = (Building) buildingEntry.getValue();
       flowRoutes = building.findParticleGenRate(flowRoutes);
     }
-    
+
     checkFlowDelayLimit();
-    
+
     if (!timeIsChanged && newAssignedBuildingID != -1)
     {
       drawFirstParticle();
     }
   }
-  
+
   void drawFirstParticle()
   {
-      boolean hasNewOutFlow = false;
-      
-      for (int i = 0; i < flowRoutes.size(); i++) 
+    boolean hasNewOutFlow = false;
+
+    for (int i = 0; i < flowRoutes.size(); i++) 
+    {
+      FlowRoute curFlowRoute = flowRoutes.get(i);
+      if (curFlowRoute.initial_nodeID == newAssignedBuildingID)
       {
-        FlowRoute curFlowRoute = flowRoutes.get(i);
-        if (curFlowRoute.initial_nodeID == newAssignedBuildingID)
+        particles.add(curFlowRoute.getNewParticle());
+        hasNewOutFlow = true;
+        break;
+      }
+    }
+
+    if (!hasNewOutFlow)
+    {
+      for (int j = 0; j < flowRoutes.size(); j++)
+      {
+        FlowRoute curFlowRoute = flowRoutes.get(j);
+        if (curFlowRoute.isStartOfFlow && curFlowRoute.dest_nodeID == newAssignedBuildingID)
         {
-          curFlowRoute.addNewParticle(particles);
-          hasNewOutFlow = true;
+          particles.add(curFlowRoute.getNewParticle());
           break;
         }
       }
-      
-      if (!hasNewOutFlow)
-      {
-        for (int j = 0; j < flowRoutes.size(); j++)
-        {
-          FlowRoute curFlowRoute = flowRoutes.get(j);
-          if (curFlowRoute.isStartOfFlow && curFlowRoute.dest_nodeID == newAssignedBuildingID)
-          {
-            curFlowRoute.addNewParticle(particles);
-            break;
-          }
-        }
-      }
-      
-      newAssignedBuildingID = -1;
+    }
+
+    newAssignedBuildingID = -1;
   }
 
   /*Check if new particles should be generated. 
@@ -174,7 +178,7 @@ class GNWMap
     {
       if (flowRoutes.get(i).timeToNextParticleGen == 0)
       {
-        flowRoutes.get(i).addNewParticle(particles);
+        particles.add(flowRoutes.get(i).getNewParticle());
         if (flowRoutes.get(i).isStartOfFlow == true)
         {
           flowRoutes.get(i).timeToNextParticleGen = (int)random(0, flowRoutes.get(i).delay); //set time for second particle
@@ -223,7 +227,7 @@ class GNWMap
       ArrayList<BuildingUse> buildingUses = new ArrayList<BuildingUse>();
       buildingUses.add(selectedBuildingUse);     
       selectedBuilding = building;
-      
+
       newAssignedBuildingID = building.doorNodeId;
     } 
     catch (Exception e) {
@@ -343,7 +347,7 @@ class GNWMap
    */
   void makeDefaultUseFromFile() 
   {
-    String tagString = (PCIMode) ? "PCIMode" : "default";
+    String tagString = (isPCIVisionSelected) ? "PCIMode" : "default";
     String lines[];
     lines = loadStrings("customize_use.txt");
     int mode = 0;

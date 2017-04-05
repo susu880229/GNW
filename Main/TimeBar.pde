@@ -1,10 +1,8 @@
 /** 
- *the TimeBar class represent the time slider
+ * The TimeBar class represent the time slider
  */
-  
 class TimeBar
 {
- 
   int x;
   int y;
   int wi;
@@ -15,6 +13,8 @@ class TimeBar
   int back_hi;
   int position;
   color dot_color;
+  
+  int numOfSections = 8;
   
   /**
    * TimeBar constructor
@@ -28,10 +28,8 @@ class TimeBar
    * @back_hi is the height of the bar
    * @position is the index of the dots (multiplied by the back_wi / 8).
    */
-   
   TimeBar(int dot_x, int dot_y, int dot_wi, int dot_hi)
   {
-    
     x = dot_x;
     y = dot_y;
     wi = dot_wi;
@@ -41,7 +39,6 @@ class TimeBar
     back_x = x;
     back_y = y - 6;
     dot_color = color(22, 184, 189);
-    
   }
   
   void render()
@@ -68,10 +65,9 @@ class TimeBar
       {
         fill(dot_color);
         ellipseMode(CENTER);
-        ellipse(back_x + back_wi / 8 * i, y, wi, hi);
+        ellipse(back_x + back_wi / numOfSections * i, y, wi, hi);
       }
     }
-    
   }
   
   void mouseDragged()
@@ -80,44 +76,31 @@ class TimeBar
   }
   
   /**
-   * draw the dots only on the certain five time selections of the slider bar
+   * Draw the dots only on the certain five time selections of the slider bar
    */
   void position_decide()
   {
     
-    for(int i = 0; i < 8; i++)
+    for(int i = 0; i < numOfSections; i++)
     {
-      if(mouseX >= back_x + back_wi / 8 * i && mouseX < back_x + back_wi / 8 * (i + 1))
+      int next_i = i + 1;
+      
+      if(mouseX >= back_x + back_wi / numOfSections * i && mouseX < back_x + back_wi / numOfSections * next_i)
       {
         if(i % 2 == 0) // even number
         {
-          //x = back_x + back_wi / 8 * i - wi / 2; //define the position at the specific time
-          x = back_x + back_wi / 8 * i;
-          time_decide(i);
-          position = i;
-          
+          x = back_x + back_wi / numOfSections * i;
+          cur_time = floor(i/2);
+          position = i;          
         }
-        else if ((i + 1) % 2 == 0)
+        else if (next_i % 2 == 0)
         {
-          //x = back_x + back_wi / 8 * (i + 1) - wi / 2; //define the position at the specific time
-          x = back_x + back_wi / 8 * (i + 1);
-          time_decide(i + 1);
-          position = i + 1;
+          x = back_x + back_wi / numOfSections * next_i;
+          cur_time = floor(next_i / 2);
+          position = next_i;
         }
         break;
       }
-      
-    }
-    
-  }
-  
-  /** 
-   * update the time choice according to the position of the dot
-   */
-   
-  void time_decide(int i)
-  {
-    cur_time = floor(i/2);
-  }
-  
+    }    
+  }  
 }

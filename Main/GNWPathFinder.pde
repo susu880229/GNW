@@ -1,3 +1,6 @@
+/**
+ * GNWPathFinder finds all the possible paths between the buildings
+ */
 class GNWPathFinder 
 {
   ArrayList<GraphNode> gNodes;
@@ -26,12 +29,13 @@ class GNWPathFinder
     Edge_arrayToList();
   }
 
-
   /**
-   * Finds route
-   * @return GraphNode[] List of nodes to visit to go from startNode to endNode
+   * Finds list of graph nodes for path
+   * @param startNode The source node
+   * @param endNode   The destination node
+   * @return          List of nodes to visit to go from startNode to endNode
    */
-  ArrayList<GraphNode> findPath(int startNode, int endNode) 
+  ArrayList<GraphNode> findPath(int startNode, int endNode)
   {
     ArrayList<GraphNode> path_nodes = new ArrayList<GraphNode>();
     pathFinder.search(startNode, endNode, true);
@@ -43,11 +47,10 @@ class GNWPathFinder
   }
 
   /**
-   *change gNodes from Array to ArrayList
+   * Change gNodes from Array to ArrayList
    */
   void Node_arrayTolist()
   {
-
     for (GraphNode node : GNWGraph.getNodeArray())
     {
       gNodes.add(node);
@@ -56,7 +59,7 @@ class GNWPathFinder
 
 
   /**
-   *change gEdges from Array to ArrayList
+   * Change gEdges from Array to ArrayList
    */
   void Edge_arrayToList()
   {
@@ -150,36 +153,6 @@ class GNWPathFinder
     vertex(ax - awidthx, ay - awidthy);
     vertex(ax + awidthx, ay + awidthy);
     endShape();
-  }
-
-  /**
-   * THIS FUNCTION IS ONLY TEMP HERE TO ILLUSTRATE ROUTES
-   */
-
-  //use the findpath result (a series of GraphNodes) as argument to draw lines between these nodes
-  void drawRoute(ArrayList<GraphNode> r) 
-  {
-    int lineCol =color(200, 0, 0);
-    float sWeight = 5.0f;
-    if (r.size() >= 2) {
-      pushStyle();
-      stroke(lineCol);
-      strokeWeight(sWeight);
-      noFill();
-      for (int i = 1; i < r.size(); i++)
-        line(r.get(i-1).xf(), r.get(i-1).yf(), r.get(i).xf(), r.get(i).yf());
-
-      // Route start node
-      strokeWeight(2.0f);
-      stroke(0, 0, 160);
-      fill(0, 0, 255);
-      ellipse(r.get(0).xf(), r.get(0).yf(), nodeSize, nodeSize);
-      // Route end node
-      stroke(160, 0, 0);
-      fill(255, 0, 0);
-      ellipse(r.get(r.size()-1).xf(), r.get(r.size()-1).yf(), nodeSize, nodeSize); 
-      popStyle();
-    }
   }
 
   /**

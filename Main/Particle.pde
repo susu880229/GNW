@@ -1,7 +1,6 @@
 /**
  * The Particle class represents each dot on the map.
  */
-
 class Particle
 {
   int maxPathDeviation = 5;    //how far the particles can deviate from the standard path (how much the particles can stray from their path)
@@ -29,13 +28,13 @@ class Particle
   
   /**
    * The Particle constructor
+   * 
    * @param routeNodes the graph nodes of the route that the particle will travel through.
    * @param start_nodeID the node at the beginning of the route
    * @param end_nodeID the node at the end of the route
    * @param from_use the building use at the start point of the route
    * @param to_use the building use at the end point of the route
    */
-
   Particle (ArrayList<GraphNode> routeNodes, int start_nodeID, int end_nodeID, String from_use, String to_use) 
   {
     nodes = routeNodes;
@@ -190,7 +189,11 @@ class Particle
   }
   
   
-  //check if the particle's position is within the same path.
+  /** 
+  * Checks if the particle's position is within the same path
+  * 
+  * @param path Path to check 
+  */
   boolean checkBoundaries(Path path)
   {
     if (abs(path.gradient) <= 1)    //if line is more horizontal than vertical
@@ -211,29 +214,38 @@ class Particle
     }
   }
   
+  /**
+  * Select color of dot depending on building use destination and source
+  */
   void selectFill()
   {
+    color officeWorkerColor = color(102, 217, 226, 200);
+    color studentColor = color(255, 137, 49, 200);
+    color lightIndustryColor = color(249, 212, 99, 200);
+    color residentColor = color(138, 206, 138, 200);
+    color visitorColor = color(20, 93, 158, 200);
+    
     if (from_buildingUse.equals("Office") || to_buildingUse.equals("Office"))
     {
-      flowColor = color(102, 217, 226, 200);
+      flowColor = officeWorkerColor;
     } 
     else if (from_buildingUse.equals("Education") || to_buildingUse.equals("Education"))
     {
-      flowColor = color(255, 137, 49, 200);
+      flowColor = studentColor;
     }
     else if (from_buildingUse.equals("Light Industry") || to_buildingUse.equals("Light Industry"))
     {
-      flowColor = color(249, 212, 99, 200);
+      flowColor = lightIndustryColor;
     }
     else if (from_buildingUse.equals("Resident") || to_buildingUse.equals("Resident") || 
               from_buildingUse.equals("Student Resident") || to_buildingUse.equals("Student Resident"))
     {
-      flowColor = color(138, 206, 138, 200);
+      flowColor = residentColor;
     }
     else if (from_buildingUse.equals("Neighborhood") || to_buildingUse.equals("Neighborhood") 
             || from_buildingUse.equals("Transit") || to_buildingUse.equals("Transit"))
     {
-      flowColor = color(20, 93, 158, 200);
+      flowColor = visitorColor;
     }
     else if ((from_buildingUse.equals("Art and Culture") && to_buildingUse.equals("Retail")) 
             || (from_buildingUse.equals("Retail") && to_buildingUse.equals("Art and Culture")))
@@ -242,16 +254,16 @@ class Particle
       switch (colorChoice)
       {
         case 1:
-          flowColor = color(102, 217, 226, 200);
+          flowColor = officeWorkerColor;
           break;
          case 2:
-           flowColor = color(255, 137, 49, 200);
+           flowColor = studentColor;
            break;
          case 3:
-         flowColor = color(138, 206, 138, 200);
+         flowColor = residentColor;
            break;
          case 4:
-           flowColor = color(20, 93, 158, 200);
+           flowColor = visitorColor;
            break;  
       }
     }
