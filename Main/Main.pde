@@ -39,8 +39,8 @@ PImage glowImage_shaw;
 boolean start;
 PImage instruction;
 
-boolean isDefaultSelected = false;
-boolean isPCIVisionSelected = true;
+boolean isDefaultSelected = true;
+boolean isPCIVisionSelected = false;
 boolean isInstructionSelected = false;
 
 Boolean onboardingScreen = true;
@@ -51,9 +51,10 @@ void setup()
 {
   //FOR OUTPUT OF GRAPH NODE COORDINATES
   //outputPathCoordinates = createWriter("positions.txt"); 
-
   fullScreen(P2D);
+  background(0);
   orientation(LANDSCAPE);
+  
   cur_time = 0;
   pre_time = -1;
   timeChanged = false;
