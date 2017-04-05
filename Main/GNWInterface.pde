@@ -15,10 +15,6 @@ class GNWInterface
   TimeBar time_bar;
   HotspotCoords close_instruButton;
 
-  boolean isDefaultSelected;
-  boolean isPCIVisionSelected;
-  boolean isInstructionSelected;
-
   GNWInterface() 
   {
     interfaceImage = loadImage("interface.png");
@@ -34,10 +30,6 @@ class GNWInterface
     createBuildingUseBoxes();
     createButtonsPanel();
     close_instruButton = new HotspotCoords(1855, 35, 2015, 35, 2015, 195, 1855, 195);
-
-    isDefaultSelected = true;
-    isPCIVisionSelected = false;
-    isInstructionSelected = false;
   }
 
   /**
@@ -133,18 +125,16 @@ class GNWInterface
   void selectButtonPanel()
   {
     if (buttonPanel.get("reset").contains()) {
-      PCIMode = false;
-      reset();
-      GNWMap.isBuildingUseChanged = false;
       isDefaultSelected = true;
       isPCIVisionSelected = false;
+      reset(); //<>//
+      GNWMap.isBuildingUseChanged = false;
     } else if (buttonPanel.get("pci").contains())
     {
-      PCIMode = true;
-      reset();
-      GNWMap.isBuildingUseChanged = false;
       isDefaultSelected = false;
       isPCIVisionSelected = true;
+      reset();
+      GNWMap.isBuildingUseChanged = false;
     } else if (buttonPanel.get("instruction").contains())
     {
       start = false;
@@ -198,63 +188,69 @@ class GNWInterface
     }
   }
 
-  //detect buildingUseBox
+  /**
+   * Selects new building use box based on user input
+   */
   void update_buildingBox()
   {
-    selectedBUIcon = null;
-    boolean found = false;
+    clearSelectedBUse(); //clear existing selected building use
+
     for (int i = 0; i < buildingUseBoxes.size(); i++) {
       BuildingUseBox buildingUseBox = buildingUseBoxes.get(i);
-      if (buildingUseBox.drag_detect() || buildingUseBox.pull_detect())
-      {
-        found = true;
-        //tap to different buildingBox to set the lock default setting
-        if (selectedBUBox == null || buildingUseBox.buildingUse.name != selectedBUBox.buildingUse.name)
-        {
-          buildingUseBox.lock = false; 
-          selectedBUBox = buildingUseBox; //create a new cur_selectedBUBox
-        }
-        break;
-      }
-    }
 
-    if (!found)
-    {
-      clearSelectedBox();
+      Boolean changeDetected = buildingUseBox.drag_detect() || buildingUseBox.pull_detect();
+      Boolean validBUBox = selectedBUBox == null || buildingUseBox.buildingUse.name != selectedBUBox.buildingUse.name;
+
+      if (changeDetected && validBUBox)
+      {
+        buildingUseBox.lock = false; 
+        selectedBUBox = buildingUseBox; 
+        return;
+      }
     }
   }
 
-  //add use_icon or pull up the image
+  /**
+   * When building use box is selected, create building use icon or pull up the image depending on current states of interface
+   * Case 1: If drag is detected and that building use box is not locked, then create a new building use icon
+   * Case 2: If pull is detected on a building use but there is a lock on the building use box, then release the lock
+   * Case 3: If pull is detected and there's no lock on the building use box, then activate the lock.
+   */
   void function_buildingBox()
   {
-    if (selectedBUBox != null)
-    {
-      if (selectedBUBox.drag_detect())
+    if (selectedBUBox != null) {
+      if (selectedBUBox.drag_detect() && !selectedBUBox.lock)
       {
-        if (selectedBUBox.lock == false)
-        {
-          selectedBUIcon = new BuildingUseIcon(selectedBUBox.buildingUse, mouseX, mouseY);
-        }
-      } else if (selectedBUBox.pull_detect())
+        selectedBUIcon = new BuildingUseIcon(selectedBUBox.buildingUse, mouseX, mouseY);
+      } else if (selectedBUBox.pull_detect() && selectedBUBox.lock)
       {
-        //selectedBUBox.lock = true;
-        if (selectedBUBox.lock == true)
-        {
-          clearSelectedBox();
-        } else
-        {
-          selectedBUBox.lock = true;
-        }
+        clearSelectedBox();
+      } else if (selectedBUBox.pull_detect() && !selectedBUBox.lock)
+      {
+        selectedBUBox.lock = true;
       }
     }
   }
 
+  /**
+   * Deselects currently selected building use box
+   */
   void clearSelectedBox()
   {
-
     selectedBUBox = null;
   }
 
+  /**
+   * Deselects currently selected building use
+   */
+  void clearSelectedBUse()
+  {
+    selectedBUIcon = null;
+  }
+
+  /**
+   * Updates location of building use icon when user drags it
+   */
   void update() 
   {
     if (selectedBUIcon != null) {
@@ -262,6 +258,9 @@ class GNWInterface
     }
   }
 
+  /**
+   * Highlight building that has the building use icon hovering over it 
+   */
   void dropFeedback(boolean isOnMap)
   {
     if (selectedBUIcon != null && mousePressed == true && isOnMap)
@@ -276,11 +275,5 @@ class GNWInterface
         //println(e);
       }
     }
-  }
-
-
-  void clearSelected ()
-  {
-    selectedBUIcon = null;
   }
 }

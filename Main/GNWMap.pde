@@ -1,3 +1,6 @@
+/**
+ * GNWMap represents the map of Great Northern Way on the to of the application
+ */
 class GNWMap
 {
   HashMap<String, Building> buildings; //String is building id
@@ -15,7 +18,6 @@ class GNWMap
 
   boolean isBuildingUseChanged;
   Building selectedBuilding;
-  //Boolean PCIMode = false;
   Boolean show = true;
 
   int newAssignedBuildingID = -1;
@@ -40,6 +42,8 @@ class GNWMap
     //initialize the hashmap use_flows
     use_flows();
     createUseFlowFromFile();
+    
+    addDefaultBuildingUses();
   }
 
   void render()
@@ -80,8 +84,8 @@ class GNWMap
 
       checkFlowDelayLimit(); 
 
-      GNWInterface.isDefaultSelected = false;          //clear the UI button border
-      GNWInterface.isPCIVisionSelected = false;        //clear the UI button border
+      isDefaultSelected = false;          //clear the UI button border
+      isPCIVisionSelected = false;        //clear the UI button border
 
       return;
     } else {
@@ -343,7 +347,7 @@ class GNWMap
    */
   void makeDefaultUseFromFile() 
   {
-    String tagString = (PCIMode) ? "PCIMode" : "default";
+    String tagString = (isPCIVisionSelected) ? "PCIMode" : "default";
     String lines[];
     lines = loadStrings("customize_use.txt");
     int mode = 0;
