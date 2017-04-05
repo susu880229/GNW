@@ -106,7 +106,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 8. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
 
 ### Running Executables
-- **You need Java installed on your computer (both Windows and Mac). If you don't have it, go to https://www.java.com/en/download/ to download it and follow the prompts to install it. 
+- **You need Java installed on your computer (both Windows and Mac). If you don't have it, go to https://www.java.com/en/download/ to download it and follow the prompts to install it. **
 
 1. Windows:
 
