@@ -375,7 +375,7 @@ Uncomment the last three lines by removing the double slashes "//". This allows 
 1. Try exporting the app to a .apk instead, then transfer and install the .apk to the tablet. See [Compiling and deploying on Android tablet](#compiling-and-deploying-on-android-tablet) for more details.
 
 ## Releases
-- Delivery
+- [Delivery](https://github.com/mdm11/GNW/releases/tag/v1.0.0)
 - Future plans
   - Having a different density depending on the lot size
   - Giving users statistics on the number of people in the area as well as the number of people attracted by each use
