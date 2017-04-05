@@ -106,12 +106,13 @@ NB: the app was designed and programmed specifically for the device and operatin
 8. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
 
 ### Running Executables
+- **You need Java installed on your computer (both Windows and Mac). If you don't have it, go to https://www.java.com/en/download/ to download it and follow the prompts to install it. 
 
 1. Windows:
 
 	1. Unzip windows.zip (this step is only applicable if accessing the executable the first time from the Delivery folder)
 	2. Open `application.windows64` folder
-	3. Double click `Main.exe` (note: You need Java installed on your computer. If you don't have it, follow the prompts or go to https://www.java.com/en/download/ to download it)
+	3. Double click `Main.exe`
 	4. If you want to run this program on the outside of the folder, right click `Main.exe` > Click Create Shortcut > Drag shortcut to where you want to run the program.
 
 
