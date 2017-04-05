@@ -101,7 +101,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 3. Go to the Onboarding class and comment out line 42 for `onBoardingVideo.stop();`. This is not compatible with the Android video library and it is not needed here.
 4. Go to `File` > `Export Signed Package`
 5. Type in a password of your choice and press ok (if password is invalid, press "Reset Password" and set a new one)
-6. Transfer the file `|-Main/android/bin/Main-release-signed.apk` into the tablet
+6. Transfer the file `|-Main/android/bin/Main-release-signed-aligned.apk` into the tablet
 7. Using the tablet, open the file and click install
 8. If a pop-up appears showing that the installation is blocked, enable `Settings > Lock screen and security > Unknown sources`
 
