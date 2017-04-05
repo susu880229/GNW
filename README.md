@@ -7,12 +7,15 @@ GNW Creative Community
 * [Getting started](#getting-started)
   * [Compiling and deploying on Mac or Windows](#compiling-and-deploying-on-mac-or-windows)
   * [Compiling and deploying on Android tablet](#compiling-and-deploying-on-android-tablet)
+  * [Running executables](#running-executables)
 * [Documentation](#documentation)
 * [How to](#how-to)
   * [Edit text and images](#edit-text-and-images)
   * [Adjust the flow](#adjust-the-flow)
   * [Adjust the default building uses and PCI vision](#adjust-the-default-building-uses-and-pci-vision)
   * [Edit or add new lots](#edit-or-add-new-lots)
+  * [Edit the app icon](#edit-the-app-icon)
+  * [Edit the app name](#edit-the-app-name)
 * [FAQ and troubleshooting](#faq-and-troubleshooting)
   * [What happens if the app crashes?](#what-happens-if-the-app-crashes)
   * [How do I display the app on an external computer?](#how-do-i-display-the-app-on-an-external-computer)
@@ -44,7 +47,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 1. Download processing here: https://processing.org/download/ on PC or Mac
 
-2. install the following packages
+2. Install the following packages
 
 	1. Mac & Windows: the below packages can be installed in Processing's menu bar. Sketch > Import Library... > Add library... > Search > Install package
 		1. ControlP5 from Andreas Schlegel: http://www.sojamo.de/libraries/controlP5/
@@ -52,13 +55,12 @@ NB: the app was designed and programmed specifically for the device and operatin
 		3. Video (Desktop) from The Processing Foundation: https://github.com/processing/processing-video
 
 	2. Mac & Windows: the below package need to be manually installed. A copy can be found on the repo
-		1. Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android
-			-To manually install the Android video package:
+		1. Video (Android) from Umair Khan:  https://github.com/omerjerk/processing-video-android. To manually install the Android video package:
 
 			   1. From the project folder, go to GNW > Lib > video_android
 			   2. Copy the entire video_android folder into the Processing Library (should be in Documents/Processing/libraries)
 			   3. Restart Processing
-			   4. Check if video_android is listed as an available library to use under Sketch > Import Library... > `Video Library for Processing Android` should appear under Contributed library . If not, restart computer.
+			   4. Check if video_android is listed as an available library to use under Sketch > Import Library... > `Video Library for Processing Android` should appear under Contributed library. If not, restart computer.
 
 3. Open the project folder
 
@@ -86,7 +88,7 @@ NB: the app was designed and programmed specifically for the device and operatin
 2. Ensure that the correct video library is selected. The library `processing.video.*` should be imported and `in.omerjerk.processing.video.android.*` should be commented out
 3. Go to the Onboarding class and uncomment line 42 for `onBoardingVideo.stop();`. The video library for desktop, `processing.video.*`, requires the video to stop before replaying it
 4. Run the project by clicking the play button at the top-left corner to ensure that everything is working properly
-5. Before creating any new executable(s), remove any existing executable files & folders from the `Main` project folder. 
+5. Before creating any new executable(s), remove any existing executable files & folders from the `Main` project folder.
 6. Go to `File` > `Export Application... ` > check off the platforms you want (if you are on a Windows computer, you may not be able to export for Mac) > click `Export`
 7. The new executable(s) can be found inside the `Main` project folder
 
@@ -105,20 +107,20 @@ NB: the app was designed and programmed specifically for the device and operatin
 
 ### Running Executables
 
-1. Windows: 
-	
+1. Windows:
+
 	1. Unzip windows.zip (this step is only applicable if accessing the executable the first time from the Delivery folder)
 	2. Open `application.windows64` folder
 	3. Double click `Main.exe` (note: You need Java installed on your computer. If you don't have it, follow the prompts or go to https://www.java.com/en/download/ to download it)
 	4. If you want to run this program on the outside of the folder, right click `Main.exe` > Click Create Shortcut > Drag shortcut to where you want to run the program.
-	
-	
+
+
 2. Mac:
 
 	1. Unzip mac.zip (this step is only applicable if accessing the executable the first time from the Delivery folder)
 	2. Open `Main.app/Contents/MacOS` folder
-	3. Double click `Main.app` 
-	4. If you want to run this program on the outside of the folder, right click `Main.app` > Click Copy > Go to where you want to run it from and paste the app there. 
+	3. Double click `Main.app`
+	4. If you want to run this program on the outside of the folder, right click `Main.app` > Click Copy > Go to where you want to run it from and paste the app there.
 
 ## Documentation
 
@@ -148,7 +150,7 @@ NB: the app was designed and programmed specifically for the device and operatin
       |- icon-72.png
 ```
 
-2. Sketch properties **[DO NOT EDIT]**
+2. Sketch properties **/ DO NOT EDIT /**
 
 Processing will automatically adjust it according to SDK used for development.
 
@@ -215,7 +217,7 @@ Processing will automatically adjust it according to SDK used for development.
 
 ```
 
-4. Android Video Library  **[DO NOT EDIT]**
+4. Android Video Library **/ DO NOT EDIT /**
 ```
 |-Lib/video_android/
     |- this folder holds the basic example of how to use the video_android library
@@ -235,7 +237,7 @@ Processing will automatically adjust it according to SDK used for development.
 
 ### Edit text and images
 
-1. Find corresponding Adobe Illustrator file in `Delivery/Assets` **[To Do]**
+1. Find corresponding Adobe Illustrator file in the delivery package under `delivery/design assets`
 2. Using Adobe Illustrator, edit text and/or the image without changing its size or proportion
 3. Export the image in the same size and file name as the image found in `|- Main/data/`, and replace the image with the updated one
 4. Re-compile and re-install the app
@@ -279,9 +281,9 @@ Processing will automatically adjust it according to SDK used for development.
 	2. Changing the building use assignments for the PCI Vision is the same as for default. Refer to above from the second step.
 
 ### Edit or add new lots
-1. Locate the Adobe Illustrator file of the map in `Delivery/Assets`**[To do]** and edit it. Export the map in .png format with a white background. Name it as map.png.
+1. Locate the Adobe Illustrator file of the map in in the delivery package under `delivery/design assets/entire-map.ai` and edit it. Export the map in .png format with a white background. Name it as map.png.
 
-2. Locate the Adobe Illustrator file of the map paths in `Delivery/Assets` **[To do]**. Using the new map as a guide, edit the paths so that there is a path leading into the new/edited lot. Give each new path intersection and end point (i.e. the start and end of any new straight lines created) a number. Each intersection and end point is a "node", and the number of the node will be used in the code. Export the image in .png format.
+2. On the same `entire-map.ai` file, unhide the `paths` layer. Edit the paths so that there is a path leading into the new/edited lot. Give each new path intersection and end point (i.e. the start and end of any new straight lines created) a number. Each intersection and end point is a "node", and the number of the node will be used in the code. Export the image in .png format.
 
 ![image of map paths](http://i288.photobucket.com/albums/ll174/twin_friends/map-paths_zpsnovhra7m.png)
 
@@ -375,3 +377,6 @@ Uncomment the last three lines by removing the double slashes "//". This allows 
 ## Releases
 - Delivery
 - Future plans
+  - Having a different density depending on the lot size
+  - Giving users statistics on the number of people in the area as well as the number of people attracted by each use
+  - Saving user sessions and showing the collected data in a dashboard to help PCI understand what the public really values in terms of uses
