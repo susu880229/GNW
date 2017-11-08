@@ -1,139 +1,341 @@
+//import processing.video.*; //this is for desktop //<>//
+import in.omerjerk.processing.video.android.*; //this is for android
+
+import pathfinder.*;
 import java.util.Map;
 
-//String here is building id
-HashMap<String, Building> GNWMap; 
-ArrayList<Integer> type_1_buildingIds;
-ArrayList<Integer> type_2_buildingIds;
-ArrayList<Integer> type_3_buildingIds;
+GNWPathFinder GNWPathFinder;
+GNWMap GNWMap;
+GNWInterface GNWInterface;
 
-void setup() {
-  size(1400, 700);
-  GNWMap = new HashMap<String, Building>();
-  type_1_buildingIds = new ArrayList<Integer>();
-  type_2_buildingIds = new ArrayList<Integer>();
-  type_3_buildingIds = new ArrayList<Integer>();
+HashMap<String, BuildingUse> buildingUses;
+HashMap<String, ArrayList<Building>> use_buildings;
+HashMap<Integer, ArrayList<UseFlow>> use_flows;
+
+//transformations
+int shiftX = 0;
+int shiftY = 0;
+float scaleFactor;
+
+//time selection parameters
+int cur_time;
+int pre_time;
+boolean timeChanged;
+
+//images for the drop feedback
+PImage glowImage_515;
+PImage glowImage_521;
+PImage glowImage_701;
+PImage glowImage_887;
+PImage glowImage_901;
+PImage glowImage_1933;
+PImage glowImage_1980;
+PImage glowImage_lot4;
+PImage glowImage_lot5;
+PImage glowImage_lot7;
+PImage glowImage_naturesPath;
+PImage glowImage_shaw;
+
+boolean start;
+PImage instruction;
+
+boolean isDefaultSelected = true;
+boolean isPCIVisionSelected = false;
+boolean isInstructionSelected = false;
+
+Boolean onboardingScreen = true;
+Onboarding onboarding;
+int onboardingStartTime = getCurrentTimeSeconds();
+
+void setup()
+{
+  //FOR OUTPUT OF GRAPH NODE COORDINATES
+  //outputPathCoordinates = createWriter("positions.txt"); 
+  fullScreen(P2D);
+  background(0);
+  orientation(LANDSCAPE);
   
-  createGNWMap();
-  addInitBuildingTypes();
-  
-  //TODO: dynamically add types to building (drag and drop type icon into buildings)
+  cur_time = 0;
+  pre_time = -1;
+  timeChanged = false;
+
+  use_flows = new HashMap<Integer, ArrayList<UseFlow>>();
+  use_buildings = new HashMap<String, ArrayList<Building>>();
+  buildingUses = new HashMap<String, BuildingUse>();
+
+  setBuildingUses();
+  setUse_buildings();
+
+  GNWMap = new GNWMap(); //include initialize the use_buildings hashmap and the use_flows hashmap
+  GNWInterface = new GNWInterface();
+  GNWPathFinder = new GNWPathFinder(); 
+  onboarding = new Onboarding();
+
+  scaleFactor = height/(float)GNWInterface.interfaceImage.height;
+
+  loadDropFeedbackImages();
+  start = true;
+  frameRate(25);
+  instruction = loadImage("instruction.png");
 }
 
-/** 
-* Draws all the buildings in GNWMap
-*/
+void reset()
+{
+  // Clear all the customizable uses and permanent uses on each building
+  for (Map.Entry buildingEntry : GNWMap.buildings.entrySet()) 
+  {
+    Building building = (Building) buildingEntry.getValue();
+    building.customizableUses.clear();
+    building.permanentUses.clear();
+  }
+
+  // Reset use_buildings hasmap
+  use_buildings.clear();
+  setUse_buildings();
+
+  // Clear selected interface values  
+  GNWInterface.selectedBUIcon = null;
+  GNWInterface.selectedBUBox = null;
+
+  // Clear flow routes and dots and selected building
+  GNWMap.flowRoutes.clear();
+  GNWMap.particles.clear();
+  GNWMap.selectedBuilding = null;
+
+  // Add default or PCI building uses to map
+  GNWMap.addDefaultBuildingUses();
+
+  timeChanged = true;
+  onboardingScreen = false;
+  start = true;
+}
+
 void draw() {
-  background(255);
-  for (Map.Entry GNWMapEntry : GNWMap.entrySet()) { //<>//
-    Building building = (Building) GNWMapEntry.getValue();
-    building.render();
-    building.run();
+  pushMatrix();
+  scale(scaleFactor);
+
+  if (onboardingScreen) {
+    onboarding.playVideo();
+  } else {
+    pushMatrix();
+    translate(shiftX, shiftY);
+    GNWMap.render();
+    //GNWPathFinder.drawGraph(); //Show graph on map for debugging
+    update_time();
+
+    if (GNWMap.isBuildingUseChanged || timeChanged)  //whenever a new building use is added or the time is changed, calculate the flow densities for all paths
+    {
+      GNWMap.flowInit(timeChanged);
+      GNWInterface.updateButtonBorder();
+      GNWMap.isBuildingUseChanged = false;
+      timeChanged = false;
+    }
+
+    GNWInterface.dropFeedback(isOnMap());
+    GNWMap.drawFlow();
+    GNWMap.showSelectedBuilding(); //draw the tooltip and place holder
+    popMatrix();
+    GNWInterface.render();    //render buildingUseBoxes and SelectedBUIcon
+
+    if (!start) 
+    {
+      image(instruction, 0, 0);
+    }
+  }
+
+  fill(0);        
+  rect(GNWInterface.interfaceImage.width, 0, width, GNWInterface.interfaceImage.height);
+
+  popMatrix();
+}
+
+void update_time()
+{
+  if (cur_time != pre_time)
+  {
+    timeChanged = true;
+    pre_time = cur_time;
   }
 }
 
-
 /**
-* Creates new building and adds the building to GNWMap
-*/
-void addBuilding(String id, Boolean customizable, float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-  Building newBuilding = new Building(id, customizable, x1, y1, x2, y2, x3, y3, x4, y4);
-  GNWMap.put(id, newBuilding);
+ * Calculates mouse value if it was on original size sketch (i.e. if scaleFactor = 1)
+ */
+void scaleMouse() {
+  pmouseX = int(pmouseX / scaleFactor);
+  pmouseY = int(pmouseY / scaleFactor);
+  mouseX = int(mouseX / scaleFactor);
+  mouseY = int(mouseY / scaleFactor);
 }
 
-
 /**
-* Adds type to building and adds building to list of appropriate type of building
-* @param id is the building ID
-* @param type is the type of usage to add to building
-*/
-void addType(int id, Type type) {
-  Building building = GNWMap.get(id);
-  building.addType(type);
-  
-  //Adds building id to appropriate list of building Ids
-  switch(type.id) {
-    case 1:
-      type_1_buildingIds.add(id);
-      break;
-    case 2:
-      type_2_buildingIds.add(id);
-      break;
-    case 3:
-      type_3_buildingIds.add(id);
-      break;
+ * Handles how to interpret mouse presses; both cases below checks raw values, so need to scale mouse values back to real size before checking
+ * First case: select building use or pull out the detailed information of each use if mouse pressed onto interface
+ * Second case: select building to show the uses or select use to delete if mouse pressed onto map 
+ **/
+void mousePressed()
+{
+  scaleMouse();
+
+  if (onboardingScreen) 
+  {
+    onboarding.selectVideoFunction();
+  } else {
+    if (start)
+    {
+      GNWMap.show = false; //turn off the place holder
+      if (!isOnMap()) {
+        GNWMap.clearSelectedBuilding();
+        GNWInterface.selectInterface();
+      } else {
+        try 
+        {
+          GNWMap.selectTooltip();
+        } 
+        catch(Exception e) 
+        {
+          GNWMap.selectBuilding();   
+          GNWInterface.clearSelectedBox();
+        }
+      }
+    } else
+    {
+      GNWInterface.close_instruction();
+    }
   }
 }
 
 /**
-* Adds default/existing building usages
-*/
-void addInitBuildingTypes() {
-  GNWMap.get("Stn").addType(new Type_3());
-  
-  GNWMap.get("521").addType(new Type_4());
-  GNWMap.get("515").addType(new Type_4());
-
-  GNWMap.get("EmilyCarr").addType(new Type_1());
-  
-  GNWMap.get("CDM1").addType(new Type_1());
-  GNWMap.get("CDM2").addType(new Type_4());
-  GNWMap.get("CDM3").addType(new Type_1());
-  
-  GNWMap.get("Lot1").addType(new Type_4());
-  GNWMap.get("Lot2").addType(new Type_4());
-  GNWMap.get("Lot3").addType(new Type_4());
-  GNWMap.get("Lot4").addType(new Type_4());
-  GNWMap.get("Mec").addType(new Type_4());
-  
-  GNWMap.get("VCC").addType(new Type_1());
-  GNWMap.get("Lot5").addType(new Type_4());
-  
-  GNWMap.get("Lot6").addType(new Type_4());   
-  GNWMap.get("Lot7").addType(new Type_3());
+ * Handles how to interpret different mouse drags
+ * First case: moving building use icon - it updates raw interface values, so need to scaleMouse() first
+ * Second case: moving the time slider dot - it updates raw interface values, so need to scaleMouse() first
+ * Third case: moving map - scaled map is being updated, so don't need to scaleMouse(); however, isOnMap() checks raw y values, so need to revert mouseY
+ **/
+void mouseDragged()
+{
+  scaleMouse();
+  //avoid the user move the map to impact the close instruction button to work
+  if (start && !onboardingScreen)
+  {
+    if (GNWInterface.selectedBUIcon != null)
+    {
+      GNWInterface.update();
+    } else if (GNWInterface.selectedBUIcon == null && isOnTimeSlider()) 
+    {
+      GNWInterface.time_bar.mouseDragged();
+    } else if (isOnMap()) 
+    {
+      mouseX = int(mouseX * scaleFactor);
+      pmouseX = int(pmouseX * scaleFactor);
+      pmouseY = int(pmouseY * scaleFactor); 
+      shiftX = shiftX - (pmouseX - mouseX);
+      shiftX = constrain(shiftX, GNWInterface.interfaceImage.width - GNWMap.mapImage.width, 0);
+    }
+  }
 }
 
-/** 
-* Creates GNWMap with all the buildings and lots
-* Buildings/lots are added to from left to right and top to bottom
-*/
-void createGNWMap() {
-  addBuilding("City", false, 220, 140, 265, 150, 252, 200, 205, 190);
-  addBuilding("Park", false, 205, 195, 252, 205, 235, 275, 187, 265);
-  addBuilding("Stn", true, 185, 270, 235, 280, 225, 330, 170, 330);
-  
-  addBuilding("Equinox", false, 264, 175, 328, 190, 323, 215, 258, 200);
-  addBuilding("521", true, 250, 235, 290, 245, 280, 282, 240, 275);
-  addBuilding("515", true, 240, 280, 295, 290, 295, 330, 230, 330);
-  
-  addBuilding("EmilyCarr", false, 305, 230, 475, 230, 475, 280, 305, 280);
-  addBuilding("Plaza", false, 300, 290, 360, 290, 360, 330, 300, 330);
-  addBuilding("PCI", false, 365, 290, 485, 290, 485, 330, 365, 330);
-
-  addBuilding("CDM1", false, 490, 235, 540, 235, 540, 305, 490, 305);
-   
-  addBuilding("CDM2", true, 545, 235, 605, 258, 605, 285, 545, 285);
-  addBuilding("CDM3", false, 545, 290, 605, 290, 605, 330, 545, 330); 
-  
-  addBuilding("Lot1", true, 610, 258, 760, 300, 745, 370, 610, 330);  
-  addBuilding("Lot2", true, 765, 300, 825, 320, 845, 400, 750, 372);
-  addBuilding("Lot3", true, 830, 320, 920, 348, 900, 417, 850, 402);
-  addBuilding("Lot4", true, 925, 348, 1015, 375, 995, 445, 905, 418);
-  addBuilding("Mec", false, 1020, 377, 1100, 400, 1100, 478, 1000, 447);
-  
-  addBuilding("Lot5", true, 1105, 400, 1210, 420, 1210, 480, 1105, 480);
-  addBuilding("VCC", false, 1105, 500, 1210, 500, 1210, 550, 1105, 550);
-   
-  addBuilding("Lot6", true, 1220, 500, 1325, 500, 1325, 550, 1220, 550);
-  addBuilding("Lot7", true, 1220, 420, 1325, 450, 1325, 480, 1220, 480);
-  
-  addBuilding("Residential1", false, 170, 350, 615, 350, 615, 550, 170, 550);
-  addBuilding("Residential2", false, 615, 350, 1100, 500, 1100, 550, 615, 550);
+/**
+ * Handles what happens when user releases icon; 
+ * If dropped onto a building, handle any horizontal scroll and add building use to building and building to use
+ * Icon is always removed from sketch wherever icon is released
+ */
+void mouseReleased()
+{ 
+  if (GNWInterface.selectedBUIcon != null && isOnMap()) {
+    try {
+      //add use to building as well as add building to use arraylist 
+      GNWMap.assignBuildingUse(GNWInterface.selectedBUIcon.buildingUse);
+    } 
+    catch(Exception e) {
+      GNWInterface.clearSelectedBUse();
+    }
+  }
+  GNWInterface.clearSelectedBUse();
 }
 
+/**
+ * Checks if mouse position is on map
+ * This checks raw coordinates (i.e. when scaleFactor is 1)
+ */
+boolean isOnMap()
+{
+  int midY = 913;
+  return !onboardingScreen && mouseY < midY;
+}
 
-//USED FOR DEBUGGING - prints x & y coordinate values of mouse click
+/**
+ * Checks if mouse position is on time bar
+ * This checks raw coordinates (i.e. when scaleFactor is 1)
+ */
+boolean isOnTimeSlider()
+{
+  int time_top = 1280;
+  int time_bottom = 1450;
+  return mouseY > time_top && mouseY < time_bottom;
+}
+
+/**
+ * Sets building categories 
+ */
+void setBuildingUses()
+{
+  buildingUses.put("Retail", new BuildingUse("Retail", "retail.png", #EA6C90));
+  buildingUses.put("Art and Culture", new BuildingUse("Art and Culture", "artCulture.png", #AA96CC));
+  buildingUses.put("Light Industry", new BuildingUse("Light Industry", "lightIndustrial.png", #F9D463));
+  buildingUses.put("Office", new BuildingUse("Office", "offices.png", #66D9E2));
+  buildingUses.put("Resident", new BuildingUse("Resident", "residential.png", #8ACE8A));
+
+  buildingUses.put("Transit", new BuildingUse("Transit", "", 0));
+  buildingUses.put("Neighborhood", new BuildingUse("Neighborhood", "", 0));
+  buildingUses.put("Park and Public", new BuildingUse("Park and Public", "", 0));
+  buildingUses.put("Education", new BuildingUse("Education", "", 0));
+  buildingUses.put("Student Resident", new BuildingUse("Student Resident", "", 0));
+}
+
+/**
+ * Adds empty lists for each building categories into use_buildings
+ * Use_buildings keeps track of all the buildings for each category
+ */
+void setUse_buildings()
+{
+  use_buildings.put("Retail", new ArrayList<Building>());
+  use_buildings.put("Art and Culture", new ArrayList<Building>());
+  use_buildings.put("Light Industry", new ArrayList<Building>());
+  use_buildings.put("Office", new ArrayList<Building>());
+  use_buildings.put("Resident", new ArrayList<Building>());
+
+  use_buildings.put("Transit", new ArrayList<Building>());
+  use_buildings.put("Neighborhood", new ArrayList<Building>());
+  use_buildings.put("Park and Public", new ArrayList<Building>());
+  use_buildings.put("Education", new ArrayList<Building>());
+  use_buildings.put("Student Resident", new ArrayList<Building>());
+}
+
+void loadDropFeedbackImages()
+{
+  glowImage_515 = loadImage("highlight_515.png");
+  glowImage_521 = loadImage("highlight_521.png");
+  glowImage_701 = loadImage("highlight_701.png");
+  glowImage_887 = loadImage("highlight_887.png");
+  glowImage_901 = loadImage("highlight_901.png");
+  glowImage_1933 = loadImage("highlight_1933.png");
+  glowImage_1980 = loadImage("highlight_1980.png");
+  glowImage_lot4 = loadImage("highlight_lot4.png");
+  glowImage_lot5 = loadImage("highlight_lot5.png");
+  glowImage_lot7 = loadImage("highlight_lot7.png");
+  glowImage_naturesPath = loadImage("highlight_naturesPath.png");
+  glowImage_shaw = loadImage("highlight_shaw.png");
+}
+
+/**
+ * Returns current time (only minute and second) in seconds
+ */
+int getCurrentTimeSeconds()
+{
+  return (minute() * 60) + second();
+}
+
+////USED FOR DEBUGGING - prints x & y coordinate values of mouse click
 //void mouseClicked() {
-//  fill(0);
-//  ellipse(mouseX, mouseY, 2, 2);
-//  println("x: " + mouseX + "; y: " + mouseY);
+//  println("x: " + (mouseX - shiftX) + "; y: " +  (mouseY - shiftY));
 //}

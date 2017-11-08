@@ -1,0 +1,24 @@
+#################################
+# Java generated files          #
+#################################
+*.class
+*.war
+*.ear
+
+#################################
+# OS generated files            #
+#################################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+#################################
+# Processing files              #
+#################################
+sketch.properties
+applet
+application.macosx
+build-tmp/
+web-export/

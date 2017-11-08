@@ -1,0 +1,59 @@
+# List of possible uses to add: 
+# Park and Public
+# Retail
+# Art and Culture
+# Office
+# Resident
+# Light Industry
+# --------------------
+# List of all customizable buildings/lots:
+# Lot4 
+# Lot5
+# Lot7
+# 521
+# 515
+# 1933
+# 701
+# 1980
+# 887
+# 901 
+# Shaw
+# NaturesPath
+# --------------------
+<default>
+901 = Office
+Shaw = Office
+Lot4 = Art and Culture
+</default>
+<PCIMode>
+Lot5 = Retail
+Lot5 = Art and Culture
+Lot5 = Resident
+Lot4 = Art and Culture
+Lot4 = Office
+Lot7 = Retail
+Lot7 = Resident
+Lot7 = Office
+521 = Retail
+521 = Art and Culture
+521 = Resident
+515 = Retail
+515 = Resident
+515 = Office
+1933 = Office
+1933 = Light Industry
+701 = Office
+701 = Light Industry
+701 = Retail
+1980 = Office
+1980 = Light Industry
+887 = Retail
+901 = Light Industry
+901 = Retail
+901 = Office
+Shaw = Retail
+Shaw = Resident
+Shaw = Office
+NaturesPath = Resident
+NaturesPath = Office
+</PCIMode>
